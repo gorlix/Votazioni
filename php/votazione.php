@@ -8,7 +8,7 @@
     <title>Votazione</title>
 </head>
 <body>
-    <div class="header">hola
+    <div class="header">
         <div class="box-logo"></div>
         <div class="box-titolo-header"></div>
     </div>
