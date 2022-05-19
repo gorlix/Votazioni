@@ -13,12 +13,12 @@
         $sql = "";
         $tab;
 
-        /*$conn = mysqli_connect($server,$username,$password,$dbName);
+        $conn = mysqli_connect($server,$username,$password,$dbName);
         if(!$conn){
             die("Connessione Fallita: " . mysqli_connect_error());
-        }*/
+        }
 
-        /*$sql = "select quesito,tipo,fine FROM votazione";
+        $sql = "select quesito,tipo,fine FROM votazione";
 
         $result = mysqli_query($conn,$sql);
         $tab = "<table>
@@ -40,7 +40,9 @@
                         </tr>";
                 }
             }
-        }*/
+        }
+
+        echo $tab;
         
 
         
