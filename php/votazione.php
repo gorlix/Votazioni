@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <?php
-        require __DIR__ . '/SharedFunctions.php';
+        require __DIR__ . '/sharedFunctions.php';
     ?>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,6 +23,7 @@
                     $_GLOBALS['idVot'] = "";
                     $_GLOBALS['idUtente'] = "";
                     $_GLOBALS['error'] = "";
+                    $_GLOBALS['quesito'] = "";
 
                     $conn = connettiDb();
 
@@ -51,7 +52,8 @@
                         // Ritorna il nome della votazione (quesito)
                         if ($resultNomVot->num_rows > 0) {
                             while($row = $resultNomVot->fetch_assoc()) {
-                                echo $row['Quesito'];
+                                $_GLOBALS['quesito'] = $row['Quesito'];
+                                echo $_GLOBALS['quesito'];
                             }
                         } else {
                             $_GLOBALS['error'] = "ERROR";
@@ -66,33 +68,36 @@
         ?>
         <div class="contenuto">
         <?php
-                if($_GLOBALS['error'] == "") {
-                    $conn = connettiDb();
+            if($_GLOBALS['error'] == "") {
+                $conn = connettiDb();
 
-                    $qryInfoVot = "SELECT Tipo, Inizio, Fine, Quorum FROM Votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
-                    $resultIdVot = $conn->query($qryIdVot);
+                $qryInfoVot = "SELECT Tipo, Inizio, Fine, Quorum FROM Votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
+                $resultInfoVot = $conn->query($qryInfoVot);
 
-                    // Ritorna l'ID della votazione in base all'hash dato
-                    if ($resultIdVot->num_rows > 0) {
-                        while($row = $resultIdVot->fetch_assoc()) {
-                            $_GLOBALS['idVot'] = $row['ID_Votazione'];
-                            $_GLOBALS['idUtente'] = $row['ID_Utente'];
-                        }
-                    } else {
-                        $_GLOBALS['error'] = "ERROR";
-                        echo  $_GLOBALS['error'];
+                // In base all'id del quesito, stampo i dati necessari
+                if ($resultInfoVot->num_rows > 0) {
+                    while($row = $resultInfoVot->fetch_assoc()) {
+                        echo "<p>Votazione aperta " . $row['Inizio'] . " e termina " . $row['Fine'] . "</p>
+                            <p>Tipo votazione: " . $row['Tipo'] . "</p>
+                            <p>Quorum: " . $row['Quorum'] . "%</p>";
                     }
                 } else {
-                    echo "<p class=\"errore\">ERRORE: hai già risposto alla votazione o la votazione non esiste.</p>";
-                }   
-            ?>
+                    $_GLOBALS['error'] = "ERROR";
+                    echo  $_GLOBALS['error'];
+                }
+
+                $conn->close();
+            } else {
+                echo "<p class=\"errore\">ERRORE: hai già risposto alla votazione o la votazione non esiste.</p>";
+            }   
+        ?>
         </div>
     </div>
 </body>
 </html>
 
 
-/* 
+<!--
 Se la votazione selezionata è aperta mostrare le opzioni per poter votare.
 Se la votazione selezionata è chiusa ma il tempo non è terminato, si mostra tutto ma con le opzioni bloccate
 Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati allora verrà mostrato un messaggio di “Risultati in elaborazione”
@@ -100,4 +105,4 @@ Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono sta
 Se la votazione è anonima, in risposta la chiave esterna sull’opzione non viene salvata, se invece è nominale si.
 In entrambi i tipi di votazione si incrementa il numero di voti sull’opzione.
 Se la votazione è con scelte multiple si inserirà nella tabella risposta N record in base alle N risposte. Prima di inserirle bisogna controllare che le N risposte date non siano maggiori del numero massimo di opzioni per cui si può rispondere. Se succede mostrare un errore e non fare nulla. Altrimenti con una transazione effettuare tutte le operazioni necessarie. 
-*/
+            -->
