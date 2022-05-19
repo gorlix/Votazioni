@@ -24,10 +24,10 @@
                     $_GLOBALS['idUtente'] = "";
                     $_GLOBALS['error'] = "";
 
-                    $connessione = connettiDb();
+                    $conn = connettiDb();
 
                     $qryIdVot = "SELECT ID_Votazione, ID_Utente FROM Esegue WHERE hash LIKE '$hash'";
-                    $resultIdVot = $connessione->query($qryIdVot);
+                    $resultIdVot = $conn->query($qryIdVot);
 
                     // Ritorna l'ID della votazione in base all'hash dato
                     if ($resultIdVot->num_rows > 0) {
@@ -40,13 +40,13 @@
                         echo  $_GLOBALS['error'];
                     }
 
-                    $connessione->close();
+                    $conn->close();
 
                     if($error != "") {
-                        $connessione = connettiDb();
+                        $conn = connettiDb();
 
                         $qryNomVot = "SELECT Quesito FROM Votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
-                        $resultNomVot = $connessione->query($qryNomVot);
+                        $resultNomVot = $conn->query($qryNomVot);
 
                         // Ritorna il nome della votazione (quesito)
                         if ($resultNomVot->num_rows > 0) {
@@ -65,7 +65,27 @@
             include "Navbar.php";
         ?>
         <div class="contenuto">
+        <?php
+                if($_GLOBALS['error'] == "") {
+                    $conn = connettiDb();
 
+                    $qryInfoVot = "SELECT Tipo, Inizio, Fine, Quorum FROM Votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
+                    $resultIdVot = $conn->query($qryIdVot);
+
+                    // Ritorna l'ID della votazione in base all'hash dato
+                    if ($resultIdVot->num_rows > 0) {
+                        while($row = $resultIdVot->fetch_assoc()) {
+                            $_GLOBALS['idVot'] = $row['ID_Votazione'];
+                            $_GLOBALS['idUtente'] = $row['ID_Utente'];
+                        }
+                    } else {
+                        $_GLOBALS['error'] = "ERROR";
+                        echo  $_GLOBALS['error'];
+                    }
+                } else {
+                    echo "<p class=\"errore\">ERRORE: hai già risposto alla votazione o la votazione non esiste.</p>";
+                }   
+            ?>
         </div>
     </div>
 </body>
