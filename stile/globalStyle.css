@@ -1,0 +1,82 @@
+body { 
+    margin: 0px;
+}
+
+.container {  
+    display: grid;
+
+    grid-template-columns: 30% 1fr;
+    grid-template-rows: 134px 1fr;
+
+    gap: 0px 0px;
+
+    grid-auto-flow: row;
+
+    grid-template-areas:
+      "logo titolo"
+      "sidebar contenuto";
+}
+  
+.logo { 
+    grid-area: logo; 
+
+    background-color: rgba(230, 126, 34, 1);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-scuola {
+    display: flex;
+
+    max-width: 100%;
+    max-height: 100%;
+}
+  
+.titolo { 
+    grid-area: titolo; 
+
+    background-color: rgba(204, 204, 204, 1);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.titolo-header {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    font-size: 60px;
+
+    display: flex;
+
+    max-width: 100%;
+}
+  
+.sidebar { 
+    grid-area: sidebar; 
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.elenco {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    padding: 15px;
+
+    font-size: 30px;
+}
+
+.link {
+    text-decoration: none;
+    color: black;
+}
+  
+.contenuto { 
+    grid-area: contenuto;
+}
