@@ -8,7 +8,7 @@
     <!--Usato solo quando viene eseguito un submit nella pagina-->
     <?php
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
+            
         }
     ?>
     <meta charset="UTF-8">
@@ -81,7 +81,7 @@
         <div class="contenuto">
         <?php
             if($_GLOBALS['error'] == "") {
-                $numScelte = "";
+                $_GLOBALS['numScelte'] = "";
 
                 $conn = connettiDb();
 
@@ -96,7 +96,7 @@
                             <p class=\"testo\">Tipo votazione: " . $row['tipo'] . ".</p>
                             <p class=\"testo\">Quorum: " . $row['quorum'] . "%</p>
                             <p class=\"quesito\">" . $row['quesito'] . "</p>";
-                        $numScelte = $row['scelteMax'];
+                            $_GLOBALS['numScelte'] = $row['scelteMax'];
                     }
                 } else {
                     $_GLOBALS['error'] = "ERROR";
@@ -113,9 +113,9 @@
 
                  // Ricevo informazioni delle opzioni aggangiate alla votazione
                  if ($resultOpz->num_rows > 0) {
-                    echo "<form action='<?php echo htmlspecialchars(" . $_SERVER['PHP_SELF']. ") ;?>'>";
+                    echo '<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
                     while($row = $resultOpz->fetch_assoc()) {
-                        if($numScelte == 1) {
+                        if($_GLOBALS['numScelte'] == 1) {
                             echo "<input type=\"radio\" name=\"opzione\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\">
                                 <label class=\"testo\">" . $row['testo'] . "</label><br><br>";
                             $aus++;
