@@ -23,18 +23,18 @@
                     $_GLOBALS['idVot'] = "";
                     $_GLOBALS['idUtente'] = "";
                     $_GLOBALS['error'] = "";
-                    $_GLOBALS['quesito'] = "";
+                    $_GLOBALS['nomQuesito'] = "";
 
                     $conn = connettiDb();
 
-                    $qryIdVot = "SELECT ID_Votazione, ID_Utente FROM Esegue WHERE hash LIKE '$hash'";
+                    $qryIdVot = "SELECT idVotazione, idUtente FROM esegue WHERE hash LIKE '$hash'";
                     $resultIdVot = $conn->query($qryIdVot);
 
                     // Ritorna l'ID della votazione in base all'hash dato
                     if ($resultIdVot->num_rows > 0) {
                         while($row = $resultIdVot->fetch_assoc()) {
-                            $_GLOBALS['idVot'] = $row['ID_Votazione'];
-                            $_GLOBALS['idUtente'] = $row['ID_Utente'];
+                            $_GLOBALS['idVot'] = $row['idVotazione'];
+                            $_GLOBALS['idUtente'] = $row['idUtente'];
                         }
                     } else {
                         $_GLOBALS['error'] = "ERROR";
@@ -46,14 +46,14 @@
                     if($error != "") {
                         $conn = connettiDb();
 
-                        $qryNomVot = "SELECT Quesito FROM Votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
+                        $qryNomVot = "SELECT quesito FROM votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
                         $resultNomVot = $conn->query($qryNomVot);
 
                         // Ritorna il nome della votazione (quesito)
                         if ($resultNomVot->num_rows > 0) {
                             while($row = $resultNomVot->fetch_assoc()) {
-                                $_GLOBALS['quesito'] = $row['Quesito'];
-                                echo $_GLOBALS['quesito'];
+                                $_GLOBALS['nomQuesito'] = $row['quesito'];
+                                echo $_GLOBALS['nomQuesito'];
                             }
                         } else {
                             $_GLOBALS['error'] = "ERROR";
@@ -69,17 +69,21 @@
         <div class="contenuto">
         <?php
             if($_GLOBALS['error'] == "") {
+                $numScelte = "";
+
                 $conn = connettiDb();
 
-                $qryInfoVot = "SELECT Tipo, Inizio, Fine, Quorum FROM Votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
+                $qryInfoVot = "SELECT tipo, inizio, fine, quorum, scelteMax, quesito FROM votazione WHERE id LIKE '" . $_GLOBALS['idVot'] . "'";
                 $resultInfoVot = $conn->query($qryInfoVot);
 
                 // In base all'id del quesito, stampo i dati necessari
                 if ($resultInfoVot->num_rows > 0) {
                     while($row = $resultInfoVot->fetch_assoc()) {
-                        echo "<p>Votazione aperta " . $row['Inizio'] . " e termina " . $row['Fine'] . "</p>
-                            <p>Tipo votazione: " . $row['Tipo'] . "</p>
-                            <p>Quorum: " . $row['Quorum'] . "%</p>";
+                        echo "<p>Votazione aperta " . $row['inizio'] . " e termina " . $row['fine'] . "</p>
+                            <p>Tipo votazione: " . $row['tipo'] . "</p>
+                            <p>Quorum: " . $row['quorum'] . "%</p>
+                            <p class=\"quesito\">" . $row['quesito'] . "</p>";
+                        $numScelte = $row['scelteMax'];
                     }
                 } else {
                     $_GLOBALS['error'] = "ERROR";
@@ -87,6 +91,25 @@
                 }
 
                 $conn->close();
+
+                $conn = connettiDb();
+
+                $qryOpz = "SELECT id, testo FROM opzione WHERE idVotazione LIKE '" . $_GLOBALS['idVot'] . "'";
+                $resultOpz = $conn->query($qryOpz);
+
+                 // Ricevo informazioni delle opzioni aggangiate alla votazione
+                 if ($resultOpz->num_rows > 0) {
+                    echo "<form action";
+                    while($row = $resultOpz->fetch_assoc()) {
+                        if($numScelte == 1) {
+                            echo "<input type=\"radio\" id=\"".$aus."\" value=\"".$row['id']."\">
+                                <p>" . $row['testo'] . "</p>";
+                        }
+                    }
+                } else {
+                    $_GLOBALS['error'] = "ERROR";
+                    echo  $_GLOBALS['error'];
+                }
             } else {
                 echo "<p class=\"errore\">ERRORE: hai già risposto alla votazione o la votazione non esiste.</p>";
             }   
