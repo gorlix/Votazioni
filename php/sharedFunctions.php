@@ -1,7 +1,11 @@
 <?php
-////////////////////////////////////////////////////////////////////////////////
-//DATABASE
-//Funzione per la connessione al Database
+/*
+ * Funzioni Databse
+ */
+
+/*
+ * Connessione al Database
+ */
 function connettiDb(){
     $servername = "localhost";
     $username = "root";
@@ -13,7 +17,10 @@ function connettiDb(){
     }
     return $conn;
 }
-//funzione per verificare la correttezza delle credenziali (mail e password) inserite
+/*
+ * Verifica Login
+ * funzione per verificare la correttezza delle credenziali (mail e password) inserite
+ */
 function check_login($conn, $mail, $password){
     $password = hash_password($password);
     $sql = "SELECT * FROM utente WHERE mail = '$mail' AND pw = '$password'";
@@ -24,13 +31,17 @@ function check_login($conn, $mail, $password){
         return false;
     }
 }
-////////////////////////////////////////////////////////////////////////////////
-//hash password tipo sha1
+
+/*
+ * hash password tipo sha1
+ */
 function hash_password($password) {
     return sha1($password);
 }
 
-//funzioner per verificare il formato valido della mail inserita
+/*
+ * funzioner per verificare il formato valido della mail inserita
+ */
 function valida_mail($mail) {
     $valida = true;
     if (!filter_var($mail, FILTER_VALIDATE_EMAIL))
