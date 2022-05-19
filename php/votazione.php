@@ -18,7 +18,9 @@
         <div class="titolo">
             <p class="titolo-header">Votazione: 
                 <?php
-                    $hash = $_GET['hash'];
+                    // $hash = $_GET['hash'];
+                    $hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
+                    $hash = "ash sbagliato";
 
                     $_GLOBALS['idVot'] = "";
                     $_GLOBALS['idUtente'] = "";
@@ -43,7 +45,7 @@
 
                     $conn->close();
 
-                    if($error != "") {
+                    if($_GLOBALS['error'] != "") {
                         $conn = connettiDb();
 
                         $qryNomVot = "SELECT quesito FROM votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
@@ -56,8 +58,10 @@
                                 echo $_GLOBALS['nomQuesito'];
                             }
                         } else {
-                            $_GLOBALS['error'] = "ERROR";
-                            echo  $_GLOBALS['error'];
+                            if($_GLOBALS['error'] == "") {
+                                $_GLOBALS['error'] = "ERROR";
+                                echo  $_GLOBALS['error'];
+                            }
                         }
                     }
                 ?>
