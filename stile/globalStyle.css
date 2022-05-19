@@ -79,4 +79,19 @@ body {
   
 .contenuto { 
     grid-area: contenuto;
+    
+}
+
+td{
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+    padding:10px;
+}
+
+ #titoli{
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+    padding:10px; 
+    font-size: 20px;
+    align-content:left;
 }
