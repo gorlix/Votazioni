@@ -6,7 +6,7 @@ use votazioniScolastiche;
 
 create table utente(
   id int NOT NULL AUTO_INCREMENT,
-  pw varchar(30) NOT NULL,
+  pw varchar(512) NOT NULL,
   mail varchar(50) NOT NULL,
   nome varchar(30) NOT NULL,
   cognome varchar(30) NOT NULL,
