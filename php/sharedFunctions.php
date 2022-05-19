@@ -5,7 +5,7 @@
 function connettiDb(){
     $servername = "localhost";
     $username = "root";
-    $password = "root";
+    $password = "";
     $dbname = "votazioniScolastiche";
     $conn = new mysqli($servername, $username, $password, $dbname);
     if ($conn->connect_error) {
@@ -15,14 +15,14 @@ function connettiDb(){
 }
 //funzione per verificare la correttezza delle credenziali (mail e password) inserite
 function check_login($conn, $mail, $password){
+    $valido = false;
     $password = hash_password($password);
     $sql = "SELECT * FROM utente WHERE mail = '$mail' AND pw = '$password'";
     $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        return true;
-    } else {
-        return false;
-    }
+    if ($result->num_rows > 0)
+        $valido = true;
+    $conn->close();
+    return $valido;
 }
 ////////////////////////////////////////////////////////////////////////////////
 //hash password tipo sha1
