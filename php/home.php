@@ -1,11 +1,28 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-    <meta charset="utf-8"/>
-    <title>Dati</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../stile/globalStyle.css">
+    <title>Votazione</title>
 </head>
 <body>
-    <?php
+    <div class="container">
+        <div class="logo">
+            <img src="../immagini//logoScuola.png" alt="logo scuola" class="logo-scuola">
+        </div>
+        <div class="titolo">
+            <p class="titolo-header">Lista Votazioni</p>
+        </div>
+        <?PHP
+            include "Navbar.php";
+        ?>
+        <div class="contenuto">
+            <center>
+            <h1 style="align:center">Lista Votazioni</h1>
+        <?php
         $server = "localhost";
         $username = "root";
         $password = "";
@@ -47,5 +64,8 @@
 
         
     ?>
+    </center>
+        </div>
+    </div>
 </body>
 </html>
