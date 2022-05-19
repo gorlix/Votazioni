@@ -24,6 +24,14 @@ function check_login($conn, $mail, $password){
     $conn->close();
     return $valido;
 }
+
+function getIdUtente($conn, $mail){
+    $sql = "SELECT id FROM utente WHERE mail = '$mail'";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+    $conn->close();
+    return $row['id'];
+}
 ////////////////////////////////////////////////////////////////////////////////
 //hash password tipo sha1
 function hash_password($password) {
