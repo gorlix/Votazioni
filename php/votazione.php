@@ -4,6 +4,13 @@
     <?php
         require __DIR__ . '/sharedFunctions.php';
     ?>
+
+    <!--Usato solo quando viene eseguito un submit nella pagina-->
+    <?php
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        }
+    ?>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +27,8 @@
                 <?php
                     // $hash = $_GET['hash'];
                     $hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
-                    $hash = "ash sbagliato";
+                    //$hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
+                    // $hash = "ash sbagliato";
 
                     $_GLOBALS['idVot'] = "";
                     $_GLOBALS['idUtente'] = "";
@@ -83,9 +91,10 @@
                 // In base all'id del quesito, stampo i dati necessari
                 if ($resultInfoVot->num_rows > 0) {
                     while($row = $resultInfoVot->fetch_assoc()) {
-                        echo "<p>Votazione aperta " . $row['inizio'] . " e termina " . $row['fine'] . "</p>
-                            <p>Tipo votazione: " . $row['tipo'] . "</p>
-                            <p>Quorum: " . $row['quorum'] . "%</p>
+                        echo "<p class=\"testo\">Data apertura votazione: " . $row['inizio'] . ".<br>
+                            Data chiusura votazione: " . $row['fine'] . ".</p>
+                            <p class=\"testo\">Tipo votazione: " . $row['tipo'] . ".</p>
+                            <p class=\"testo\">Quorum: " . $row['quorum'] . "%</p>
                             <p class=\"quesito\">" . $row['quesito'] . "</p>";
                         $numScelte = $row['scelteMax'];
                     }
@@ -98,18 +107,25 @@
 
                 $conn = connettiDb();
 
+                $aus = 0;
                 $qryOpz = "SELECT id, testo FROM opzione WHERE idVotazione LIKE '" . $_GLOBALS['idVot'] . "'";
                 $resultOpz = $conn->query($qryOpz);
 
                  // Ricevo informazioni delle opzioni aggangiate alla votazione
                  if ($resultOpz->num_rows > 0) {
-                    echo "<form action";
+                    echo "<form action='<?php echo htmlspecialchars(" . $_SERVER['PHP_SELF']. ") ;?>'>";
                     while($row = $resultOpz->fetch_assoc()) {
                         if($numScelte == 1) {
-                            echo "<input type=\"radio\" id=\"".$aus."\" value=\"".$row['id']."\">
-                                <p>" . $row['testo'] . "</p>";
+                            echo "<input type=\"radio\" name=\"opzione\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\">
+                                <label class=\"testo\">" . $row['testo'] . "</label><br><br>";
+                            $aus++;
+                        } else {
+                            echo "<input type=\"checkbox\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\">
+                                <a class=\"testo\">" . $row['testo'] . "</a><br><br>";
                         }
                     }
+                    echo "<input type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\">  
+                        </form>";
                 } else {
                     $_GLOBALS['error'] = "ERROR";
                     echo  $_GLOBALS['error'];

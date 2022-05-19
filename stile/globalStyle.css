@@ -110,3 +110,23 @@ td{
 
     color: red;
 }
+
+.testo {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    padding: 10px;
+
+    font-size: 20px;
+}
+
+.quesito {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    padding: 10px;
+
+    font-size: 30px;
+
+    font-style: italic;
+}
