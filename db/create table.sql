@@ -54,7 +54,7 @@ create table opzione(
 create table esegue(
   idUtente int NOT NULL,
   idVotazione int NOT NULL,
-  hash varchar(256),
+  hash varchar(512),
   FOREIGN KEY(idUtente) REFERENCES utente(id),
   FOREIGN KEY(idVotazione) REFERENCES votazione(id),
   PRIMARY KEY(idUtente,idVotazione)
@@ -73,7 +73,7 @@ create table risposta(
 );
 
 create table recupero(
-  hash varchar(256),
+  hash varchar(512),
   idUtente int NOT NULL,
   dataScadenza date NOT NULL,
   oraScadenza time NOT NULL,
