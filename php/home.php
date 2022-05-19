@@ -21,7 +21,7 @@
         ?>
         <div class="contenuto">
             <center>
-            <h1 style="align:center">Lista Votazioni</h1>
+            <h1 style="align:center; font-family: 'Roboto Mono', monospace;font-family: 'Space Mono', monospace;">Lista Votazioni</h1>
         <?php
         $server = "localhost";
         $username = "root";
@@ -38,15 +38,15 @@
         $sql = "select quesito,tipo,fine FROM votazione";
 
         $result = mysqli_query($conn,$sql);
-        $tab = "<table>
-                    <tr>
-                        <th>TITOLO</th>
-                        <th>TIPO</th>
-                        <th>COMPLETATO</th>
+        $tab = "<table style='width:100%'>
+                    <tr style='width:100%; border-bottom: 2px solid black'>
+                        <td id='titoli'>TITOLO</td>
+                        <td id='titoli'>TIPO</td>
+                        <td id='titoli'>COMPLETATO</td>
                     </tr>";
         if(mysqli_query($conn,$sql)){
             while($row=mysqli_fetch_assoc($result)){
-                $tab .= "<tr>
+                $tab .= "<tr style='width:100%'>
                             <td>" . $row['quesito'] . "</td>
                             <td>" . $row['tipo'] . "</td>";
                 if($row['fine'] >= date("Y-M-D h:i:sa")){
