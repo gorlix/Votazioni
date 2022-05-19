@@ -7,6 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../stile/globalStyle.css">
     <title>Votazione</title>
+    <script>
+        jQuery(document).ready(function($){
+            $(".clickable-row").click(function(){
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container">
@@ -35,7 +42,7 @@
             die("Connessione Fallita: " . mysqli_connect_error());
         }
 
-        $sql = "select quesito,tipo,fine FROM votazione";
+        $sql = "select id,quesito,tipo,fine FROM votazione";
 
         $result = mysqli_query($conn,$sql);
         $tab = "<table style='width:100%'>
@@ -46,15 +53,17 @@
                     </tr>";
         if(mysqli_query($conn,$sql)){
             while($row=mysqli_fetch_assoc($result)){
-                $tab .= "<tr style='width:100%'>
-                            <td>" . $row['quesito'] . "</td>
+                $tab .= "<form method = 'post' action = 'votazione.php'>";
+                $tab .= "<tr class='clickable-row' style='width:100%' >
+                            <td name='id'>" . $row['quesito'] . "</td>
+                            <input type='hidden' name='id' value='".$row['id']."'>
                             <td>" . $row['tipo'] . "</td>";
                 if($row['fine'] >= date("Y-M-D h:i:sa")){
                     $tab .= "<td> SI </td>
-                        </tr>";
+                        </tr> </form>";
                 }else{
                     $tab .= "<td> NO </td>
-                        </tr>";
+                        </tr> </form>";
                 }
             }
         }
