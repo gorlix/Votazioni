@@ -20,7 +20,7 @@
             include "Navbar.php";
         ?>
         <div class="contenuto">
-            <!--Contenuto della pagine qui sotto-->
+
         </div>
     </div>
 </body>
