@@ -44,3 +44,9 @@
     display: flex;
     max-width: 100%;
 }
+
+.sidebar {
+    position: fixed;
+    position: absolute;
+    
+}

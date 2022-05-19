@@ -16,7 +16,7 @@
             <p class="titolo-header">Votazioni</p>
         </div>
     </div>
-    <div clas="sidebar"></div>
+    <div clas="sidebar">ciao</div>
     <div class="contenuti"></div>
 </body>
 </html>
