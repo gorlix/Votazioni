@@ -19,21 +19,25 @@
             <p class="titolo-header">Votazione: 
                 <?php
                     $hash = $_GET['hash'];
-                    $idVot = "";
-                    $error = "";
+
+                    $_GLOBALS['idVot'] = "";
+                    $_GLOBALS['idUtente'] = "";
+                    $_GLOBALS['error'] = "";
 
                     $connessione = connettiDb();
 
-                    $qryIdVot = "SELECT ID_Votazione FROM Esegue WHERE hash LIKE '$hash'";
+                    $qryIdVot = "SELECT ID_Votazione, ID_Utente FROM Esegue WHERE hash LIKE '$hash'";
                     $resultIdVot = $connessione->query($qryIdVot);
 
                     // Ritorna l'ID della votazione in base all'hash dato
                     if ($resultIdVot->num_rows > 0) {
                         while($row = $resultIdVot->fetch_assoc()) {
-                            $idVot = $row['ID_Votazione'];
+                            $_GLOBALS['idVot'] = $row['ID_Votazione'];
+                            $_GLOBALS['idUtente'] = $row['ID_Utente'];
                         }
                     } else {
-                        echo $error = "ERROR";
+                        $_GLOBALS['error'] = "ERROR";
+                        echo  $_GLOBALS['error'];
                     }
 
                     $connessione->close();
@@ -41,7 +45,7 @@
                     if($error != "") {
                         $connessione = connettiDb();
 
-                        $qryNomVot = "SELECT Quesito FROM Votazione WHERE ID LIKE '$idVot'";
+                        $qryNomVot = "SELECT Quesito FROM Votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
                         $resultNomVot = $connessione->query($qryNomVot);
 
                         // Ritorna il nome della votazione (quesito)
@@ -50,7 +54,8 @@
                                 echo $row['Quesito'];
                             }
                         } else {
-                            echo $error = "ERROR";
+                            $_GLOBALS['error'] = "ERROR";
+                            echo  $_GLOBALS['error'];
                         }
                     }
                 ?>
@@ -60,8 +65,19 @@
             include "Navbar.php";
         ?>
         <div class="contenuto">
-            <!--Contenuto della pagine qui sotto-->
+
         </div>
     </div>
 </body>
 </html>
+
+
+/* 
+Se la votazione selezionata è aperta mostrare le opzioni per poter votare.
+Se la votazione selezionata è chiusa ma il tempo non è terminato, si mostra tutto ma con le opzioni bloccate
+Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati allora verrà mostrato un messaggio di “Risultati in elaborazione”
+Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono stati pubblicati dal creatore della votazione, allora si mostreranno le opzioni con le varie percentuali
+Se la votazione è anonima, in risposta la chiave esterna sull’opzione non viene salvata, se invece è nominale si.
+In entrambi i tipi di votazione si incrementa il numero di voti sull’opzione.
+Se la votazione è con scelte multiple si inserirà nella tabella risposta N record in base alle N risposte. Prima di inserirle bisogna controllare che le N risposte date non siano maggiori del numero massimo di opzioni per cui si può rispondere. Se succede mostrare un errore e non fare nulla. Altrimenti con una transazione effettuare tutte le operazioni necessarie. 
+*/
