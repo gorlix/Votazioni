@@ -36,7 +36,7 @@
                     // $hash = $_GET['hash'];
                     //$hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
                     $hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
-                    // $hash = "ash sbagliato";
+                    //$hash = "ash sbagliato";
 
                     $_GLOBALS['idVot'] = "";
                     $_GLOBALS['idUtente'] = "";
@@ -60,10 +60,9 @@
                     }
 
                     $conn->close();
-
-                    if($_GLOBALS['error'] != "") {
-                        $conn = connettiDb();
-
+                    
+                    if($_GLOBALS['error'] == "") {
+                        $conn = connettiDb();   
                         $qryNomVot = "SELECT quesito FROM votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
                         $resultNomVot = $conn->query($qryNomVot);
 
