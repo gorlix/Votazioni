@@ -67,6 +67,13 @@
 			}
 			echo $content;
 		?>
+		
+		<form action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>' method = 'POST'>
+			<input type="submit" name="crea" value="Crea votazione"/><br>
+			<input type="submit" name="modifica" value="Modifica votazione"/><br>
+		</form>
+		
+		
 		</center>
         </div>
     </div>
