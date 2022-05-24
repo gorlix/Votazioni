@@ -1,7 +1,7 @@
 <?php
     require __DIR__ . '/SharedFunctions.php';
 
-
+	session_start();
 
     if(!isset($_SESSION["id_utente"]))
     {
