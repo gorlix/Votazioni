@@ -1,12 +1,17 @@
 <?php
+    session_start();
     require __DIR__ . '/SharedFunctions.php';
 
-
+    if(isset($_POST['esci'])) /* Ho schiacciato il tasto esci? */
+    {
+        session_destroy();
+        header("Location:login.php");
+    }
 
     if(!isset($_SESSION["id_utente"]))
     {
         echo "<h1 style='position: center'>NON SEI AUTORIZZATO</h1>";
-        die();
+        //die();
     }
     else
     {
@@ -77,7 +82,17 @@
                     "</li>" ;
             }
 
+            echo
+                "<li class='elenco' id='3'>";
+            echo
+                '<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
+                        "<input type='submit' name='esci' value='Esci'/><br>
+                    </form>" .
+                "</li>" ;
+
+
     echo
             "</ul>" .
+
         "</div>";
 ?>
