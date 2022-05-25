@@ -79,6 +79,8 @@
                             }
                         }
                     }
+
+                    $conn->close();
                 ?>
             </p>
         </div>
@@ -142,6 +144,8 @@
             } else {
                 echo "<p class=\"errore\">ERRORE: hai già risposto alla votazione o la votazione non esiste.</p>";
             }    
+            
+            $conn->close();
         ?>
         </div>
     </div>
