@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <?php
-        require __DIR__ . '/sharedFunctions.php';
+        //require __DIR__ . '/sharedFunctions.php';
     ?>
     <!--Usato solo quando viene eseguito un submit nella pagina-->
     <?php
@@ -33,6 +33,14 @@
         <div class="titolo">
             <p class="titolo-header">Votazione: 
                 <?php
+                $servername = "localhost";
+                $username = "root";
+                $password = "";
+                $dbname = "votazioniScolastiche";
+                $conn = new mysqli($servername, $username, $password, $dbname);
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
                     // $hash = $_GET['hash'];
                     //$hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
                     $hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
@@ -43,7 +51,7 @@
                     $_GLOBALS['error'] = "";
                     $_GLOBALS['nomQuesito'] = "";
 
-                    $conn = connettiDb();
+                    //$conn = connettiDb();
 
                     $qryIdVot = "SELECT idVotazione, idUtente FROM esegue WHERE hash LIKE '$hash'";
                     $resultIdVot = $conn->query($qryIdVot);
@@ -62,7 +70,11 @@
                     $conn->close();
                     
                     if($_GLOBALS['error'] == "") {
-                        $conn = connettiDb();   
+                        $conn = new mysqli($servername, $username, $password, $dbname);
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                        //$conn = connettiDb();   
                         $qryNomVot = "SELECT quesito FROM votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
                         $resultNomVot = $conn->query($qryNomVot);
 
@@ -89,10 +101,18 @@
         ?>
         <div class="contenuto">
         <?php
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "votazioniScolastiche";
+        
             if($_GLOBALS['error'] == "") {
                 $_GLOBALS['numScelte'] = "";
-
-                $conn = connettiDb();
+                $conn = new mysqli($servername, $username, $password, $dbname);
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+               // $conn = connettiDb();
 
                 $qryInfoVot = "SELECT tipo, inizio, fine, quorum, scelteMax, quesito FROM votazione WHERE id LIKE '" . $_GLOBALS['idVot'] . "'";
                 $resultInfoVot = $conn->query($qryInfoVot);
@@ -114,7 +134,11 @@
 
                 $conn->close();
 
-                $conn = connettiDb();
+                $conn = new mysqli($servername, $username, $password, $dbname);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+                //$conn = connettiDb();
 
                 $aus = 0;
                 $qryOpz = "SELECT id, testo FROM opzione WHERE idVotazione LIKE '" . $_GLOBALS['idVot'] . "'";
