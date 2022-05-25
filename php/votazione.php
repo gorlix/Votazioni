@@ -1,24 +1,117 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+<!--
+    Crea variabili di sessione
+-->
     <?php
         //require __DIR__ . '/sharedFunctions.php';
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "votazioniScolastiche";
+        
+        session_start();
+
+        // $hash = $_GET['hash'];
+        //$hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
+        $hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
+        //$hash = "ash sbagliato";
+
+        $conn = new mysqli($servername, $username, $password, $dbname);
+
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        //$conn = connettiDb();
+
+        $qryIdVot = "SELECT idVotazione, idUtente FROM esegue WHERE hash LIKE '$hash'";
+        $resultIdVot = $conn->query($qryIdVot);
+
+        // Ritorna l'ID della votazione in base all'hash dato
+        if ($resultIdVot->num_rows > 0) {
+            while($row = $resultIdVot->fetch_assoc()) {
+                $_SESSION['idVot'] = $row['idVotazione'];
+                $_SESSION['idUtente'] = $row['idUtente'];
+            }
+        } else {
+            $_GLOBALS['error'] = "ERROR";
+            echo  $_GLOBALS['error'];
+        }
+
+        $conn->close();
     ?>
-    <!--Usato solo quando viene eseguito un submit nella pagina-->
+
+<!--
+    Usato solo quando viene eseguito un submit nella pagina
+-->
     <?php
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            //if($_GLOBALS['numScelte'] == 1) {
-                $name = $_POST['opzione'];
-                foreach ($name as $color){ 
-                    echo $color."<br />";
-                }
-            //}
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $dbname = "votazioniScolastiche";
+            $aus = 0;
+
+            $opzioni = $_POST['opzione'];
             
-            $aus = array();
+            $aus = count($opzioni);
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+
+            if($aus == $_SESSION['numScelte']) {
+                /*
+                ✓ bisogna fare un alter table per il nVoti, 
+                ✓ query per vedere il tipo di votazione,
+                x bisogna creare la ternaria in base al tipo di votazione
+                */
+                
+                $qryTipoVot = "SELECT tipo FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
+                $resultTipoVot = $conn->query($qryTipoVot);
+
+                if($resultTipoVot->num_rows > 0) {
+                    while($row = $resultTipoVot->fetch_assoc()) {
+                        $tipoVot = $row['tipo'];
+                    }
+                } else {
+                    $_GLOBALS['error'] = "ERROR";
+                    echo  $_GLOBALS['error'];
+                }
+
+                for($i = 0; $i < count($opzioni); $i++) {
+                    $qrynVotOp = "SELECT nVoti FROM opzione WHERE id LIKE '" . $opzioni[$i] . "' AND idVotazione LIKE '" . $_SESSION['idVot'] . "'";
+                    $resultnVotOp = $conn->query($qrynVotOp);
+
+                    if($resultnVotOp->num_rows > 0) {
+                        while($row = $resultnVotOp->fetch_assoc()) {
+                            $row['nVoti']++;
+                            
+                            $qryAggiungiVoto = "UPDATE opzione SET nVoti = '" . $row['nVoti'] . "' WHERE id='" . $opzioni[$i] . "'";
+
+                            if (!($conn->query($qryAggiungiVoto) === TRUE)) {
+                                echo "Error updating record: " . $conn->error;
+                            }
+                        }
+                    }
+                    
+                }
+
+
+            } else {
+                $_SESSION['erroreScel'] = "error";
+            }
+           // $aus = array();
 
             //for($i = 0; i < $_GLOBALS['n'])
         }
     ?>
+<!----------------------------------------------------------------------
+    HTML
+---------------------------------------------------------------------->
+
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,49 +126,24 @@
         <div class="titolo">
             <p class="titolo-header">Votazione: 
                 <?php
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $dbname = "votazioniScolastiche";
-                $conn = new mysqli($servername, $username, $password, $dbname);
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-                    // $hash = $_GET['hash'];
-                    //$hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
-                    $hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
-                    //$hash = "ash sbagliato";
+                    $servername = "localhost";
+                    $username = "root";
+                    $password = "";
+                    $dbname = "votazioniScolastiche";
 
-                    $_GLOBALS['idVot'] = "";
-                    $_GLOBALS['idUtente'] = "";
                     $_GLOBALS['error'] = "";
                     $_GLOBALS['nomQuesito'] = "";
+                    
+                    $conn = new mysqli($servername, $username, $password, $dbname);
 
-                    //$conn = connettiDb();
-
-                    $qryIdVot = "SELECT idVotazione, idUtente FROM esegue WHERE hash LIKE '$hash'";
-                    $resultIdVot = $conn->query($qryIdVot);
-
-                    // Ritorna l'ID della votazione in base all'hash dato
-                    if ($resultIdVot->num_rows > 0) {
-                        while($row = $resultIdVot->fetch_assoc()) {
-                            $_GLOBALS['idVot'] = $row['idVotazione'];
-                            $_GLOBALS['idUtente'] = $row['idUtente'];
-                        }
-                    } else {
-                        $_GLOBALS['error'] = "ERROR";
-                        echo  $_GLOBALS['error'];
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
                     }
 
-                    $conn->close();
-                    
                     if($_GLOBALS['error'] == "") {
-                        $conn = new mysqli($servername, $username, $password, $dbname);
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
+
                         //$conn = connettiDb();   
-                        $qryNomVot = "SELECT quesito FROM votazione WHERE ID LIKE '" . $_GLOBALS['idVot'] . "'";
+                        $qryNomVot = "SELECT quesito FROM votazione WHERE ID LIKE '" . $_SESSION['idVot'] . "'";
                         $resultNomVot = $conn->query($qryNomVot);
 
                         // Ritorna il nome della votazione (quesito)
@@ -96,81 +164,83 @@
                 ?>
             </p>
         </div>
-        <?PHP
-            include "Navbar.php";
-        ?>
+        <?php //include "Navbar.php"; ?>
         <div class="contenuto">
-        <?php
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "votazioniScolastiche";
-        
-            if($_GLOBALS['error'] == "") {
-                $_GLOBALS['numScelte'] = "";
-                $conn = new mysqli($servername, $username, $password, $dbname);
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-               // $conn = connettiDb();
-
-                $qryInfoVot = "SELECT tipo, inizio, fine, quorum, scelteMax, quesito FROM votazione WHERE id LIKE '" . $_GLOBALS['idVot'] . "'";
-                $resultInfoVot = $conn->query($qryInfoVot);
-
-                // In base all'id del quesito, stampo i dati necessari
-                if ($resultInfoVot->num_rows > 0) {
-                    while($row = $resultInfoVot->fetch_assoc()) {
-                        $_GLOBALS['numScelte'] = $row['scelteMax'];
-                        echo "<p class=\"testo\">Data apertura votazione: " . $row['inizio'] . ".<br>
-                            Data chiusura votazione: " . $row['fine'] . ".</p>
-                            <p class=\"testo\">Tipo votazione: " . $row['tipo'] . ".</p>
-                            <p class=\"testo\">Quorum: " . $row['quorum'] . "%</p>
-                            <p class=\"quesito\">" . $row['quesito'] . " (max " . $_GLOBALS['numScelte'] . " scelte)</p>";
-                    }
-                } else {
-                    $_GLOBALS['error'] = "ERROR";
-                    echo  $_GLOBALS['error'];
-                }
-
-                $conn->close();
-
-                $conn = new mysqli($servername, $username, $password, $dbname);
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-                //$conn = connettiDb();
-
-                $aus = 0;
-                $qryOpz = "SELECT id, testo FROM opzione WHERE idVotazione LIKE '" . $_GLOBALS['idVot'] . "'";
-                $resultOpz = $conn->query($qryOpz);
-                $_GLOBALS['numOpz'] = "";
-
-                // Ricevo informazioni delle opzioni aggangiate alla votazione
-                if ($resultOpz->num_rows > 0) {
-                    echo '<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
-                    while($row = $resultOpz->fetch_assoc()) {
-                        if($_GLOBALS['numScelte'] == 1) {
-                            echo "<input type=\"radio\" name=\"opzione[]\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\">
-                                <label class=\"testo\">" . $row['testo'] . "</label><br><br>";
-                            $aus++;
-                        } else {
-                            $_GLOBALS['numOpz']++;
-                            echo "<input name=\"checkbox[]\" type=\"checkbox\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\">
-                                <a class=\"testo\">" . $row['testo'] . "</a><br><br>";
-                        }
-                    }
-                    echo "<input type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\">  
-                        </form>";
-                } else {
-                    $_GLOBALS['error'] = "ERROR";
-                    echo  $_GLOBALS['error'];
-                }
-            } else {
-                echo "<p class=\"errore\">ERRORE: hai già risposto alla votazione o la votazione non esiste.</p>";
-            }    
+            <?php
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $dbname = "votazioniScolastiche";
             
-            $conn->close();
-        ?>
+                if($_GLOBALS['error'] == "") {
+                    $_SESSION['numScelte'] = "";
+
+                    $conn = new mysqli($servername, $username, $password, $dbname);
+
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+                    // $conn = connettiDb();
+
+                    $qryInfoVot = "SELECT tipo, inizio, fine, quorum, scelteMax, quesito FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
+                    $resultInfoVot = $conn->query($qryInfoVot);
+
+                    // In base all'id del quesito, stampo i dati necessari
+                    if ($resultInfoVot->num_rows > 0) {
+                        while($row = $resultInfoVot->fetch_assoc()) {
+                            $_SESSION['numScelte'] = $row['scelteMax'];
+                            echo "<p class=\"testo\">Data apertura votazione: " . $row['inizio'] . ".<br>
+                                Data chiusura votazione: " . $row['fine'] . ".</p>
+                                <p class=\"testo\">Tipo votazione: " . $row['tipo'] . ".</p>
+                                <p class=\"testo\">Quorum: " . $row['quorum'] . "%</p>
+                                <p class=\"quesito\">" . $row['quesito'] . " (max " . $_SESSION['numScelte'] . " scelte)</p>";
+                        }
+                    } else {
+                        $_GLOBALS['error'] = "ERROR";
+                        echo  $_GLOBALS['error'];
+                    }
+
+                    $conn->close();
+
+                    $conn = new mysqli($servername, $username, $password, $dbname);
+
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+                    //$conn = connettiDb();
+
+                    $aus = 0;
+                    $qryOpz = "SELECT id, testo FROM opzione WHERE idVotazione LIKE '" . $_SESSION['idVot'] . "'";
+                    $resultOpz = $conn->query($qryOpz);
+                    $_GLOBALS['numOpz'] = "";
+
+                    // Ricevo informazioni delle opzioni aggangiate alla votazione
+                    if ($resultOpz->num_rows > 0) {
+                        echo '<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
+                        while($row = $resultOpz->fetch_assoc()) {
+                            if($_SESSION['numScelte'] == 1) {
+                                echo "<input type=\"radio\" name=\"opzione[]\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\">
+                                    <label class=\"testo\">" . $row['testo'] . "</label><br><br>";
+                                $aus++;
+                            } else {
+                                $_GLOBALS['numOpz']++;
+                                echo "<input name=\"opzione[]\" type=\"checkbox\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\">
+                                    <a class=\"testo\">" . $row['testo'] . "</a><br><br>";
+                            }
+                        }
+                        echo "<input type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\">  
+                            </form>";
+                    } else {
+                        $_GLOBALS['error'] = "ERROR";
+                        echo  $_GLOBALS['error'];
+                    }
+                } else {
+                    echo "<p class=\"errore\">ERRORE: hai già risposto alla votazione o la votazione non esiste.</p>";
+                }    
+                
+                $conn->close();
+            ?>
+            <p class="errore"><?php if(isset($_SESSION['erroreScel'])) {echo 'Errore: numero scelte sbagliate.';}?></p>
         </div>
     </div>
 </body>
