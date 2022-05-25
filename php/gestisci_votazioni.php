@@ -61,16 +61,20 @@
 					$id = $row["id"];
 				// $altro = $row["altro"];
 				$content.= "<option value='$id'>$quesito</option>\n
-								</select>
-								<input type = 'submit'>";
+								</select>";
 			  }
 			}
 			echo $content;
 		?>
 		
 		<form action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>' method = 'POST'>
-			<input type="submit" name="crea" value="Crea votazione"/><br>
-			<input type="submit" name="modifica" value="Modifica votazione"/><br>
+			<br>
+			<br><input type="submit" name="crea" value="Crea votazione"/><br>
+			<br><input type="submit" name="modifica" value="Modifica votazione"/><br>
+			<br><input type="submit" name="cancella" value="Cancella votazione"/><br>
+		</form>
+		<form action='<?php echo htmlspecialchars('gestisci_opzione.php'); ?>' method = 'POST'>
+			<br><input type="submit" name="gestisci" value="Gestisci opzione"/><br>
 		</form>
 		
 		
