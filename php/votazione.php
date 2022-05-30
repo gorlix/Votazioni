@@ -90,6 +90,9 @@
                         echo  $_GLOBALS['error'];
                     }
 
+                    $lock = "START TRANSACTION";
+                    $conn->query($lock);
+
                     for($i = 0; $i < count($opzioni); $i++) {
                         $qrynVotOp = "SELECT nVoti FROM opzione WHERE id LIKE '" . $opzioni[$i] . "' AND idVotazione LIKE '" . $_SESSION['idVot'] . "'";
                         $resultnVotOp = $conn->query($qrynVotOp);
@@ -101,15 +104,20 @@
                                 $qryAggiungiVoto = "UPDATE opzione SET nVoti = '" . $row['nVoti'] . "' WHERE id='" . $opzioni[$i] . "'";
 
                                 if (!($conn->query($qryAggiungiVoto) === TRUE)) {
-                                    echo "Error updating record: " . $conn->error;
+                                    $rollback = "ROLLBACK";
+                                    $conn->query($rollback);
                                 }
                             }
                         }
                         
                     }
                 } else {
-                    $_SESSION['erroreScel'] = "error";
+                    $_GLOBALS['error'] = "ERROR";
+                    echo  $_GLOBALS['error'];
                 }
+
+                $commit = "COMMIT";
+                $conn->query($commit);
 
                 if($tipoVot == "anonimo") {
                     $qryVotAnonim = "INSERT INTO risposta(data, ora, idUtente, idVotazione) VALUES 
@@ -284,8 +292,6 @@
 
 
 <!--
-Se la votazione selezionata è aperta mostrare le opzioni per poter votare.
-Se la votazione selezionata è chiusa ma il tempo non è terminato, si mostra tutto ma con le opzioni bloccate
 Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati allora verrà mostrato un messaggio di “Risultati in elaborazione”
 Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono stati pubblicati dal creatore della votazione, allora si mostreranno le opzioni con le varie percentuali
 -->
