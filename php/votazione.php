@@ -16,9 +16,12 @@
         $username = "root";
         $password = "";
         $dbname = "votazioniScolastiche";
-        
-        session_start();
+        $error = "";
 
+        session_start();
+    
+        $_SESSION['errore'] = "";
+         
         // $hash = $_GET['hash'];
         //$hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
         $hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
@@ -42,8 +45,7 @@
                 $_SESSION['idUtente'] = $row['idUtente'];
             }
         } else {
-            $_GLOBALS['error'] = "ERROR";
-            echo  $_GLOBALS['error'];
+            $_SESSION['errore'] = "ERRORE: ash errato";
         }
 
         $conn->close();
@@ -59,6 +61,7 @@
             $password = "";
             $dbname = "votazioniScolastiche";
             $aus = 0;
+            $error = "";
 
             if(isset($_POST['opzione'])) {
             
@@ -68,10 +71,10 @@
                 $conn = new mysqli($servername, $username, $password, $dbname);
 
                 if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
+                    die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
                 }
 
-                if($aus == $_SESSION['numScelte']) {               
+                if($aus > 0 && $aus <= $_SESSION['numScelte']) {               
                     $qryTipoVot = "SELECT tipo FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
                     $resultTipoVot = $conn->query($qryTipoVot);
 
@@ -80,8 +83,7 @@
                             $tipoVot = $row['tipo'];
                         }
                     } else {
-                        $_GLOBALS['error'] = "ERROR";
-                        echo  $_GLOBALS['error'];
+                        $_SESSION['errore'] = "ERRORE: tipo di votazione inesistente o votazione non valida";
                     }
 
                     $lock = "START TRANSACTION";
@@ -105,9 +107,12 @@
                         }
                         
                     }
+                } else if($aus == 0) {
+                    $_SESSION['errore'] = "ERRORE: selezione minimo una scelta";
+                } else if($aus > $_SESSION['numScelte']) {
+                    $_SESSION['errore'] = "ERRORE: superato il numero di scelte massime";
                 } else {
-                    $_GLOBALS['error'] = "ERROR";
-                    echo  $_GLOBALS['error'];
+                    $_SESSION['errore'] = "ERRORE: numero scelte errato";
                 }
 
                 $commit = "COMMIT";
@@ -118,7 +123,7 @@
                                     ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "')";
                     
                     if(!($conn->query($qryVotAnonim) === TRUE)) {
-                        echo "Error updating record: " . $conn->error;
+                        die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
                     }
                 } else if($tipoVot == "nominale") {
                     for($i = 0; $i < count($opzioni); $i++) {
@@ -126,7 +131,7 @@
                                     ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "', '" . $opzioni[$i] . "')";
 
                         if(!($conn->query($qryVotNom) === TRUE)) {
-                            echo "Error updating record: " . $conn->error;
+                            die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
                         }
                     }
                 }
@@ -162,7 +167,7 @@
                     $conn = new mysqli($servername, $username, $password, $dbname);
 
                     if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
+                        die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
                     }
 
                     if($_GLOBALS['error'] == "") {
@@ -178,10 +183,7 @@
                                 echo $_GLOBALS['nomQuesito'];
                             }
                         } else {
-                            if($_GLOBALS['error'] == "") {
-                                $_GLOBALS['error'] = "ERROR";
-                                echo  $_GLOBALS['error'];
-                            }
+                            $_SESSION['errore'] = "ERRORE: quesito inesistente o votazione non valida";
                         }
                     }
 
@@ -203,7 +205,7 @@
                     $conn = new mysqli($servername, $username, $password, $dbname);
 
                     if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
+                        die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
                     }
                     // $conn = connettiDb();
 
@@ -221,8 +223,7 @@
                                 <p class=\"quesito\">" . $row['quesito'] . " (max " . $_SESSION['numScelte'] . " scelte)</p>";
                         }
                     } else {
-                        $_GLOBALS['error'] = "ERROR";
-                        echo  $_GLOBALS['error'];
+                        $_SESSION['errore'] = "ERRORE: votazione non valida";
                     }
 
                     $conn->close();
@@ -230,7 +231,7 @@
                     $conn = new mysqli($servername, $username, $password, $dbname);
 
                     if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
+                        die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
                     }
                     //$conn = connettiDb();
 
@@ -246,6 +247,8 @@
                             $tempoInizio = $row['inizio'];
                             $tempoFine = $row['fine'];
                         }
+                    } else {
+                        $_SESSION['errore'] = "ERRORE: votazione non valida";
                     }
 
                     // calcoli per il tempo
@@ -270,13 +273,15 @@
                     $resultOpz = $conn->query($qryOpz);
                     $_GLOBALS['numOpz'] = "";
 
-                    // Ricevo informazioni delle opzioni aggangiate alla votazione
+                    // Ricevo informazioni delle opzioni agganciate alla votazione
                     if ($resultOpz->num_rows > 0) {
                         echo '<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
                         while($row = $resultOpz->fetch_assoc()) {
                             $mediaVot = ""; 
 
-                            // DEVO DETENERE IL LOCK!! --------------------------------------------------------------------------------------------------------------------------------
+                            $lock = "START TRANSACTION";
+                            $conn->query($lock);
+
                             if($vot == "chiusa") {
                                 $qryTotVoti = "SELECT SUM(nVoti) AS totVoti FROM opzione 
                                                 WHERE idVotazione LIKE '" . $_SESSION['idVot'] . "'";
@@ -290,12 +295,16 @@
                                     while($row1 = $resultTotVoti->fetch_assoc()) {
                                         $totVoti = $row1['totVoti'];
                                     }
+                                } else {
+                                    $_SESSION['errore'] = "ERRORE: opzione non valida";
                                 }
 
                                 if($resultnVoti->num_rows > 0) {
                                     while($row2 = $resultnVoti->fetch_assoc()) {
                                         $nVoti = $row2['nVoti'];
                                     }
+                                } else {
+                                    $_SESSION['errore'] = "ERRORE: opzione non valida";
                                 }
                                 
                                 $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "%";
@@ -315,16 +324,17 @@
                         echo "<input class=\"bottone\" type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\" " . $attScelta . ">  
                             </form>";
                     } else {
-                        $_GLOBALS['error'] = "ERROR";
-                        echo  $_GLOBALS['error'];
+                        $_SESSION['errore'] = "ERRORE: votazione non valida";
                     }
                 } else {
                     echo "<p class=\"errore\">ERRORE: hai già risposto alla votazione o la votazione non esiste.</p>";
                 }    
+                $commit = "COMMIT";
+                $conn->query($commit);
                 
                 $conn->close();
             ?>
-            <p class="errore"><?php if(isset($_SESSION['erroreScel'])) {echo 'Errore: numero scelte sbagliate.';}?></p>
+            <p class="errore"><?php if(isset($_SESSION['errore'])) {echo $_SESSION['errore'];$_SESSION['errore'] = "";}?></p>
         </div>
     </div>
 </body>
@@ -335,6 +345,5 @@
 ✓ Se la votazione selezionata è chiusa ma il tempo non è terminato, si mostra tutto ma con le opzioni bloccate
 x Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati 
     allora verrà mostrato un messaggio di “Risultati in elaborazione”
-✓ Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono stati pubblicati dal creatore 
-    della votazione, allora si mostreranno le opzioni con le varie percentuali
+✓ Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono stati pubblicati dal creatore della votazione, allora si mostreranno le opzioni con le varie percentuali
 -->
