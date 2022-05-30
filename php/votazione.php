@@ -71,13 +71,7 @@
                     die("Connection failed: " . $conn->connect_error);
                 }
 
-                if($aus == $_SESSION['numScelte']) {
-                    /*
-                    ✓ bisogna fare un alter table per il nVoti, 
-                    ✓ query per vedere il tipo di votazione,
-                    ✓ bisogna creare la ternaria in base al tipo di votazione
-                    */
-                    
+                if($aus == $_SESSION['numScelte']) {               
                     $qryTipoVot = "SELECT tipo FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
                     $resultTipoVot = $conn->query($qryTipoVot);
 
@@ -272,7 +266,7 @@
                                     <a class=\"testo\">" . $row['testo'] . "</a><br><br>";
                             }
                         }
-                        echo "<input type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\" " . $attScelta . ">  
+                        echo "<input class=\"bottone\" type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\" " . $attScelta . ">  
                             </form>";
                     } else {
                         $_GLOBALS['error'] = "ERROR";
@@ -292,6 +286,7 @@
 
 
 <!--
-Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati allora verrà mostrato un messaggio di “Risultati in elaborazione”
-Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono stati pubblicati dal creatore della votazione, allora si mostreranno le opzioni con le varie percentuali
+✓ Se la votazione selezionata è chiusa ma il tempo non è terminato, si mostra tutto ma con le opzioni bloccate
+x Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati allora verrà mostrato un messaggio di “Risultati in elaborazione”
+x Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono stati pubblicati dal creatore della votazione, allora si mostreranno le opzioni con le varie percentuali
 -->
