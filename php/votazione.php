@@ -1,3 +1,9 @@
+<?php
+    /**
+    * @author Simone Negro
+    * @author Cosimo Daniele
+    */
+?>
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -54,69 +60,72 @@
             $dbname = "votazioniScolastiche";
             $aus = 0;
 
-            $opzioni = $_POST['opzione'];
+            if(isset($_POST['opzione'])) {
             
-            $aus = count($opzioni);
-            $conn = new mysqli($servername, $username, $password, $dbname);
-
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
-
-            if($aus == $_SESSION['numScelte']) {
-                /*
-                ✓ bisogna fare un alter table per il nVoti, 
-                ✓ query per vedere il tipo di votazione,
-                ✓ bisogna creare la ternaria in base al tipo di votazione
-                */
+                $opzioni = $_POST['opzione'];
                 
-                $qryTipoVot = "SELECT tipo FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
-                $resultTipoVot = $conn->query($qryTipoVot);
+                $aus = count($opzioni);
+                $conn = new mysqli($servername, $username, $password, $dbname);
 
-                if($resultTipoVot->num_rows > 0) {
-                    while($row = $resultTipoVot->fetch_assoc()) {
-                        $tipoVot = $row['tipo'];
-                    }
-                } else {
-                    $_GLOBALS['error'] = "ERROR";
-                    echo  $_GLOBALS['error'];
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
                 }
 
-                for($i = 0; $i < count($opzioni); $i++) {
-                    $qrynVotOp = "SELECT nVoti FROM opzione WHERE id LIKE '" . $opzioni[$i] . "' AND idVotazione LIKE '" . $_SESSION['idVot'] . "'";
-                    $resultnVotOp = $conn->query($qrynVotOp);
+                if($aus == $_SESSION['numScelte']) {
+                    /*
+                    ✓ bisogna fare un alter table per il nVoti, 
+                    ✓ query per vedere il tipo di votazione,
+                    ✓ bisogna creare la ternaria in base al tipo di votazione
+                    */
+                    
+                    $qryTipoVot = "SELECT tipo FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
+                    $resultTipoVot = $conn->query($qryTipoVot);
 
-                    if($resultnVotOp->num_rows > 0) {
-                        while($row = $resultnVotOp->fetch_assoc()) {
-                            $row['nVoti']++;
-                            
-                            $qryAggiungiVoto = "UPDATE opzione SET nVoti = '" . $row['nVoti'] . "' WHERE id='" . $opzioni[$i] . "'";
+                    if($resultTipoVot->num_rows > 0) {
+                        while($row = $resultTipoVot->fetch_assoc()) {
+                            $tipoVot = $row['tipo'];
+                        }
+                    } else {
+                        $_GLOBALS['error'] = "ERROR";
+                        echo  $_GLOBALS['error'];
+                    }
 
-                            if (!($conn->query($qryAggiungiVoto) === TRUE)) {
-                                echo "Error updating record: " . $conn->error;
+                    for($i = 0; $i < count($opzioni); $i++) {
+                        $qrynVotOp = "SELECT nVoti FROM opzione WHERE id LIKE '" . $opzioni[$i] . "' AND idVotazione LIKE '" . $_SESSION['idVot'] . "'";
+                        $resultnVotOp = $conn->query($qrynVotOp);
+
+                        if($resultnVotOp->num_rows > 0) {
+                            while($row = $resultnVotOp->fetch_assoc()) {
+                                $row['nVoti']++;
+                                
+                                $qryAggiungiVoto = "UPDATE opzione SET nVoti = '" . $row['nVoti'] . "' WHERE id='" . $opzioni[$i] . "'";
+
+                                if (!($conn->query($qryAggiungiVoto) === TRUE)) {
+                                    echo "Error updating record: " . $conn->error;
+                                }
                             }
                         }
+                        
                     }
+                } else {
+                    $_SESSION['erroreScel'] = "error";
+                }
+
+                if($tipoVot == "anonimo") {
+                    $qryVotAnonim = "INSERT INTO risposta(data, ora, idUtente, idVotazione) VALUES 
+                                    ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "')";
                     
-                }
-            } else {
-                $_SESSION['erroreScel'] = "error";
-            }
-
-            if($tipoVot == "anonimo") {
-                $qryVotAnonim = "INSERT INTO risposta(data, ora, idUtente, idVotazione) VALUES 
-                                ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVotazione'] . "')";
-                
-                if(!($conn->query($qryVotAnonim) === TRUE)) {
-                    echo "Error updating record: " . $conn->error;
-                }
-            } else if($tipoVot == "nominale") {
-                for($i = 0; $i < count($opzioni); $i++) {
-                    $qryVotNom = "INSERT INTO risposta(data, ora, idUtente, idVotazione, idOpzione) VALUES
-                                ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVotazione'] . "', '" . $opzioni[$i] . "')";
-
-                    if(!($conn->query($qryVotNom) === TRUE)) {
+                    if(!($conn->query($qryVotAnonim) === TRUE)) {
                         echo "Error updating record: " . $conn->error;
+                    }
+                } else if($tipoVot == "nominale") {
+                    for($i = 0; $i < count($opzioni); $i++) {
+                        $qryVotNom = "INSERT INTO risposta(data, ora, idUtente, idVotazione, idOpzione) VALUES
+                                    ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "', '" . $opzioni[$i] . "')";
+
+                        if(!($conn->query($qryVotNom) === TRUE)) {
+                            echo "Error updating record: " . $conn->error;
+                        }
                     }
                 }
             }
@@ -155,7 +164,7 @@
                     }
 
                     if($_GLOBALS['error'] == "") {
-
+                        
                         //$conn = connettiDb();   
                         $qryNomVot = "SELECT quesito FROM votazione WHERE ID LIKE '" . $_SESSION['idVot'] . "'";
                         $resultNomVot = $conn->query($qryNomVot);
@@ -181,10 +190,10 @@
         <?php //include "Navbar.php"; ?>
         <div class="contenuto">
             <?php
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "votazioniScolastiche";
+                $servername = "localhost";
+                $username = "root";
+                $password = "";
+                $dbname = "votazioniScolastiche";
             
                 if($_GLOBALS['error'] == "") {
                     $_SESSION['numScelte'] = "";
@@ -224,25 +233,38 @@
                     //$conn = connettiDb();
 
                     $aus = 0;
+
                     $qryOpz = "SELECT id, testo FROM opzione WHERE idVotazione LIKE '" . $_SESSION['idVot'] . "'";
                     $resultOpz = $conn->query($qryOpz);
                     $_GLOBALS['numOpz'] = "";
+
+                    //----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                    $attScelta = "enable";
+
+                    $qryVotChiusa = "SELECT idVotazione FROM risposta 
+                                    WHERE idUtente LIKE '" . $_SESSION['idUtente'] ."' AND idVotazione LIKE '" . $_SESSION['idVot'] . "'";
+                    $resultVotChiusa = $conn->query($qryVotChiusa);
+
+                    if($resultVotChiusa->num_rows > 0) {
+                        $attScelta = "disabled";
+                    } 
 
                     // Ricevo informazioni delle opzioni aggangiate alla votazione
                     if ($resultOpz->num_rows > 0) {
                         echo '<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
                         while($row = $resultOpz->fetch_assoc()) {
                             if($_SESSION['numScelte'] == 1) {
-                                echo "<input type=\"radio\" name=\"opzione[]\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\">
+                                echo "<input type=\"radio\" name=\"opzione[]\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\" " . $attScelta . ">
                                     <label class=\"testo\">" . $row['testo'] . "</label><br><br>";
                                 $aus++;
                             } else {
                                 $_GLOBALS['numOpz']++;
-                                echo "<input name=\"opzione[]\" type=\"checkbox\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\">
+                                echo "<input name=\"opzione[]\" type=\"checkbox\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\" " .$attScelta . ">
                                     <a class=\"testo\">" . $row['testo'] . "</a><br><br>";
                             }
                         }
-                        echo "<input type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\">  
+                        echo "<input type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\" " . $attScelta . ">  
                             </form>";
                     } else {
                         $_GLOBALS['error'] = "ERROR";
@@ -266,7 +288,4 @@ Se la votazione selezionata è aperta mostrare le opzioni per poter votare.
 Se la votazione selezionata è chiusa ma il tempo non è terminato, si mostra tutto ma con le opzioni bloccate
 Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati allora verrà mostrato un messaggio di “Risultati in elaborazione”
 Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono stati pubblicati dal creatore della votazione, allora si mostreranno le opzioni con le varie percentuali
-Se la votazione è anonima, in risposta la chiave esterna sull’opzione non viene salvata, se invece è nominale si.
-In entrambi i tipi di votazione si incrementa il numero di voti sull’opzione.
-Se la votazione è con scelte multiple si inserirà nella tabella risposta N record in base alle N risposte. Prima di inserirle bisogna controllare che le N risposte date non siano maggiori del numero massimo di opzioni per cui si può rispondere. Se succede mostrare un errore e non fare nulla. Altrimenti con una transazione effettuare tutte le operazioni necessarie. 
-            -->
+-->
