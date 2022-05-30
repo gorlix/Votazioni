@@ -95,3 +95,8 @@ td{
     font-size: 20px;
     align-content:left;
 }
+
+.bottone{
+    background-color: rgba(230, 126, 34, 1);
+    padding: 3px;
+}
