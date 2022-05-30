@@ -298,18 +298,18 @@
                                     }
                                 }
                                 
-                                $mediaVot = round((100 * $nVoti) / $totVoti, 1) . "%";
+                                $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "%";
                             }
 
                             if($_SESSION['numScelte'] == 1) {
                                 echo "<input type=\"radio\" name=\"opzione[]\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\" " . $attScelta . ">
-                                    <label class=\"testo\">" . $row['testo'] . " - " . $mediaVot . "</label><br><br>";
+                                    <label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label><br><br>";
                                 $aus++;
                                 
                             } else {
                                 $_GLOBALS['numOpz']++;
                                 echo "<input name=\"opzione[]\" type=\"checkbox\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\" " .$attScelta . ">
-                                    <a class=\"testo\">" . $row['testo'] . " - " . $mediaVot . "</a><br><br>";
+                                    <a class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</a><br><br>";
                             }
                         }
                         echo "<input class=\"bottone\" type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\" " . $attScelta . ">  
