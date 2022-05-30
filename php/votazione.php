@@ -236,13 +236,27 @@
 
                     $aus = 0;
 
-                    $qryOpz = "SELECT id, testo FROM opzione WHERE idVotazione LIKE '" . $_SESSION['idVot'] . "'";
-                    $resultOpz = $conn->query($qryOpz);
-                    $_GLOBALS['numOpz'] = "";
-
                     //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+                    $qryTempo = "SELECT inizio, fine FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
+                    $resultTempo = $conn->query($qryTempo);
+                    
+                    if($resultTempo->num_rows > 0) {
+                        while($row = $resultTempo->fetch_assoc()) {
+                            $tempoInizio = $row['inizio'];
+                            $tempoFine = $row['fine'];
+                        }
+                    }
+
+                    // calcoli per il tempo
+                    $dataCorrente = date("Y-m-d h:i:s");
                     $attScelta = "enable";
+                    $vot = "aperta";
+
+                    if($dataCorrente < $tempoInizio || $dataCorrente > $tempoFine) {
+                        $attScelta = "disabled";
+                        $vot = "chiusa";    
+                    }
 
                     $qryVotChiusa = "SELECT idVotazione FROM risposta 
                                     WHERE idUtente LIKE '" . $_SESSION['idUtente'] ."' AND idVotazione LIKE '" . $_SESSION['idVot'] . "'";
@@ -252,18 +266,50 @@
                         $attScelta = "disabled";
                     } 
 
+                    $qryOpz = "SELECT id, testo FROM opzione WHERE idVotazione LIKE '" . $_SESSION['idVot'] . "'";
+                    $resultOpz = $conn->query($qryOpz);
+                    $_GLOBALS['numOpz'] = "";
+
                     // Ricevo informazioni delle opzioni aggangiate alla votazione
                     if ($resultOpz->num_rows > 0) {
                         echo '<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
                         while($row = $resultOpz->fetch_assoc()) {
+                            $mediaVot = ""; 
+
+                            // DEVO DETENERE IL LOCK!! --------------------------------------------------------------------------------------------------------------------------------
+                            if($vot == "chiusa") {
+                                $qryTotVoti = "SELECT SUM(nVoti) AS totVoti FROM opzione 
+                                                WHERE idVotazione LIKE '" . $_SESSION['idVot'] . "'";
+
+                                $qrynVoti = "SELECT nVoti FROM opzione WHERE id LIKE '" . $row['id'] . "'";
+
+                                $resultTotVoti = $conn->query($qryTotVoti);
+                                $resultnVoti = $conn->query($qrynVoti);
+
+                                if($resultTotVoti->num_rows > 0) {
+                                    while($row1 = $resultTotVoti->fetch_assoc()) {
+                                        $totVoti = $row1['totVoti'];
+                                    }
+                                }
+
+                                if($resultnVoti->num_rows > 0) {
+                                    while($row2 = $resultnVoti->fetch_assoc()) {
+                                        $nVoti = $row2['nVoti'];
+                                    }
+                                }
+                                
+                                $mediaVot = round((100 * $nVoti) / $totVoti, 1) . "%";
+                            }
+
                             if($_SESSION['numScelte'] == 1) {
                                 echo "<input type=\"radio\" name=\"opzione[]\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\" " . $attScelta . ">
-                                    <label class=\"testo\">" . $row['testo'] . "</label><br><br>";
+                                    <label class=\"testo\">" . $row['testo'] . " - " . $mediaVot . "</label><br><br>";
                                 $aus++;
+                                
                             } else {
                                 $_GLOBALS['numOpz']++;
                                 echo "<input name=\"opzione[]\" type=\"checkbox\" id=\"" . $aus . "\" value=\"" . $row['id'] . "\" " .$attScelta . ">
-                                    <a class=\"testo\">" . $row['testo'] . "</a><br><br>";
+                                    <a class=\"testo\">" . $row['testo'] . " - " . $mediaVot . "</a><br><br>";
                             }
                         }
                         echo "<input class=\"bottone\" type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\" " . $attScelta . ">  
@@ -287,6 +333,8 @@
 
 <!--
 ✓ Se la votazione selezionata è chiusa ma il tempo non è terminato, si mostra tutto ma con le opzioni bloccate
-x Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati allora verrà mostrato un messaggio di “Risultati in elaborazione”
-x Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono stati pubblicati dal creatore della votazione, allora si mostreranno le opzioni con le varie percentuali
+x Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati 
+    allora verrà mostrato un messaggio di “Risultati in elaborazione”
+✓ Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono stati pubblicati dal creatore 
+    della votazione, allora si mostreranno le opzioni con le varie percentuali
 -->
