@@ -50,9 +50,31 @@
                         <p class='titoli'>AGGIUNGI OPZIONI AL QUESITO:</p>
                         <p class='titoli'>" . $row['quesito'] . "</p>
                     </center>";
-                
-                echo "<center><input type='text'></center><br>";
+                echo "<form method='POST' action='" . <?php
+                                                            $server = "localhost";
+                                                            $username = "root";
+                                                            $password = "";
+                                                            $dbName = "votazioniscolastiche";
+                                                            $idVotazione = 1;
+
+                                                            if ($conn->connect_error) {
+                                                                die("Connection failed: " . $conn->connect_error);
+                                                            }
+
+                                                            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                                                                $opzione = $_SERVER["opzione"];
+                                                                $idVotazione = $_SERVER["id"];
+                                                            }
+
+                                                            
+
+
+                                                            
+                                                        ?> . "'>"
+                echo "<center><input type='text' name = 'opzione'></center><br>";
+                echo "<center><input type='hidden' name='id' value=" . $idVotazione . "/></center>";
                 echo "<center><input type='submit' name='crea' value='Aggiungi opzione'/></center>";
+                echo "</form>"
             
             ?>
         </div>
