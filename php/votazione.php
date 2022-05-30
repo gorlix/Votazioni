@@ -27,14 +27,12 @@
         $hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
         //$hash = "ash sbagliato";
 
-        /*$conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = new mysqli($servername, $username, $password, $dbname);
 
         if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }*/
+            die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
+        }
         
-        $conn = connettiDb();
-
         $qryIdVot = "SELECT idVotazione, idUtente FROM esegue WHERE hash LIKE '$hash'";
         $resultIdVot = $conn->query($qryIdVot);
 
