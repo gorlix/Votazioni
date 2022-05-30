@@ -5,7 +5,7 @@
     Crea variabili di sessione
 -->
     <?php
-        //require __DIR__ . '/sharedFunctions.php';
+        require __DIR__ . '/sharedFunctions.php';
         $servername = "localhost";
         $username = "root";
         $password = "";
@@ -18,12 +18,13 @@
         $hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
         //$hash = "ash sbagliato";
 
-        $conn = new mysqli($servername, $username, $password, $dbname);
+        /*$conn = new mysqli($servername, $username, $password, $dbname);
 
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
-        }
-        //$conn = connettiDb();
+        }*/
+        
+        $conn = connettiDb();
 
         $qryIdVot = "SELECT idVotazione, idUtente FROM esegue WHERE hash LIKE '$hash'";
         $resultIdVot = $conn->query($qryIdVot);
@@ -66,7 +67,7 @@
                 /*
                 ✓ bisogna fare un alter table per il nVoti, 
                 ✓ query per vedere il tipo di votazione,
-                x bisogna creare la ternaria in base al tipo di votazione
+                ✓ bisogna creare la ternaria in base al tipo di votazione
                 */
                 
                 $qryTipoVot = "SELECT tipo FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
@@ -98,14 +99,27 @@
                     }
                     
                 }
-
-
             } else {
                 $_SESSION['erroreScel'] = "error";
             }
-           // $aus = array();
 
-            //for($i = 0; i < $_GLOBALS['n'])
+            if($tipoVot == "anonimo") {
+                $qryVotAnonim = "INSERT INTO risposta(data, ora, idUtente, idVotazione) VALUES 
+                                ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVotazione'] . "')";
+                
+                if(!($conn->query($qryVotAnonim) === TRUE)) {
+                    echo "Error updating record: " . $conn->error;
+                }
+            } else if($tipoVot == "nominale") {
+                for($i = 0; $i < count($opzioni); $i++) {
+                    $qryVotNom = "INSERT INTO risposta(data, ora, idUtente, idVotazione, idOpzione) VALUES
+                                ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVotazione'] . "', '" . $opzioni[$i] . "')";
+
+                    if(!($conn->query($qryVotNom) === TRUE)) {
+                        echo "Error updating record: " . $conn->error;
+                    }
+                }
+            }
         }
     ?>
 <!----------------------------------------------------------------------
