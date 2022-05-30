@@ -130,3 +130,7 @@ td{
 
     font-style: italic;
 }
+.bottone{
+    background-color: rgba(230, 126, 34, 1);
+    padding: 3px;
+}
