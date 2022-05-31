@@ -21,6 +21,7 @@
     ?>
     <div class="contenuto">
         <?php
+        /*
         echo "<h1>Operazioni utente</h1>";
         echo "<h3>Seleziona utente </h3>";
         $str = "<select name='nome'>";
@@ -35,28 +36,36 @@
         }
         $str.="</select>";
         echo $str;
+        */
         ?>
         <br>
         <br>
-        <form action='gestisci_utente.php' method='post'>
+        <form action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>' method='post'>
             <input type='submit' name='submit' value='Crea utente'>
             <input type='submit' name='submit' value='Modifica utente'>
             <input type='submit' name='submit' value='Elimina utente'>
         </form>
+        <?php
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $aus = $_POST["submit"];
+                if($aus  == "Crea utente"){
+                    stampaFormCreazioneUtente();
+                }else if($aus  == "Modifica utente"){
+                    stampaFormModificaUtente("mail.prova@mail.com");
+                }else if($aus == "EliminaUtente"){
+                    eliminaUtente();
+                }else if($aus == "SalvaModificaUtente"){
+                    modificaUtente();
+                }else if($aus == "SalvaCreazioneUtente"){
+                    creaUtente();
+                }else if ($aus == "add_usr_to_grp"){
+                    aggiungiUntenteAlGruppo();
+                }else if($aus == "remove_usr_from_grp"){
+                    rimuoviUtenteDalGruppo();
+                }
+            }
+        ?>
 
-        <form action="gestisci_utente.php" method="post">
-            <br><br>
-            <h2>Crea utente</h2>
-            <label>Mail</label>
-            <input type="text" name="mail_inpt">
-            <label>Password</label>
-            <input type="text" name="pw_inpt"><br><br>
-            <label>Nome</label>
-            <input type="text" name="nome_inpt">
-            <label>Cognome</label>
-            <input type="text" name="cognome_inpt"><br><br>
-            <input type="submit" name="submit" value="Salva operazione">
-        </form>
         <?php
         echo "<h2>Gestione gruppi utente</h2><h3>Seleziona gruppo</h3>";
         $str = "<select name='nome'>";
@@ -72,31 +81,84 @@
         $str.="</select>";
         echo $str;
 
-        echo "<form action='gestisci_utente.php' method='post'>
+        echo "<form action='htmlspecialchars($_SERVER[PHP_SELF])' method='post'>
             <br><br>
             <input type='submit' name='add_usr_to_grp' value='Aggiungi al gruppo'>
             <input type='submit' name='rem_usr_frm_grp' value='Rimuovi dal gruppo'><br><br>
         </form>";
-        echo "<h4>Gruppi già associati</h4>";
-        $mail_selected = "ciao@gmail.com";
-        echo "Mail: ".$mail_selected."<br>";
-        $conn = connettiDb();
-        $str = "<table style='border: 1px solid black'><tr style='border: 1px solid black'><th style='border: 1px solid black'>Nome</th></tr>";
-        $query = "SELECT nome FROM gruppo INNER JOIN appartienea app ON app.idGruppo = g.id WHERE app.idUtente = (SELECT id FROM utente WHERE mail = '$mail_selected')";
-        $conn = connettiDb();
-        echo $query;
-        $ris = $conn->query($query);
-        if ($ris->num_rows > 0) {
-            while($row = $ris->fetch_assoc()) {
-                $str .= "<tr style='border: 1px solid black'><td style='border: 1px solid black'>".$row["nome"]."</td></tr>";
-            }
-        }
-        $str.="</table>";
-        echo $str;
+        //stampaGruppi("mail.prova@mail.com");
         ?>
-
-
     </div>
 </div>
 </body>
 </html>
+
+<?php
+function stampaGruppi($mail_selected){
+    echo "<h4>Gruppi già associati</h4>";
+    echo "Mail: ".$mail_selected."<br><br>";
+    $conn = connettiDb();
+    $str = "<table style='border: 1px solid black'><tr style='border: 1px solid black'><th style='border: 1px solid black'>Nome</th></tr>";
+
+    $query = "SELECT nome FROM gruppo g INNER JOIN appartienea app ON app.idGruppo = g.id WHERE app.idUtente = (SELECT id FROM utente WHERE mail = '$mail_selected')";
+    $conn = connettiDb();
+    //echo $query;
+    $ris = $conn->query($query);
+    if ($ris->num_rows > 0) {
+        while($row = $ris->fetch_assoc()) {
+            $str .= "<tr style='border: 1px solid black'><td style='border: 1px solid black'>".$row["nome"]."</td></tr>";
+        }
+    }
+    $str.="</table>";
+    echo $str;
+}
+
+function stampaFormCreazioneUtente(){
+    echo "<form action='htmlspecialchars($_SERVER[PHP_SELF])' method='post'><br><br>
+            <h2>Crea utente</h2>
+            <label>Mail</label>
+                <input type='text' name='mail_inpt'>
+            <label>Password</label>
+                <input type='text' name='pw_inpt'><br><br>
+            <label>Nome</label>
+                <input type='text' name='nome_inpt'>
+            <label>Cognome</label>
+                <input type='text' name='cognome_inpt'><br><br>
+            <input type='submit' name='submit' value='SalvaCreazioneUtente'>
+         </form>";
+}
+
+function stampaFormModificaUtente($mail_selected){
+    echo "<form action='htmlspecialchars($_SERVER[PHP_SELF])' method='post'><br><br>
+            <h2>Modifica utente</h2>
+            <label>Mail</label>
+                <input type='text' name='mail_inpt' value='$mail_selected'>
+            <label>Password</label>
+                <input type='text' name='pw_inpt'><br><br>
+            <label>Nome</label>
+                <input type='text' name='nome_inpt'>
+            <label>Cognome</label>
+                <input type='text' name='cognome_inpt'><br><br>
+            <input type='submit' name='submit' value='SalvaModificaUtente'>
+         </form>";
+}
+
+function eliminaUtente($mail_selected){
+    //Eliminazione utente dal DB
+}
+
+function modificaUtente($new_pw, $new_nome, $new_cognome, $new_mail){
+    //Modifica utente nel DB
+}
+
+function creaUtente($pw, $nome, $cognome, $mail){
+    //Creazione utente nel DB
+}
+
+function aggiungiUntenteAlGruppo($id_User, $id_Group){
+    //Aggiungi utente al gruppo
+}
+
+function rimuoviUtenteDalGruppo($id_User, $id_Group){
+    //Rimuovi utente dal gruppo
+}
