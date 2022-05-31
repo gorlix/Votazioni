@@ -32,6 +32,7 @@ create table votazione(
   id int NOT NULL AUTO_INCREMENT,
   quesito varchar(40) NOT NULL,
   tipo ENUM('anonimo','nominale'),
+  pubblica boolean DEFAULT false,
   inizio dateTime NOT NULL,
   fine dateTime NOT NULL,
   quorum float NOT NULL,
