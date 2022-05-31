@@ -28,21 +28,6 @@
         <div class="contenuto">
             <center>
             <h1 style="align:center; font-family: 'Roboto Mono', monospace;font-family: 'Space Mono', monospace;">Lista Votazioni</h1>
-			<?php
-				if(isset($_POST['crea']))  
-				{
-					echo "crea";
-				}
-				if(isset($_POST['modifica']))  
-				{
-					echo "modifica";
-				}
-				if(isset($_POST['cancella']))  
-				{
-					echo "cancella";
-				}
-			?>
-			
 		<?php
 			$server = "localhost";
 			$username = "root";

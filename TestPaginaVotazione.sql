@@ -1,0 +1,416 @@
+-- phpMyAdmin SQL Dump
+-- version 4.7.0
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Creato il: Mag 25, 2022 alle 08:12
+-- Versione del server: 5.7.17
+-- Versione PHP: 5.6.30
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `azienda`
+--
+DROP DATABASE IF EXISTS `azienda`;
+CREATE DATABASE IF NOT EXISTS `azienda` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `azienda`;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `dettaglio_ordine`
+--
+
+DROP TABLE IF EXISTS `dettaglio_ordine`;
+CREATE TABLE IF NOT EXISTS `dettaglio_ordine` (
+  `ID_ordine` int(11) NOT NULL,
+  `ID_prodotto` int(11) NOT NULL,
+  `quantita` int(11) NOT NULL,
+  PRIMARY KEY (`ID_ordine`,`ID_prodotto`),
+  KEY `ID_prodotto` (`ID_prodotto`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `dettaglio_ordine`
+--
+
+INSERT INTO `dettaglio_ordine` (`ID_ordine`, `ID_prodotto`, `quantita`) VALUES
+(4, 2, 1),
+(5, 2, 0),
+(6, 2, 0),
+(7, 2, 0),
+(8, 2, 0),
+(9, 1, 1),
+(10, 1, 6),
+(10, 2, 2),
+(11, 1, 6),
+(11, 2, 2),
+(12, 1, 2),
+(12, 4, 2),
+(13, 7, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ordine`
+--
+
+DROP TABLE IF EXISTS `ordine`;
+CREATE TABLE IF NOT EXISTS `ordine` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ID_utente` int(11) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `ordine`
+--
+
+INSERT INTO `ordine` (`ID`, `ID_utente`) VALUES
+(2, 1),
+(3, 1),
+(4, 1),
+(5, 1),
+(6, 1),
+(7, 1),
+(8, 1),
+(9, 1),
+(10, 1),
+(11, 1),
+(12, 1),
+(13, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `prodotto`
+--
+
+DROP TABLE IF EXISTS `prodotto`;
+CREATE TABLE IF NOT EXISTS `prodotto` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Nome` varchar(40) NOT NULL,
+  `Descrizione` varchar(255) DEFAULT NULL,
+  `Categoria` varchar(40) NOT NULL,
+  `Immagine` varchar(40) NOT NULL,
+  `Prezzo` decimal(6,2) NOT NULL,
+  `Giacenza` int(11) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `prodotto`
+--
+
+INSERT INTO `prodotto` (`ID`, `Nome`, `Descrizione`, `Categoria`, `Immagine`, `Prezzo`, `Giacenza`) VALUES
+(1, 'Aspirapolvere Dyson', 'Aspirapolvere senza filo cyclone V10', 'Elettrodomestici', 'aspirapolvere.png', '125.00', 34),
+(2, 'Oreo Golden', 'Oreo al gusto vaniglia', 'Alimentare', 'oreo.png', '2.50', 55),
+(3, 'PlayStation 5', 'Colore bianco con un joystick', 'Videogiochi', 'ps5.png', '849.00', 5),
+(4, 'Tavolo da Ping Pong', 'Tavolo + due racchette + pallina da gioco', 'Giochi', 'pingpong.png', '489.90', 8),
+(5, 'Palla da calcio Nike', 'Palla nike colore giallo e nero', 'Sport', 'pallacalcio.png', '16.00', 24),
+(6, 'Collanina oro', 'Collanina oro con pendente', 'Gioielleria', 'collana.png', '230.00', 3),
+(7, 'Matita faber castell', 'Matita HB', 'Cancelleria', 'matita.png', '2.30', 135),
+(8, 'Quaderno a righe', 'Quaderno giallo', 'Cancelleria', 'quaderno.png', '4.60', 69),
+(9, 'Cassa JBL Go 3', 'Cassa bluetooth', 'Elettronica', 'jbl.png', '39.90', 12),
+(10, 'Profumo Chanel N.5', '', 'Profumeria', 'profumo.png', '59.20', 21),
+(11, 'Caricatore iPhone', '', 'Elettronica', 'caricatorel.png', '20.00', 56),
+(12, 'Caricatore tipo C', '', 'Elettronica', 'caricatorec.png', '12.90', 83),
+(13, 'Vaso in terracotta', 'Vaso semicircolare con decorazione', 'Decorazione per esterni', 'vaso.png', '163.90', 15);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `utente`
+--
+
+DROP TABLE IF EXISTS `utente`;
+CREATE TABLE IF NOT EXISTS `utente` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Username` varchar(40) NOT NULL,
+  `Password` varchar(40) NOT NULL,
+  `Nome` varchar(40) NOT NULL,
+  `Debito` float NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `utente`
+--
+
+INSERT INTO `utente` (`ID`, `Username`, `Password`, `Nome`, `Debito`) VALUES
+(1, 'Beast', 'a', 'Simone', 3994.6),
+(2, 'Gabbo', 'w', 'Gabriele', 0);
+--
+-- Database: `ufficio`
+--
+DROP DATABASE IF EXISTS `ufficio`;
+CREATE DATABASE IF NOT EXISTS `ufficio` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `ufficio`;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `utente`
+--
+
+DROP TABLE IF EXISTS `utente`;
+CREATE TABLE IF NOT EXISTS `utente` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Nome` varchar(40) NOT NULL,
+  `Username` varchar(40) NOT NULL,
+  `Password` varchar(40) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `utente`
+--
+
+INSERT INTO `utente` (`ID`, `Nome`, `Username`, `Password`) VALUES
+(47, 'simone', 'ngr', 'aaa'),
+(44, 'gabriele', 'nolw', 'dsfcf'),
+(46, 'simone', 'BeastOfShadow', 'dscsa'),
+(48, 'simone', 'eee', 'aaa'),
+(49, 'a', 'a', 'a');
+--
+-- Database: `votazioniscolastiche`
+--
+DROP DATABASE IF EXISTS `votazioniscolastiche`;
+CREATE DATABASE IF NOT EXISTS `votazioniscolastiche` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `votazioniscolastiche`;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `appartienea`
+--
+
+DROP TABLE IF EXISTS `appartienea`;
+CREATE TABLE IF NOT EXISTS `appartienea` (
+  `idUtente` int(11) NOT NULL,
+  `idGruppo` int(11) NOT NULL,
+  PRIMARY KEY (`idUtente`,`idGruppo`),
+  KEY `idGruppo` (`idGruppo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `appartienea`
+--
+
+INSERT INTO `appartienea` (`idUtente`, `idGruppo`) VALUES
+(1, 1),
+(1, 2),
+(2, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esegue`
+--
+
+DROP TABLE IF EXISTS `esegue`;
+CREATE TABLE IF NOT EXISTS `esegue` (
+  `idUtente` int(11) NOT NULL,
+  `idVotazione` int(11) NOT NULL,
+  `hash` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`idUtente`,`idVotazione`),
+  UNIQUE KEY `hash` (`hash`),
+  KEY `idVotazione` (`idVotazione`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `esegue`
+--
+
+INSERT INTO `esegue` (`idUtente`, `idVotazione`, `hash`) VALUES
+(1, 1, 'A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206'),
+(2, 2, 'C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `gruppo`
+--
+
+DROP TABLE IF EXISTS `gruppo`;
+CREATE TABLE IF NOT EXISTS `gruppo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `gruppo`
+--
+
+INSERT INTO `gruppo` (`id`, `nome`) VALUES
+(1, 'Admin'),
+(2, 'Crea_votazione');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `opzione`
+--
+
+DROP TABLE IF EXISTS `opzione`;
+CREATE TABLE IF NOT EXISTS `opzione` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `testo` varchar(40) NOT NULL,
+  `nVoti` int(11) NOT NULL DEFAULT '0',
+  `idVotazione` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idVotazione` (`idVotazione`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `opzione`
+--
+
+INSERT INTO `opzione` (`id`, `testo`, `nVoti`, `idVotazione`) VALUES
+(1, 'Si', 0, 1),
+(2, 'No', 0, 1),
+(3, 'Roma', 0, 2),
+(4, 'Milano', 0, 2),
+(5, 'Torino', 0, 2),
+(6, 'Genova', 0, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `recupero`
+--
+
+DROP TABLE IF EXISTS `recupero`;
+CREATE TABLE IF NOT EXISTS `recupero` (
+  `hash` varchar(256) NOT NULL,
+  `idUtente` int(11) NOT NULL,
+  `dataScadenza` date NOT NULL,
+  `oraScadenza` time NOT NULL,
+  PRIMARY KEY (`hash`),
+  KEY `idUtente` (`idUtente`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `risposta`
+--
+
+DROP TABLE IF EXISTS `risposta`;
+CREATE TABLE IF NOT EXISTS `risposta` (
+  `data` date NOT NULL,
+  `ora` time NOT NULL,
+  `idUtente` int(11) NOT NULL,
+  `idVotazione` int(11) NOT NULL,
+  `idOpzione` int(11) NOT NULL,
+  PRIMARY KEY (`idUtente`,`idVotazione`,`idOpzione`),
+  KEY `idVotazione` (`idVotazione`),
+  KEY `idOpzione` (`idOpzione`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `utente`
+--
+
+DROP TABLE IF EXISTS `utente`;
+CREATE TABLE IF NOT EXISTS `utente` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pw` varchar(512) NOT NULL,
+  `mail` varchar(50) NOT NULL,
+  `nome` varchar(30) NOT NULL,
+  `cognome` varchar(30) NOT NULL,
+  `forzaModificaPW` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `utente`
+--
+
+INSERT INTO `utente` (`id`, `pw`, `mail`, `nome`, `cognome`, `forzaModificaPW`) VALUES
+(1, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'mail.prova@mail.com', 'Utente', 'Prova', 0),
+(2, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'mail.prova2@mail.com', 'Utente2', 'Prova2', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `votazione`
+--
+
+DROP TABLE IF EXISTS `votazione`;
+CREATE TABLE IF NOT EXISTS `votazione` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `quesito` varchar(40) NOT NULL,
+  `tipo` enum('anonimo','nominale') DEFAULT NULL,
+  `inizio` datetime NOT NULL,
+  `fine` datetime NOT NULL,
+  `quorum` float NOT NULL,
+  `scelteMax` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `votazione`
+--
+
+INSERT INTO `votazione` (`id`, `quesito`, `tipo`, `inizio`, `fine`, `quorum`, `scelteMax`) VALUES
+(1, 'Scuola al Sabato?', 'anonimo', '2022-01-01 00:00:00', '2022-02-02 00:00:00', 75, 1),
+(2, 'Dove preferisci andare in gita?', 'nominale', '2022-01-01 00:00:00', '2022-06-02 00:00:00', 75, 2),
+(3, 'Creiamo il reparto Gianni?', 'anonimo', '2022-01-01 00:00:00', '2022-03-08 00:00:00', 75, 1),
+(4, 'è meglio C o Pyton?', 'anonimo', '2022-01-01 00:00:00', '2023-02-02 00:00:00', 75, 1);
+
+--
+-- Limiti per le tabelle scaricate
+--
+
+--
+-- Limiti per la tabella `appartienea`
+--
+ALTER TABLE `appartienea`
+  ADD CONSTRAINT `appartienea_ibfk_1` FOREIGN KEY (`idUtente`) REFERENCES `utente` (`id`),
+  ADD CONSTRAINT `appartienea_ibfk_2` FOREIGN KEY (`idGruppo`) REFERENCES `gruppo` (`id`);
+
+--
+-- Limiti per la tabella `esegue`
+--
+ALTER TABLE `esegue`
+  ADD CONSTRAINT `esegue_ibfk_1` FOREIGN KEY (`idUtente`) REFERENCES `utente` (`id`),
+  ADD CONSTRAINT `esegue_ibfk_2` FOREIGN KEY (`idVotazione`) REFERENCES `votazione` (`id`);
+
+--
+-- Limiti per la tabella `opzione`
+--
+ALTER TABLE `opzione`
+  ADD CONSTRAINT `opzione_ibfk_1` FOREIGN KEY (`idVotazione`) REFERENCES `votazione` (`id`);
+
+--
+-- Limiti per la tabella `recupero`
+--
+ALTER TABLE `recupero`
+  ADD CONSTRAINT `recupero_ibfk_1` FOREIGN KEY (`idUtente`) REFERENCES `utente` (`id`);
+
+--
+-- Limiti per la tabella `risposta`
+--
+ALTER TABLE `risposta`
+  ADD CONSTRAINT `risposta_ibfk_1` FOREIGN KEY (`idUtente`) REFERENCES `utente` (`id`),
+  ADD CONSTRAINT `risposta_ibfk_2` FOREIGN KEY (`idVotazione`) REFERENCES `votazione` (`id`),
+  ADD CONSTRAINT `risposta_ibfk_3` FOREIGN KEY (`idOpzione`) REFERENCES `opzione` (`id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
