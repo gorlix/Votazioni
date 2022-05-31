@@ -22,6 +22,7 @@
         session_start();
     
         $_SESSION['errore'] = "";
+        $_SESSION['voto'] = "";
          
         // $hash = $_GET['hash'];
         //$hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
@@ -61,83 +62,95 @@
             $dbname = "votazioniScolastiche";
             $aus = 0;
             $error = "";
+            $tipoVot = "";
 
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            if ($conn->connect_error) {
+                die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
+            }
             // DOBBIAMO FARE QUERY PER VEDERE SE HA GIà VOTATO
-            if(isset($_POST['opzione'])) {
-            
-                $opzioni = $_POST['opzione'];
+            $qryVotato = "SELECT id FROM risposta WHERE idUtente = '" . $_SESSION['idUtente'] . "' AND  idVotazione = '" . $_SESSION['idVot'] . "'";
+            $resultVotato = $conn->query($qryVotato);
+
+            if($resultVotato->num_rows > 0) {
+                $_SESSION['voto'] = "HAI GIÀ VOTATO";
+            } else {
+          
+                if(isset($_POST['opzione'])) {
                 
-                $aus = count($opzioni);
-                $conn = new mysqli($servername, $username, $password, $dbname);
+                    $opzioni = $_POST['opzione'];
+                    
+                    $aus = count($opzioni);
 
-                if ($conn->connect_error) {
-                    die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
-                }
 
-                /**
-                 * @todo 
-                 * DA MIGLIORARE CONTROLLI
-                */ 
-                if($aus > 0 && $aus <= $_SESSION['numScelte']) {               
-                    $qryTipoVot = "SELECT tipo FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
-                    $resultTipoVot = $conn->query($qryTipoVot);
+                    /**
+                     * @todo 
+                     * DA MIGLIORARE CONTROLLI
+                    */ 
+                    if($aus > 0 && $aus <= $_SESSION['numScelte']) {               
+                        $qryTipoVot = "SELECT tipo FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
+                        $resultTipoVot = $conn->query($qryTipoVot);
 
-                    if($resultTipoVot->num_rows > 0) {
-                        while($row = $resultTipoVot->fetch_assoc()) {
-                            $tipoVot = $row['tipo'];
-                        }
-                    } else {
-                        $_SESSION['errore'] = "ERRORE: tipo di votazione inesistente o votazione non valida";
-                    }
-
-                    $lock = "START TRANSACTION";
-                    $conn->query($lock);
-
-                    for($i = 0; $i < count($opzioni); $i++) {
-                        $qrynVotOp = "SELECT nVoti FROM opzione WHERE id LIKE '" . $opzioni[$i] . "' AND idVotazione LIKE '" . $_SESSION['idVot'] . "'";
-                        $resultnVotOp = $conn->query($qrynVotOp);
-
-                        if($resultnVotOp->num_rows > 0) {
-                            while($row = $resultnVotOp->fetch_assoc()) {
-                                $row['nVoti']++;
-                                
-                                $qryAggiungiVoto = "UPDATE opzione SET nVoti = '" . $row['nVoti'] . "' WHERE id='" . $opzioni[$i] . "'";
-
-                                if (!($conn->query($qryAggiungiVoto) === TRUE)) {
-                                    $rollback = "ROLLBACK";
-                                    $conn->query($rollback);
-                                }
+                        if($resultTipoVot->num_rows > 0) {
+                            while($row = $resultTipoVot->fetch_assoc()) {
+                                $tipoVot = $row['tipo'];
                             }
+                        } else {
+                            $_SESSION['errore'] = "ERRORE: tipo di votazione inesistente o votazione non valida";
                         }
                         
+                        $lock = "START TRANSACTION";
+                        $conn->query($lock);
+
+                        for($i = 0; $i < count($opzioni); $i++) {
+                            $qrynVotOp = "SELECT nVoti FROM opzione WHERE id LIKE '" . $opzioni[$i] . "' AND idVotazione LIKE '" . $_SESSION['idVot'] . "'";
+                            $resultnVotOp = $conn->query($qrynVotOp);
+
+                            if($resultnVotOp->num_rows > 0) {
+                                while($row = $resultnVotOp->fetch_assoc()) {
+                                    $row['nVoti']++;
+                                    
+                                    $qryAggiungiVoto = "UPDATE opzione SET nVoti = '" . $row['nVoti'] . "' WHERE id='" . $opzioni[$i] . "'";
+
+                                    if (!($conn->query($qryAggiungiVoto) === TRUE)) {
+                                        $rollback = "ROLLBACK";
+                                        $conn->query($rollback);
+                                    }
+                                }
+
+                            }
+                            
+                        }
+                        $_SESSION['voto'] = "VOTAZIONE ANDATA A BUON FINE";
+                    } else if($aus > $_SESSION['numScelte']) {
+                        $_SESSION['errore'] = "ERRORE: superato il numero di scelte massime";
+                    } else {
+                        $_SESSION['errore'] = "ERRORE: numero scelte errato";
                     }
-                } else if($aus == 0) {
-                    $_SESSION['errore'] = "ERRORE: selezione minimo una scelta";
-                } else if($aus > $_SESSION['numScelte']) {
-                    $_SESSION['errore'] = "ERRORE: superato il numero di scelte massime";
-                } else {
-                    $_SESSION['errore'] = "ERRORE: numero scelte errato";
-                }
 
-                $commit = "COMMIT";
-                $conn->query($commit);
+                    $commit = "COMMIT";
+                    $conn->query($commit);
 
-                if($tipoVot == "anonimo") {
-                    $qryVotAnonim = "INSERT INTO risposta(data, ora, idUtente, idVotazione) VALUES 
-                                    ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "')";
-                    
-                    if(!($conn->query($qryVotAnonim) === TRUE)) {
-                        die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
-                    }
-                } else if($tipoVot == "nominale") {
-                    for($i = 0; $i < count($opzioni); $i++) {
-                        $qryVotNom = "INSERT INTO risposta(data, ora, idUtente, idVotazione, idOpzione) VALUES
-                                    ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "', '" . $opzioni[$i] . "')";
-
-                        if(!($conn->query($qryVotNom) === TRUE)) {
+                    if($tipoVot == "anonimo") {
+                        $qryVotAnonim = "INSERT INTO risposta(data, ora, idUtente, idVotazione) VALUES 
+                                        ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "')";
+                        
+                        if(!($conn->query($qryVotAnonim) === TRUE)) {
                             die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
                         }
+                    } else if($tipoVot == "nominale") {
+                        for($i = 0; $i < count($opzioni); $i++) {
+                            $qryVotNom = "INSERT INTO risposta(data, ora, idUtente, idVotazione, idOpzione) VALUES
+                                        ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "', '" . $opzioni[$i] . "')";
+
+                            if(!($conn->query($qryVotNom) === TRUE)) {
+                                die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
+                            }
+                        }
                     }
+                } else {
+                    $_SESSION['errore'] = "ERRORE: seleziona almeno un'opzione";
                 }
             }
         }
@@ -324,7 +337,7 @@
                                     <a class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</a><br><br>";
                             }
                         }
-                        echo "<input class=\"bottone\" type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\" " . $attScelta . ">  
+                        echo "<input class=\"button\" type=\"submit\" name=\"submit\" value=\"Conferma e invia la tua votazione\" " . $attScelta . ">  
                             </form>";
                     } else {
                         $_SESSION['errore'] = "ERRORE: votazione non valida";
@@ -338,6 +351,7 @@
                 $conn->close();
             ?>
             <p class="errore"><?php if(isset($_SESSION['errore'])) {echo $_SESSION['errore'];$_SESSION['errore'] = "";}?></p>
+            <p class="voto"><?php if(isset($_SESSION['voto'])) {echo $_SESSION['voto'];}?></p>
         </div>
     </div>
 </body>
