@@ -100,15 +100,38 @@ td{
     align-content:left;
 }
 
-.button {
+.errore {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    padding: 15px;
+
+    font-size: 30px;
+
+    color: red;
+}
+
+.testo {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    padding: 10px;
+
+    font-size: 20px;
+}
+
+.quesito {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    padding: 10px;
+
+    font-size: 30px;
+
+    font-style: italic;
+}
+
+.bottone {
     background-color: rgba(230, 126, 34, 1);
-    border: none;
-    color: black;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-  }
+    padding: 3px;
+}
