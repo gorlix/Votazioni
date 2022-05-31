@@ -1,6 +1,31 @@
 <!doctype html>
 <html lang="it">
 <head>
+    <style>
+        .button {
+            background-color: rgba(230, 126, 34, 1);
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .text{
+            width: 300px;
+            heigth: 60px;
+            padding: 10px 20px;
+        }
+
+        form{
+            display: inline;
+        }
+
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -24,12 +49,14 @@
 
 
             <?php
+                
                 //session_start();
                 $server = "localhost";
 			    $username = "root";
 			    $password = "";
 			    $dbName = "votazioniscolastiche";
-                $idVotazione = 3;
+                $idVotazione = $_SESSION["idVotazione_Opzione"];
+                //$idVotazione = 3;
 
                 if ($conn->connect_error) {
                     die("Connection failed: " . $conn->connect_error);
@@ -83,10 +110,10 @@
                         </center>";
                 }
                     echo '<form method="post" action= "' . htmlspecialchars($_SERVER["PHP_SELF"]).'">';
-                    echo "<center><input type='text' name = 'opzione'></center><br>";
+                    echo "<center><input type='text' class='text' name = 'opzione'></center><br>";
                     echo "<center><input type='hidden' name = 'operazione' value=1></center><br>";
                     //echo "<center><input type='hidden' name='id' value=" . $idVotazione . "/></center>";
-                    echo "<center><input type='submit' name='crea' value='Aggiungi opzione'/></center>";
+                    echo "<center><input type='submit'  class='button' name='crea' value='Aggiungi opzione'/></center>";
                     echo "</form>";
                     echo "<br><br><br><br><br>";
                 
@@ -97,16 +124,16 @@
                 while($row = $result->fetch_assoc()){
                     echo "<center>";
                     echo '<form method="post" action= "' . htmlspecialchars($_SERVER["PHP_SELF"]).'">';
-                    echo "<input type='text' name = 'testo' value='" . $row["testo"] . "'>";
+                    echo "<input type='text' class='text' name = 'testo' value='" . $row["testo"] . "'>";
                     echo "<input type='hidden' name = 'operazione' value=2>";
                     echo "<input type='hidden' name = 'idOperazione' value='" . $row["id"] . "'>";
-                    echo "<input type='submit' value='modifica'>";
+                    echo "<input type='submit' class='button' value='modifica'>";
                     echo "</form>";
                     //echo '</form>';
                     echo '<form method="post" action= "' . htmlspecialchars($_SERVER["PHP_SELF"]).'">';
                     echo "<input type='hidden' name = 'operazione' value=3>";
                     echo "<input type='hidden' name = 'idOperazione' value='" . $row["id"] . "'>";
-                    echo "<input type='submit' value='cancella'>";
+                    echo "<input type='submit' class='button' value='cancella'>";
                     echo '</form>';
                     echo "</center>";
                     echo "<br>";
