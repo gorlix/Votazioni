@@ -23,8 +23,8 @@
         $_SESSION['errore'] = "";
          
         // $hash = $_GET['hash'];
-        //$hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
-        $hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
+        $hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
+        //$hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
         //$hash = "ash sbagliato";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
@@ -72,6 +72,10 @@
                     die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
                 }
 
+                /**
+                 * @todo 
+                 * DA MIGLIORARE CONTROLLI
+                */ 
                 if($aus > 0 && $aus <= $_SESSION['numScelte']) {               
                     $qryTipoVot = "SELECT tipo FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
                     $resultTipoVot = $conn->query($qryTipoVot);
