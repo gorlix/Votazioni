@@ -1,8 +1,13 @@
 <?php
 /**
 * @author skenny;
+Matteo Schintu
 */
 ?>
+<?php
+    require __DIR__. '/SharedFunctions.php';
+?>
+
 <!doctype html>
 <html lang="it">
 <head>
@@ -62,6 +67,7 @@
 			    $dbName = "votazioniscolastiche";
                 $idVotazione = $_SESSION["idVotazione_Opzione"];
                 //$idVotazione = 3;
+                $conn = connettiDb();
 
                 if ($conn->connect_error) {
                     die("Connection failed: " . $conn->connect_error);
