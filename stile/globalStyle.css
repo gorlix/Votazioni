@@ -131,6 +131,17 @@ td{
     align-content:left;
 }
 
+.voto{
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    padding: 15px;
+
+    font-size: 30px;
+
+    color:green;
+}
+
 .button {
     background-color: rgba(230, 126, 34, 1);
     border: none;
