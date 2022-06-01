@@ -23,6 +23,8 @@
     
         $_SESSION['errore'] = "";
         $_SESSION['voto'] = "";
+
+        // $_SESSION['id_utente'];
          
         // $hash = $_GET['hash'];
         //$hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
@@ -368,7 +370,6 @@
 
 <!--
 ✓ Se la votazione selezionata è chiusa ma il tempo non è terminato, si mostra tutto ma con le opzioni bloccate
-x Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati 
-    allora verrà mostrato un messaggio di “Risultati in elaborazione”
+✓ Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati allora verrà mostrato un messaggio di “Risultati in elaborazione”
 ✓ Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono stati pubblicati dal creatore della votazione, allora si mostreranno le opzioni con le varie percentuali
 -->
