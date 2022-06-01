@@ -50,7 +50,9 @@ Matteo Schintu
             <center>
             <h1 style="align:center; font-family: 'Roboto Mono', monospace;font-family: 'Space Mono', monospace;">Lista Votazioni</h1>
         <?php
-        session_start();
+         if(!isset($_SESSION)) { 
+             session_start(); 
+         } 
         $server = "localhost";
         $username = "root";
         $password = "";
