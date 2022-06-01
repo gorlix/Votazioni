@@ -60,6 +60,7 @@
             $username = "root";
             $password = "";
             $dbname = "votazioniScolastiche";
+
             $aus = 0;
             $error = "";
             $tipoVot = "";
@@ -69,25 +70,19 @@
             if ($conn->connect_error) {
                 die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
             }
-            // DOBBIAMO FARE QUERY PER VEDERE SE HA GIà VOTATO
+            
             $qryVotato = "SELECT id FROM risposta WHERE idUtente = '" . $_SESSION['idUtente'] . "' AND  idVotazione = '" . $_SESSION['idVot'] . "'";
             $resultVotato = $conn->query($qryVotato);
 
             if($resultVotato->num_rows > 0) {
                 $_SESSION['voto'] = "HAI GIÀ VOTATO";
             } else {
-          
                 if(isset($_POST['opzione'])) {
                 
                     $opzioni = $_POST['opzione'];
                     
                     $aus = count($opzioni);
 
-
-                    /**
-                     * @todo 
-                     * DA MIGLIORARE CONTROLLI
-                    */ 
                     if($aus > 0 && $aus <= $_SESSION['numScelte']) {               
                         $qryTipoVot = "SELECT tipo FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
                         $resultTipoVot = $conn->query($qryTipoVot);
@@ -297,8 +292,19 @@
 
                             $lock = "START TRANSACTION";
                             $conn->query($lock);
+                            // e dati pubblicati
+                            $qryDatiPub = "SELECT pubblica FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
+                            $resultDatiPub = $conn->query($qryDatiPub);
 
-                            if($vot == "chiusa") {
+                            if($resultDatiPub->num_rows > 0) {
+                                while($row3 = $resultDatiPub->fetch_assoc()) {
+                                    $pubblica = $row3['pubblica'];
+                                }
+                            } else {
+                                $_SESSION['errore'] = "ERRORE: votazione non trovata";
+                            }
+                            
+                            if($vot == "chiusa" && $pubblica == 1) {
                                 $qryTotVoti = "SELECT SUM(nVoti) AS totVoti FROM opzione 
                                                 WHERE idVotazione LIKE '" . $_SESSION['idVot'] . "'";
 
@@ -324,6 +330,8 @@
                                 }
                                 
                                 $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "%";
+                            } else {
+                                $_SESSION['errore'] = "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
                             }
 
                             if($_SESSION['numScelte'] == 1) {
