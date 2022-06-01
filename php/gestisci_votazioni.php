@@ -34,7 +34,6 @@
 			$password = "";
 			$dbName = "votazioniscolastiche";
 			$sql = "";
-			$tab;
 
 
 			$conn = new mysqli($server, $username, $password, $dbName);
