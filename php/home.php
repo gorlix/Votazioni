@@ -78,10 +78,11 @@ Matteo Schintu
                     </tr>";
         if(mysqli_query($conn,$sql)){
             while($row=mysqli_fetch_assoc($result)){
-                $tab .= "<form method = 'POST' action = 'votazione.php'>";
+                $tab .= "<tr class='clickable-row' style='width:100%' >";
                 $query2 = "select hash FROM esegue WHERE idUtente = " . $idUtente . " AND idVotazione = " . $row['id'];
                 
-                $tab .= "<tr class='clickable-row' style='width:100%' >";
+                
+                $tab .= "<form method = 'POST' action = 'votazione.php'>";
                 while($row2=mysqli_fetch_assoc(mysqli_query($conn,$query2))){
                     $tab .="<input type='hidden' name = 'hash' value = '" . $row2['hash'] . "'>";
                             
@@ -98,7 +99,7 @@ Matteo Schintu
                 }
 
                 $tab .= "<td><input type='submit' class='button' value='vai a votazione'></td>";
-                $tab .= "</tr> </form>";
+                $tab .= "</form> </tr>";
             }
         }
 
