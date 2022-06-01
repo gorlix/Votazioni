@@ -11,16 +11,18 @@
 <!--
     Crea variabili di sessione
 -->
-    <?php
-        require __DIR__ . '/sharedFunctions.php';
+    <?php   
         $servername = "localhost";
         $username = "root";
         $password = "";
         $dbname = "votazioniScolastiche";
         $error = "";
         
-        //$hash = "";
-        session_start();
+        $hash = "";
+        
+        if(!isset($_SESSION)) { 
+            session_start(); 
+        }   
     
         $_SESSION['errore'] = "";
         $_SESSION['voto'] = "";
@@ -32,7 +34,7 @@
                 $_SESSION['hashVot'] = $_GET['hash'];
                
             } else {
-               // $_SESSION['hashVot'] = "ash sbagliato";
+                $_SESSION['hashVot'] = "ash sbagliato";
                 header("Location: ../php/home.php?hash=sbagliato");
             }
        }
@@ -215,7 +217,7 @@
                 ?>
             </p>
         </div>
-        <?php //include "Navbar.php"; ?>
+        <!--<?php include "Navbar.php"; ?>-->
         <div class="contenuto">
             <?php
                 $servername = "localhost";
@@ -343,7 +345,12 @@
                                 }
                                 
                                 $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "%";
-                            }   else {
+                            }   else if($vot == "aperta") {
+                                
+                            }
+                            
+                            
+                            else {
                                 $_SESSION['errore'] = "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
                             }
 
