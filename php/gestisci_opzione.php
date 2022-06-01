@@ -55,14 +55,7 @@
 
             <?php
                 
-                //session_start();
-                $server = "localhost";
-			    $username = "root";
-			    $password = "";
-			    $dbName = "votazioniscolastiche";
-                $idVotazione = $_SESSION["idVotazione_Opzione"];
-                //$idVotazione = 3;
-				$conn = new mysqli($server, $username, $password, $dbName);
+                $conn = connettiDb();
 
                 if ($conn->connect_error) {
                     die("Connection failed: " . $conn->connect_error);
