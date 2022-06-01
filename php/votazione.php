@@ -26,9 +26,9 @@
 
         // $_SESSION['id_utente'];
          
-        // $hash = $_GET['hash'];
+        $hash = $_POST['hash'];
         //$hash = "A0C299B71A9E59D5EBB07917E70601A3570AA103E99A7BB65A58E780EC9077B1902D1DEDB31B1457BEDA595FE4D71D779B6CA9CAD476266CC07590E31D84B206";
-        $hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
+        //$hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
         //$hash = "ash sbagliato";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
@@ -44,7 +44,7 @@
         if ($resultIdVot->num_rows > 0) {
             while($row = $resultIdVot->fetch_assoc()) {
                 $_SESSION['idVot'] = $row['idVotazione'];
-                $_SESSION['idUtente'] = $row['idUtente'];
+                $_SESSION['id_utente'] = $row['idUtente'];
             }
         } else {
             $_SESSION['errore'] = "ERRORE: ash errato";
@@ -73,7 +73,7 @@
                 die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
             }
             
-            $qryVotato = "SELECT id FROM risposta WHERE idUtente = '" . $_SESSION['idUtente'] . "' AND  idVotazione = '" . $_SESSION['idVot'] . "'";
+            $qryVotato = "SELECT id FROM risposta WHERE idUtente = '" . $_SESSION['id_utente'] . "' AND  idVotazione = '" . $_SESSION['idVot'] . "'";
             $resultVotato = $conn->query($qryVotato);
 
             if($resultVotato->num_rows > 0) {
@@ -131,7 +131,7 @@
 
                     if($tipoVot == "anonimo") {
                         $qryVotAnonim = "INSERT INTO risposta(data, ora, idUtente, idVotazione) VALUES 
-                                        ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "')";
+                                        ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['id_utente'] . "', '" . $_SESSION['idVot'] . "')";
                         
                         if(!($conn->query($qryVotAnonim) === TRUE)) {
                             die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
@@ -139,7 +139,7 @@
                     } else if($tipoVot == "nominale") {
                         for($i = 0; $i < count($opzioni); $i++) {
                             $qryVotNom = "INSERT INTO risposta(data, ora, idUtente, idVotazione, idOpzione) VALUES
-                                        ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "', '" . $opzioni[$i] . "')";
+                                        ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['id_utente'] . "', '" . $_SESSION['idVot'] . "', '" . $opzioni[$i] . "')";
 
                             if(!($conn->query($qryVotNom) === TRUE)) {
                                 die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
@@ -275,7 +275,7 @@
                     }
 
                     $qryVotChiusa = "SELECT idVotazione FROM risposta 
-                                    WHERE idUtente LIKE '" . $_SESSION['idUtente'] ."' AND idVotazione LIKE '" . $_SESSION['idVot'] . "'";
+                                    WHERE idUtente LIKE '" . $_SESSION['id_utente'] ."' AND idVotazione LIKE '" . $_SESSION['idVot'] . "'";
                     $resultVotChiusa = $conn->query($qryVotChiusa);
 
                     if($resultVotChiusa->num_rows > 0) {
