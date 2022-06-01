@@ -187,7 +187,7 @@
                     $password = "";
                     $dbname = "votazioniScolastiche";
 
-                    $_GLOBALS['error'] = "";
+                   
                     $_GLOBALS['nomQuesito'] = "";
                     
                     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -196,7 +196,7 @@
                         die($_SESSION['errore'] = "Connection failed 5: " . $conn->connect_error);
                     }
 
-                    if($_GLOBALS['error'] == "") {
+                    if($_SESSION['errore'] == "") {
                         
                         //$conn = connettiDb();   
                         $qryNomVot = "SELECT quesito FROM votazione WHERE ID LIKE '" . $_SESSION['idVot'] . "'";
@@ -225,7 +225,7 @@
                 $password = "";
                 $dbname = "votazioniScolastiche";
             
-                if($_GLOBALS['error'] == "") {
+                if($_SESSION['errore'] == "") {
                     $_SESSION['numScelte'] = "";
 
                     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -301,7 +301,7 @@
 
                     // Ricevo informazioni delle opzioni agganciate alla votazione
                     if ($resultOpz->num_rows > 0) {
-                        echo '<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
+                        echo '<form style="display: inline-block" method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
                         while($row = $resultOpz->fetch_assoc()) {
                             $mediaVot = ""; 
 
@@ -345,12 +345,9 @@
                                 }
                                 
                                 $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "%";
-                            }   else if($vot == "aperta") {
+                            } else if($vot == "aperta") {
                                 
-                            }
-                            
-                            
-                            else {
+                            } else {
                                 $_SESSION['errore'] = "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
                             }
 
@@ -371,22 +368,17 @@
                         $_SESSION['errore'] = "ERRORE: votazione non valida";
                     }
                 } else {
-                    echo "<p class=\"errore\">ERRORE: hai già risposto alla votazione o la votazione non esiste.</p>";
+                    $_SESSION['errore'] = "ERRORE: hai già risposto alla votazione o la votazione non esiste.";
                 }    
                 $commit = "COMMIT";
                 $conn->query($commit);
                 
                 $conn->close();
             ?>
+            <input style="display: inline-block" class="button" type="submit" name="submit" value="Torna alla home" onclick="location.href='home.php'">
             <p class="errore"><?php if(isset($_SESSION['errore'])) {echo $_SESSION['errore'];$_SESSION['errore'] = "";}?></p>
-            <p class="voto"><?php if(isset($_SESSION['voto'])) {echo $_SESSION['voto'];}?></p>
+            <p class="voto"><?php if(isset($_SESSION['voto'])) {echo $_SESSION['voto'];$_SESSION['voto'] = "";}?></p>
         </div>
     </div>
 </body>
 </html>
-
-<!--
-✓ Se la votazione selezionata è chiusa ma il tempo non è terminato, si mostra tutto ma con le opzioni bloccate
-✓ Se la votazione selezionata è chiusa ma il tempo è terminato, e i dati non sono ancora stati pubblicati allora verrà mostrato un messaggio di “Risultati in elaborazione”
-✓ Se la votazione selezionata è chiusa ma il tempo è terminato e i dati sono stati pubblicati dal creatore della votazione, allora si mostreranno le opzioni con le varie percentuali
--->

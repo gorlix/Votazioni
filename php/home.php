@@ -115,7 +115,8 @@
         }
         echo $tab . "</table>";
     ?>
-    </center>
+        </center>
+        <p class="errore"><?php  if(isset($_GET['hash'])) {echo "Non hai i permessi per accedere a quetsa votazione";$_GET['hash'] = "";}?></p>
         </div>
     </div>
 </body>
