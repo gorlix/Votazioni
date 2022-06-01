@@ -17,6 +17,7 @@
             <p class="titolo-header">Gestisci Votazioni</p>
         </div>
         <?PHP
+			require __DIR__. '/SharedFunctions.php';
             include "Navbar.php";
         ?>
         <div class="contenuto">
@@ -65,7 +66,8 @@
 					}
 					
 					//aggiunge il quesito del db
-					else if(isset($_POST['invia'])){
+					else if(isset($_POST['invia']))
+					{
 						
 						$inizio = $_POST['inizio'];
 						$fine = $_POST['fine'];
@@ -165,8 +167,66 @@
 						$_SESSION["idVotazione_Opzione"] = $_POST['quesito'];
 						header("location: gestisci_opzione.php");
 					}
-										
-				} else {
+					// pagina gestione della votazione
+					if(isset($_POST['gestisciG']))  
+					{
+						$query = "select quesito from votazione WHERE id = " . $_POST['quesito'];
+						$result = $conn->query($query);
+						
+						
+						while($row = $result->fetch_assoc()){
+							//$conn->close();
+							echo "<center>
+									<p class='titoli'>GESTIONE GRUPPI DEL QUESITO:</p>
+									<p class='titoli'>" . $row['quesito'] . "</p>
+								</center>";
+						}
+						
+						$content = "".'<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
+									"Gruppo:<select name='gruppo'>";
+						$query = "SELECT  id, nome FROM gruppo";
+						$ris=$conn->query($query);
+						
+						if ($ris->num_rows > 0) {
+							while($row = $ris->fetch_assoc()) {
+								$nome = $row["nome"];
+								$id = $row["id"];
+								// $altro = $row["altro"];
+								$content.= "<option name='gruppo' value='$id'>$nome</option>\n";
+							}
+						}
+						$content.="</select>.
+								<input hidden type='text' name='idVotazione' value='".$_POST['quesito']."' >
+								<br><br><input type='submit' name='aggiungiG' value='Aggiungi'/><br>
+								<br><input type='submit' name='rimuoviG' value='Rimuovi gruppo'/><br>
+								</form>";
+						echo $content;
+					}
+
+					//aggiunge tutti gli utenti del gruppo alla votazione
+					if(isset($_POST['aggiungiG']))  
+					{
+						$query = "SELECT  idUtente FROM appartienea where idGruppo=".$_POST['gruppo'];
+						$ris=$conn->query($query);
+						
+						if ($ris->num_rows > 0) 
+						{
+							while($row = $ris->fetch_assoc()) 
+							{
+								$idUtente = $row["idUtente"];
+								$inserisci = "Insert into esegue (idUtente, idVotazione)
+									values ('".$idUtente."','".$_POST['idVotazione']."')";
+								if ($conn->query($inserisci) === TRUE) 
+								{
+								  echo "New record created successfully";
+								}else{
+									echo "Error: " . $sql . "<br>" . $conn->error;
+								}
+							}
+						}
+					}
+				}else 
+				{
 					$content = "<h3>OPERAZIONE VOTAZIONE </h3>
 								<br>
 						
@@ -176,7 +236,7 @@
 							
 								"<select name='quesito'>";
 
-					$query = "SELECT  id, quesito FROM votazione /*ORDER BY */";
+					$query = "SELECT  id, quesito FROM votazione";
 					$ris=$conn->query($query);
 					
 					if ($ris->num_rows > 0) {
@@ -187,12 +247,12 @@
 							$content.= "<option name='quesito' value='$id'>$quesito</option>\n";
 						}
 					}
-					$content.="</select><br><input type='submit' name='crea' value='Crea votazione'/><br>
+					$content.="</select>.
+								<br><input type='submit' name='crea' value='Crea votazione'/><br>
 								<br><input type='submit' name='modifica' value='Modifica votazione'/><br>
 								<br><input type='submit' name='cancella' value='Cancella votazione'/><br>
 								<br><input type='submit' name='gestisci' value='Gestisci opzione'/><br>
-								<br><input type='submit' name='assegna' value='Assegna gruppo'/><br>
-								<br><input type='submit' name='rimuovi' value='Rimuovi gruppo'/><br>
+								<br><input type='submit' name='gestisciG' value='Gestisci gruppo'/><br>
 								</form>";
 					
 					echo $content;
