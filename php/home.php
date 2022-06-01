@@ -1,7 +1,8 @@
 <?php
 /**
-* @author skenny;
-Matteo Schintu
+* @author skenny;Matteo Schintu
+* @author Daniele
+* @author Negro
 */
 ?>
 <!DOCTYPE html>
@@ -83,7 +84,6 @@ Matteo Schintu
 
         if(mysqli_num_rows($result) > 0){
             while($row=mysqli_fetch_assoc($result)){
-<<<<<<< HEAD
                 $tab .= "<form method = 'GET' action = 'votazione.php'>";
 
                 $query2 = "select hash FROM esegue WHERE idUtente = " . $idUtente . " AND idVotazione = " . $row['id'];
@@ -97,16 +97,6 @@ Matteo Schintu
                         if($row2['hash'] != "")
                             $tab .="<input type='hidden' name = 'hash' value = '" . $row2['hash'] . "'>";                  
                     }
-=======
-                $tab .= "<tr class='clickable-row' style='width:100%' >";
-                $query2 = "select hash FROM esegue WHERE idUtente = " . $idUtente . " AND idVotazione = " . $row['id'];
-                
-                
-                $tab .= "<form method = 'POST' action = 'votazione.php'>";
-                while($row2=mysqli_fetch_assoc(mysqli_query($conn,$query2))){
-                    $tab .="<input type='hidden' name = 'hash' value = '" . $row2['hash'] . "'>";
-                            
->>>>>>> ceb558d8db8eb618cf3f893439e48cddf3db9e49
                 }
                 
                 $tab .= "<td name='id'>" . $row['quesito'] . "</td>
@@ -120,7 +110,7 @@ Matteo Schintu
                 }
 
                 $tab .= "<td><input type='submit' class='button' value='vai a votazione'></td>";
-                $tab .= "</form> </tr>";
+                $tab .= "</tr> </form>";
             }
         }
         echo $tab . "</table>";
