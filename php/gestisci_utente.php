@@ -1,12 +1,21 @@
 <!doctype html>
 <html lang="it">
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="../stile/globalStyle.css">
     <title>Gestisci Utente</title>
+
+    <script>
+        $(document).ready(function(){
+            $("#drpUsr").change(function() {
+                $("#btnSubDrpSelUsr").click();
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="container">
@@ -46,7 +55,7 @@
                 }else if($aus == "Rimuovi dal gruppo"){
                     rimuoviUtenteDalGruppo();
                 }
-                echo $aus;
+                echo $aus, $_POST["submittedUsr"];
             }
         ?>
 
@@ -130,8 +139,8 @@ function stampaFormModificaUtente($mail_selected){
 function stampaSelezioneUser(){
     echo "<h1>Operazioni utente</h1>";
     echo "<h3>Seleziona utente </h3>";
-    $str = "<form action='$_SERVER[PHP_SELF]' method='post'>";
-    $str .= "<select name='submit' onchange='this.form.submit();'>";
+    $str = "<form id='frmSelUsr' action='$_SERVER[PHP_SELF]' method='post'>";
+    $str .= "<select name='submittedUsr' id='drpUsr'>";
     $str .= "<option value='0'></option>";
     $query = "SELECT id, mail FROM utente";
     $conn = connettiDb();
@@ -141,9 +150,8 @@ function stampaSelezioneUser(){
             $str .= "<option value='" . $row["id"] . "'>" . $row["mail"] . "</option>";
         }
     }
-    $str .= "</select></form>";
+    $str .= "</select><input type='submit' id='btnSubDrpSelUsr' hidden name='submit' value='subButton'></form>";
     echo $str;
-
 }
 
 function eliminaUtente($mail_selected){
