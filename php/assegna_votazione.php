@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../stile/globalStyle.css">
-    <title>Votazione</title>
+    <title>Assegna</title>
 
 </head>
 <body>
@@ -14,7 +14,7 @@
             <img src="../immagini//logoScuola.png" alt="logo scuola" class="logo-scuola">
         </div>
         <div class="titolo">
-            <p class="titolo-header">Gestisci Votazioni</p>
+            <p class="titolo-header">Lista Votazioni</p>
         </div>
         <?PHP
             include "Navbar.php";
@@ -43,8 +43,7 @@
 				
 				if ($_SERVER["REQUEST_METHOD"] == "POST") 
 				{
-					//form di creazione del quesito, si genera se si schiaccia il tasto nel form 
-					//principale name='crea'
+					//Assegna 
 					if(isset($_POST['crea']))  
 					{
 						
@@ -191,10 +190,7 @@
 								<br><input type='submit' name='modifica' value='Modifica votazione'/><br>
 								<br><input type='submit' name='cancella' value='Cancella votazione'/><br>
 								<br><input type='submit' name='gestisci' value='Gestisci opzione'/><br>
-								<br><input type='submit' name='assegna' value='Assegna gruppo'/><br>
-								<br><input type='submit' name='rimuovi' value='Rimuovi gruppo'/><br>
 								</form>";
-					
 					echo $content;
 				}
 
