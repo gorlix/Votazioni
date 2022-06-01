@@ -20,24 +20,7 @@
     include "Navbar.php";
     ?>
     <div class="contenuto">
-        <?php
-        /*
-        echo "<h1>Operazioni utente</h1>";
-        echo "<h3>Seleziona utente </h3>";
-        $str = "<select name='nome'>";
-        $str .= "<option value='0'></option>";
-        $query = "SELECT id, mail FROM utente";
-        $conn = connettiDb();
-        $ris=$conn->query($query);
-        if ($ris->num_rows > 0) {
-            while($row = $ris->fetch_assoc()) {
-                $str .= "<option value='".$row["id"]."'>".$row["mail"]."</option>";
-            }
-        }
-        $str.="</select>";
-        echo $str;
-        */
-        ?>
+        <?php stampaSelezioneUser();?>
         <br>
         <br>
         <form action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>' method='post'>
@@ -52,17 +35,18 @@
                     stampaFormCreazioneUtente();
                 }else if($aus  == "Modifica utente"){
                     stampaFormModificaUtente("mail.prova@mail.com");
-                }else if($aus == "EliminaUtente"){
+                }else if($aus == "Elimina utente"){
                     eliminaUtente();
                 }else if($aus == "SalvaModificaUtente"){
                     modificaUtente();
                 }else if($aus == "SalvaCreazioneUtente"){
                     creaUtente();
-                }else if ($aus == "add_usr_to_grp"){
+                }else if ($aus == "Aggiungi al gruppo"){
                     aggiungiUntenteAlGruppo();
-                }else if($aus == "remove_usr_from_grp"){
+                }else if($aus == "Rimuovi dal gruppo"){
                     rimuoviUtenteDalGruppo();
                 }
+                echo $aus;
             }
         ?>
 
@@ -81,10 +65,10 @@
         $str.="</select>";
         echo $str;
 
-        echo "<form action='htmlspecialchars($_SERVER[PHP_SELF])' method='post'>
+        echo "<form action='$_SERVER[PHP_SELF]' method='post'>
             <br><br>
-            <input type='submit' name='add_usr_to_grp' value='Aggiungi al gruppo'>
-            <input type='submit' name='rem_usr_frm_grp' value='Rimuovi dal gruppo'><br><br>
+            <input type='submit' name='submit' value='Aggiungi al gruppo'>
+            <input type='submit' name='submit' value='Rimuovi dal gruppo'><br><br>
         </form>";
         //stampaGruppi("mail.prova@mail.com");
         ?>
@@ -114,7 +98,7 @@ function stampaGruppi($mail_selected){
 }
 
 function stampaFormCreazioneUtente(){
-    echo "<form action='htmlspecialchars($_SERVER[PHP_SELF])' method='post'><br><br>
+    echo "<form action='$_SERVER[PHP_SELF]' method='post'><br><br>
             <h2>Crea utente</h2>
             <label>Mail</label>
                 <input type='text' name='mail_inpt'>
@@ -129,7 +113,7 @@ function stampaFormCreazioneUtente(){
 }
 
 function stampaFormModificaUtente($mail_selected){
-    echo "<form action='htmlspecialchars($_SERVER[PHP_SELF])' method='post'><br><br>
+    echo "<form action='$_SERVER[PHP_SELF]' method='post'><br><br>
             <h2>Modifica utente</h2>
             <label>Mail</label>
                 <input type='text' name='mail_inpt' value='$mail_selected'>
@@ -141,6 +125,25 @@ function stampaFormModificaUtente($mail_selected){
                 <input type='text' name='cognome_inpt'><br><br>
             <input type='submit' name='submit' value='SalvaModificaUtente'>
          </form>";
+}
+
+function stampaSelezioneUser(){
+    echo "<h1>Operazioni utente</h1>";
+    echo "<h3>Seleziona utente </h3>";
+    $str = "<form action='$_SERVER[PHP_SELF]' method='post'>";
+    $str .= "<select name='submit' onchange='this.form.submit();'>";
+    $str .= "<option value='0'></option>";
+    $query = "SELECT id, mail FROM utente";
+    $conn = connettiDb();
+    $ris = $conn->query($query);
+    if ($ris->num_rows > 0) {
+        while ($row = $ris->fetch_assoc()) {
+            $str .= "<option value='" . $row["id"] . "'>" . $row["mail"] . "</option>";
+        }
+    }
+    $str .= "</select></form>";
+    echo $str;
+
 }
 
 function eliminaUtente($mail_selected){
