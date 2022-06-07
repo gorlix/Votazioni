@@ -17,7 +17,7 @@
             <p class="titolo-header">Gestisci Votazioni</p>
         </div>
         <?PHP
-			require __DIR__. '/SharedFunctions.php';
+			//require __DIR__. '/SharedFunctions.php';
             include "Navbar.php";
         ?>
         <div class="contenuto">
@@ -67,16 +67,66 @@
 						
 						$sec = strtotime($fine);  
 						$fine = date ("Y-m-d H:i", $sec);  
-						$fine .= ":00"; 
-						
-						$sql = "Insert into votazione (quesito, tipo, inizio, fine, scelteMax, quorum)
-								values ('".$_POST['quesito']."','".$_POST['tipo']."','".$inizio."' ,'".$fine."' ,'".$_POST['scelteMax']."', '0')";
-						
-						if ($conn->query($sql) === TRUE) {
-						  echo "New record created successfully";
-						} else {
-						  echo "Error: " . $sql . "<br>" . $conn->error;
-						}
+						$fine .= ":00";
+
+
+                        $sql = "UNLOCK TABLES votazione";
+                        $conn->query($sql);
+
+                        $sql = "LOCK TABLES votazione";
+                        if($conn->query($sql) === TRUE) {
+
+                            //Transazione
+                            $sql = "BEGIN TRANSACTION";
+                            echo $conn->query($sql);
+
+                            //Inserisci Votazione
+                            $sql = "Insert into votazione (quesito, tipo, inizio, fine, scelteMax, quorum)
+                                values ('" . $_POST['quesito'] . "','" . $_POST['tipo'] . "','" . $inizio . "' ,'" . $fine . "' ,'" . $_POST['scelteMax'] . "', '0')";
+
+                                if ($conn->query($sql) === TRUE) {
+                                    echo "New record created successfully";
+
+                                    $sql = "SELECT MAX(id) from votazione";
+                                    $result = $conn->query($sql);
+                                    if ($result->num_rows > 0) {
+                                        $row = $result->fetch_assoc();
+                                        $idInsert = $row["id"];
+                                        //Commit Transaction
+                                        $sql = "COMMIT";
+                                        $conn->query($sql);
+                                        //End Transaction
+                                        $sql = "END TRANSACTION";
+                                        $conn->query($sql);
+                                        
+                                        $sql = "UNLOCK TABLES votazione";
+                                        $conn->query($sql);
+
+                                    } //Getting max ID
+                                    else
+                                    {
+                                        echo "Error: " . $sql . "<br>" . $conn->error;
+                                        //Rollbakc transaction
+                                        $sql = "ROLLBACK";
+                                        $conn->query($sql);
+                                        //END Transaction
+                                        $sql = "END TRANSACTION";
+                                        $conn->query($sql);
+                                    }
+                                    //header("Location: ");
+                                } //Insert Votazione
+                                else
+                                {
+                                    echo "Error: " . $sql . "<br>" . $conn->error;
+                                }
+                        } //Lock Table
+                        else
+                        {
+                            $sql = "UNLOCK TABLES votazione";
+                            $conn->query($sql);
+                            //tabella gia bloccata
+                        }
+
 					} 
 					
 					//form di modifica del quesito, si genera se si schiaccia il tasto nel form 
