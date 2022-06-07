@@ -17,6 +17,7 @@
             <p class="titolo-header">Gestisci Votazioni</p>
         </div>
         <?PHP
+			require __DIR__. '/SharedFunctions.php';
             include "Navbar.php";
         ?>
         <div class="contenuto">
