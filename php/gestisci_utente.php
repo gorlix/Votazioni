@@ -56,10 +56,10 @@
                     $mail_selectded = "";
                     modificaUtente($new_pw, $new_nome, $new_cognome, $new_mail, getIdUtente(connettiDb(), $mail_selectded));
                 }else if($aus == "SalvaCreazioneUtente"){
-                    $new_pw = "";
-                    $new_nome = "";
-                    $new_cognome = "";
-                    $new_mail = "";
+                    $new_pw = $_POST["pw_inpt"];
+                    $new_nome = $_POST["nome_inpt"];
+                    $new_cognome = $_POST["cognome_inpt"];
+                    $new_mail = $_POST["mail_inpt"];
                     creaUtente($new_pw, $new_nome, $new_cognome, $new_mail);
                 }else if ($aus == "Aggiungi al gruppo"){
                     $id_User = "";
@@ -70,7 +70,7 @@
                     $id_Group = "";
                     rimuoviUtenteDalGruppo($id_User, $id_Group);
                 }
-                echo $aus, $_POST["submittedUsr"];
+                //echo $aus, $_POST["submittedUsr"];
             }
         ?>
 
@@ -123,13 +123,13 @@ function stampaFormCreazioneUtente(){
     echo "<form action='$_SERVER[PHP_SELF]' method='post'><br><br>
             <h2>Crea utente</h2>
             <label>Mail</label>
-                <input type='text' name='mail_inpt'>
+                <input type='text' name='mail_inpt' required>
             <label>Password</label>
-                <input type='text' name='pw_inpt'><br><br>
+                <input type='text' name='pw_inpt' required><br><br>
             <label>Nome</label>
-                <input type='text' name='nome_inpt'>
+                <input type='text' name='nome_inpt' required>
             <label>Cognome</label>
-                <input type='text' name='cognome_inpt'><br><br>
+                <input type='text' name='cognome_inpt' required><br><br>
             <input type='submit' name='submit' value='SalvaCreazioneUtente'>
          </form>";
 }
@@ -190,12 +190,27 @@ function modificaUtente($new_pw, $new_nome, $new_cognome, $new_mail, $id_utente)
 
 function creaUtente($pw, $nome, $cognome, $mail){
     //Creazione utente nel DB
+    $hashPw = hash_password($pw);
     $conn = connettiDb();
-    $query = "INSERT INTO utente (password, nome, cognome, mail) VALUES ('$pw', '$nome', '$cognome', '$mail')";
-    $ris = $conn->query($query);
-    if (!$ris) {
-        echo "Errore creazione utente";
+    $lock = "LOCK TABLES utente";
+    $conn->query($lock);
+    $startTrans = "START TRANSACTION";
+    $conn->query($startTrans);
+    $esisteUtente = "SELECT id from utente WHERE mail = '$mail'";
+    $ris = $conn->query($esisteUtente);
+    if ($ris->num_rows == 0) {
+        $query = "INSERT INTO utente (pw, nome, cognome, mail, forzaModificaPW) VALUES ('$hashPw', '$nome', '$cognome', '$mail', 0)";
+        $ris = $conn->query($query);
+        if (!$ris === TRUE) {
+            echo "Errore creazione utente 1";
+            $rollBack = "ROLLBACK";
+            $conn->query($rollBack);
+        }
     }
+    $commit = "COMMIT";
+    $conn->query($commit);
+    $unlock = "UNLOCK TABLES";
+    $conn->query($unlock);
 }
 
 function aggiungiUntenteAlGruppo($id_User, $id_Group){
@@ -203,8 +218,9 @@ function aggiungiUntenteAlGruppo($id_User, $id_Group){
     $conn = connettiDb();
     $query = "INSERT INTO appartienea (idUtente, idGruppo) VALUES ('$id_User', '$id_Group')";
     $ris = $conn->query($query);
-    if (!$ris) {
+    if (!$ris === TRUE) {
         echo "Errore aggiunta utente al gruppo";
+
     }
 }
 
@@ -213,7 +229,7 @@ function rimuoviUtenteDalGruppo($id_User, $id_Group){
     $conn = connettiDb();
     $query = "DELETE FROM appartienea WHERE idUtente = '$id_User' AND idGruppo = '$id_Group'";
     $ris = $conn->query($query);
-    if (!$ris) {
+    if (!$ris === TRUE) {
         echo "Errore rimozione utente dal gruppo";
     }
 }
