@@ -113,7 +113,7 @@
                         </center>";
                 }
                     echo '<form method="post" action= "' . htmlspecialchars($_SERVER["PHP_SELF"]).'">';
-                    echo "<center><input type='text' class='text' name = 'opzione'></center><br>";
+                    echo "<center><input type='text' class='text' name = 'opzione' required></center><br>";
                     echo "<center><input type='hidden' name = 'operazione' value=1></center><br>";
                     //echo "<center><input type='hidden' name='id' value=" . $idVotazione . "/></center>";
                     echo "<center><input type='submit'  class='button' name='crea' value='Aggiungi opzione'/></center>";
