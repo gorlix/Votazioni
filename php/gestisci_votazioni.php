@@ -69,16 +69,12 @@
 						$fine = date ("Y-m-d H:i", $sec);  
 						$fine .= ":00";
 
-
-                        $sql = "UNLOCK TABLES votazione";
-                        $conn->query($sql);
-
-                        $sql = "LOCK TABLES votazione";
-                        if($conn->query($sql) === TRUE) {
+                        $sql = "LOCK TABLES votazione WRITE";
+                        if($conn->query($sql)) {
 
                             //Transazione
                             $sql = "BEGIN TRANSACTION";
-                            echo $conn->query($sql);
+                            $conn->query($sql);
 
                             //Inserisci Votazione
                             $sql = "Insert into votazione (quesito, tipo, inizio, fine, scelteMax, quorum)
@@ -87,11 +83,14 @@
                                 if ($conn->query($sql) === TRUE) {
                                     echo "New record created successfully";
 
-                                    $sql = "SELECT MAX(id) from votazione";
+                                    $sql = "SELECT MAX(id) as maxId from votazione";
                                     $result = $conn->query($sql);
                                     if ($result->num_rows > 0) {
-                                        $row = $result->fetch_assoc();
-                                        $idInsert = $row["id"];
+                                        while ($row = $result->fetch_assoc())
+                                        {
+                                            $idInsert = $row["maxId"];
+                                        }
+                                        $_SESSION["idVotazione_Opzione"] = $idInsert;
                                         //Commit Transaction
                                         $sql = "COMMIT";
                                         $conn->query($sql);
@@ -99,8 +98,9 @@
                                         $sql = "END TRANSACTION";
                                         $conn->query($sql);
                                         
-                                        $sql = "UNLOCK TABLES votazione";
+                                        $sql = "UNLOCK TABLES";
                                         $conn->query($sql);
+                                        header("Location: gestisci_opzione.php");
 
                                     } //Getting max ID
                                     else
@@ -112,8 +112,10 @@
                                         //END Transaction
                                         $sql = "END TRANSACTION";
                                         $conn->query($sql);
+
+                                        $sql = "UNLOCK TABLES";
+                                        $conn->query($sql);
                                     }
-                                    //header("Location: ");
                                 } //Insert Votazione
                                 else
                                 {
@@ -122,7 +124,7 @@
                         } //Lock Table
                         else
                         {
-                            $sql = "UNLOCK TABLES votazione";
+                            echo $sql = "UNLOCK TABLES";
                             $conn->query($sql);
                             //tabella gia bloccata
                         }
