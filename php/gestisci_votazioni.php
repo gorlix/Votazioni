@@ -24,6 +24,7 @@
             <center>
             <h1 style="align:center; font-family: 'Roboto Mono', monospace;font-family: 'Space Mono', monospace;">Lista Votazioni</h1>
 			<?php
+				//Duplicato in navbar.php?
 				if(!isset($_SESSION))
 				{
 					session_start();
@@ -70,16 +71,68 @@
 						
 						$sec = strtotime($fine);  
 						$fine = date ("Y-m-d H:i", $sec);  
-						$fine .= ":00"; 
-						
-						$sql = "Insert into votazione (quesito, tipo, inizio, fine, scelteMax, quorum)
-								values ('".$_POST['quesito']."','".$_POST['tipo']."','".$inizio."' ,'".$fine."' ,'".$_POST['scelteMax']."', '0')";
-						
-						if ($conn->query($sql) === TRUE) {
-						  echo "New record created successfully";
-						} else {
-						  echo "Error: " . $sql . "<br>" . $conn->error;
-						}
+						$fine .= ":00";
+
+                        $sql = "LOCK TABLES votazione WRITE";
+                        if($conn->query($sql)) {
+
+                            //Transazione
+                            $sql = "BEGIN TRANSACTION";
+                            $conn->query($sql);
+
+                            //Inserisci Votazione
+                            $sql = "Insert into votazione (quesito, tipo, inizio, fine, scelteMax, quorum)
+                                values ('" . $_POST['quesito'] . "','" . $_POST['tipo'] . "','" . $inizio . "' ,'" . $fine . "' ,'" . $_POST['scelteMax'] . "', '0')";
+
+                                if ($conn->query($sql) === TRUE) {
+                                    echo "New record created successfully";
+
+                                    $sql = "SELECT MAX(id) as maxId from votazione";
+                                    $result = $conn->query($sql);
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc())
+                                        {
+                                            $idInsert = $row["maxId"];
+                                        }
+                                        $_SESSION["idVotazione_Opzione"] = $idInsert;
+                                        //Commit Transaction
+                                        $sql = "COMMIT";
+                                        $conn->query($sql);
+                                        //End Transaction
+                                        $sql = "END TRANSACTION";
+                                        $conn->query($sql);
+                                        
+                                        $sql = "UNLOCK TABLES";
+                                        $conn->query($sql);
+                                        header("Location: gestisci_opzione.php");
+
+                                    } //Getting max ID
+                                    else
+                                    {
+                                        echo "Error: " . $sql . "<br>" . $conn->error;
+                                        //Rollbakc transaction
+                                        $sql = "ROLLBACK";
+                                        $conn->query($sql);
+                                        //END Transaction
+                                        $sql = "END TRANSACTION";
+                                        $conn->query($sql);
+
+                                        $sql = "UNLOCK TABLES";
+                                        $conn->query($sql);
+                                    }
+                                } //Insert Votazione
+                                else
+                                {
+                                    echo "Error: " . $sql . "<br>" . $conn->error;
+                                }
+                        } //Lock Table
+                        else
+                        {
+                            echo $sql = "UNLOCK TABLES";
+                            $conn->query($sql);
+                            //tabella gia bloccata
+                        }
+
 					} 
 					
 					//form di modifica del quesito, si genera se si schiaccia il tasto nel form 
