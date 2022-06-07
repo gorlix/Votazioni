@@ -33,6 +33,7 @@
         <br>
         <br>
         <form action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>' method='post'>
+
             <input type='submit' name='submit' value='Crea utente'>
             <input type='submit' name='submit' value='Modifica utente'>
             <input type='submit' name='submit' value='Elimina utente'>
@@ -40,7 +41,9 @@
         <?php
             if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $aus = $_POST["submit"];
-                if($aus  == "Crea utente"){
+                if($aus == "selUser"){
+                    $_SESSION["user_selected"] = $_POST["submittedUsr"];
+                }else if($aus  == "Crea utente"){
                     stampaFormCreazioneUtente();
                 }else if($aus  == "Modifica utente"){
                     $mail_selectded = $_POST["mail_inpt"];
@@ -70,7 +73,7 @@
                     $id_Group = "";
                     rimuoviUtenteDalGruppo($id_User, $id_Group);
                 }
-                //echo $aus, $_POST["submittedUsr"];
+                echo $_SESSION["user_selected"];
             }
         ?>
 
@@ -163,7 +166,7 @@ function stampaSelezioneUser(){
             $str .= "<option value='" . $row["id"] . "'>" . $row["mail"] . "</option>";
         }
     }
-    $str .= "</select><input type='submit' id='btnSubDrpSelUsr' hidden name='submit' value='subButton'></form>";
+    $str .= "</select><input type='submit' id='btnSubDrpSelUsr' hidden name='submit' value='selUser'></form>";
     echo $str;
 }
 
