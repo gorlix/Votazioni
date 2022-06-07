@@ -46,18 +46,16 @@
                 }else if($aus  == "Crea utente"){
                     stampaFormCreazioneUtente();
                 }else if($aus  == "Modifica utente"){
-                    $mail_selectded = $_POST["mail_inpt"];
-                    stampaFormModificaUtente($mail_selectded);
+                    stampaFormModificaUtente($_SESSION["user_selected"]);
                 }else if($aus == "Elimina utente"){
-                    $mail_selectded = "";
-                    eliminaUtente($mail_selectded);
+                    eliminaUtente($_SESSION["user_selected"]);
                 }else if($aus == "SalvaModificaUtente"){
+                    //Da prendere
                     $new_pw = "";
                     $new_nome = "";
                     $new_cognome = "";
                     $new_mail = "";
-                    $mail_selectded = "";
-                    modificaUtente($new_pw, $new_nome, $new_cognome, $new_mail, getIdUtente(connettiDb(), $mail_selectded));
+                    modificaUtente($new_pw, $new_nome, $new_cognome, $new_mail, getIdUtente(connettiDb(), $_SESSION["user_selected"]));
                 }else if($aus == "SalvaCreazioneUtente"){
                     $new_pw = $_POST["pw_inpt"];
                     $new_nome = $_POST["nome_inpt"];
@@ -65,13 +63,13 @@
                     $new_mail = $_POST["mail_inpt"];
                     creaUtente($new_pw, $new_nome, $new_cognome, $new_mail);
                 }else if ($aus == "Aggiungi al gruppo"){
-                    $id_User = "";
-                    $id_Group = "";
-                    aggiungiUntenteAlGruppo($id_User, $id_Group);
+                    $id_gruppo = $_POST["id_gruppo"];
+                    echo $id_gruppo."aggiungi";
+                    //aggiungiUntenteAlGruppo($_SESSION["user_selected"], $id_gruppo);
                 }else if($aus == "Rimuovi dal gruppo"){
-                    $id_User = "";
-                    $id_Group = "";
-                    rimuoviUtenteDalGruppo($id_User, $id_Group);
+                    $id_gruppo = $_POST["id_gruppo"];
+                    echo $id_gruppo."rimuovi";
+                    //rimuoviUtenteDalGruppo($_SESSION["user_selected"], $id_gruppo);
                 }
                 echo $_SESSION["user_selected"];
             }
@@ -79,7 +77,7 @@
 
         <?php
         echo "<h2>Gestione gruppi utente</h2><h3>Seleziona gruppo</h3>";
-        $str = "<form action='$_SERVER[PHP_SELF]' method='post'><select name='nome'>";
+        $str = "<form action='$_SERVER[PHP_SELF]' method='post'><select name='id_gruppo'>";
         $str .= "<option value='0'></option>";
         $query = "SELECT id, nome FROM gruppo";
         $conn = connettiDb();
@@ -137,11 +135,11 @@ function stampaFormCreazioneUtente(){
          </form>";
 }
 
-function stampaFormModificaUtente($mail_selected){
+function stampaFormModificaUtente($id_user){
     echo "<form action='$_SERVER[PHP_SELF]' method='post'><br><br>
             <h2>Modifica utente</h2>
             <label>Mail</label>
-                <input type='text' name='mail_inpt' value='$mail_selected'>
+                <input type='text' name='mail_inpt'>
             <label>Password</label>
                 <input type='text' name='pw_inpt'><br><br>
             <label>Nome</label>
@@ -170,10 +168,10 @@ function stampaSelezioneUser(){
     echo $str;
 }
 
-function eliminaUtente($mail_selected){
+function eliminaUtente($id_user){
     //Eliminazione utente dal DB
     $conn = connettiDb();
-    $query = "DELETE FROM utente WHERE mail = '$mail_selected'";
+    $query = "DELETE FROM utente WHERE id = '$id_user'";
     $ris = $conn->query($query);
     if (!$ris) {
         echo "Errore eliminazione utente";
