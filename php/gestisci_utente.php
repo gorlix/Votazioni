@@ -53,7 +53,8 @@
                     $new_nome = "";
                     $new_cognome = "";
                     $new_mail = "";
-                    modificaUtente($new_pw, $new_nome, $new_cognome, $new_mail);
+                    $mail_selectded = "";
+                    modificaUtente($new_pw, $new_nome, $new_cognome, $new_mail, getIdUtente(connettiDb(), $mail_selectded));
                 }else if($aus == "SalvaCreazioneUtente"){
                     $new_pw = "";
                     $new_nome = "";
@@ -168,20 +169,51 @@ function stampaSelezioneUser(){
 
 function eliminaUtente($mail_selected){
     //Eliminazione utente dal DB
+    $conn = connettiDb();
+    $query = "DELETE FROM utente WHERE mail = '$mail_selected'";
+    $ris = $conn->query($query);
+    if (!$ris) {
+        echo "Errore eliminazione utente";
+    }
+    $conn->close();
 }
 
-function modificaUtente($new_pw, $new_nome, $new_cognome, $new_mail){
+function modificaUtente($new_pw, $new_nome, $new_cognome, $new_mail, $id_utente){
     //Modifica utente nel DB
+    $conn = connettiDb();
+    $query = "UPDATE utente SET password = '$new_pw', nome = '$new_nome', cognome = '$new_cognome', mail = '$new_mail' WHERE id = '$id_utente'";
+    $ris = $conn->query($query);
+    if (!$ris) {
+        echo "Errore modifica utente";
+    }
 }
 
 function creaUtente($pw, $nome, $cognome, $mail){
     //Creazione utente nel DB
+    $conn = connettiDb();
+    $query = "INSERT INTO utente (password, nome, cognome, mail) VALUES ('$pw', '$nome', '$cognome', '$mail')";
+    $ris = $conn->query($query);
+    if (!$ris) {
+        echo "Errore creazione utente";
+    }
 }
 
 function aggiungiUntenteAlGruppo($id_User, $id_Group){
     //Aggiungi utente al gruppo
+    $conn = connettiDb();
+    $query = "INSERT INTO appartienea (idUtente, idGruppo) VALUES ('$id_User', '$id_Group')";
+    $ris = $conn->query($query);
+    if (!$ris) {
+        echo "Errore aggiunta utente al gruppo";
+    }
 }
 
 function rimuoviUtenteDalGruppo($id_User, $id_Group){
     //Rimuovi utente dal gruppo
+    $conn = connettiDb();
+    $query = "DELETE FROM appartienea WHERE idUtente = '$id_User' AND idGruppo = '$id_Group'";
+    $ris = $conn->query($query);
+    if (!$ris) {
+        echo "Errore rimozione utente dal gruppo";
+    }
 }
