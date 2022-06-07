@@ -213,7 +213,7 @@
 	
 								  echo "New record created successfully";
 								}else{
-									echo "Error: " . $sql . "<br>" . $conn->error;
+									echo "Error: " . $query . "<br>" . $conn->error;
 								}
 							}
 						}
