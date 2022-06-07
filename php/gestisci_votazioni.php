@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../stile/globalStyle.css">
     <title>Votazione</title>
-
 </head>
 <body>
     <div class="container">
@@ -243,12 +242,11 @@
 						}
 						$content.="</select>.
 								<input hidden type='text' name='idVotazione' value='".$_POST['quesito']."' >
-								<br><br><input type='submit' name='aggiungiG' value='Aggiungi'/><br>
+								<br><br><input type='submit' name='aggiungiG' value='Aggiungi gruppo'/><br>
 								<br><input type='submit' name='rimuoviG' value='Rimuovi gruppo'/><br>
 								</form>";
 						echo $content;
 					}
-
 					//aggiunge tutti gli utenti del gruppo alla votazione
 					else if(isset($_POST['aggiungiG']))  
 					{
@@ -315,9 +313,7 @@
 					
 					echo $content;
 				}
-
 			?>
-			
 		</center>
         </div>
     </div>
