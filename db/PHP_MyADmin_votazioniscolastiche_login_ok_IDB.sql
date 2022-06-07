@@ -112,6 +112,7 @@ CREATE TABLE `risposta` (
   `ora` time NOT NULL,
   `idUtente` int(11) NOT NULL,
   `idVotazione` int(11) NOT NULL,
+  `pubblica` boolean DEFAULT false,
   `idOpzione` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

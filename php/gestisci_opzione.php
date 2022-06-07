@@ -59,14 +59,11 @@ Matteo Schintu
 
 
             <?php
-                
-                //session_start();
-                $server = "localhost";
-			    $username = "root";
-			    $password = "";
-			    $dbName = "votazioniscolastiche";
-                $idVotazione = $_SESSION["idVotazione_Opzione"];
-                //$idVotazione = 3;
+				if(!isset($_SESSION))
+				{
+					session_start();
+				}
+				$idVotazione = $_SESSION["idVotazione_Opzione"];
                 $conn = connettiDb();
 
                 if ($conn->connect_error) {

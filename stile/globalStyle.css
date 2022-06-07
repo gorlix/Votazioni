@@ -48,7 +48,7 @@ body {
     font-family: 'Roboto Mono', monospace;
     font-family: 'Space Mono', monospace;
 
-    font-size: 60px;
+    font-size: 35px;
 
     display: flex;
 
@@ -85,14 +85,18 @@ body {
 td{
     font-family: 'Roboto Mono', monospace;
     font-family: 'Space Mono', monospace;
+
     padding:10px;
 }
 
  .titoli{
     font-family: 'Roboto Mono', monospace;
     font-family: 'Space Mono', monospace;
+
     padding:10px; 
+
     font-size: 20px;
+
     align-content:left;
 }
 
@@ -107,4 +111,4 @@ td{
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-  }
+}
