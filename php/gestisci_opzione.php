@@ -54,7 +54,11 @@
 
 
             <?php
-                
+				if(!isset($_SESSION))
+				{
+					session_start();
+				}
+				$idVotazione = $_SESSION["idVotazione_Opzione"];
                 $conn = connettiDb();
 
                 if ($conn->connect_error) {

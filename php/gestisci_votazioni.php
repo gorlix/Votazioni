@@ -17,14 +17,17 @@
             <p class="titolo-header">Gestisci Votazioni</p>
         </div>
         <?PHP
-			require __DIR__. '/SharedFunctions.php';
+		//	require __DIR__. '/SharedFunctions.php';
             include "Navbar.php";
         ?>
         <div class="contenuto">
             <center>
             <h1 style="align:center; font-family: 'Roboto Mono', monospace;font-family: 'Space Mono', monospace;">Lista Votazioni</h1>
 			<?php
-				
+				if(!isset($_SESSION))
+				{
+					session_start();
+				}
 				$conn = connettiDb();
 
 				if ($conn->connect_error) {
@@ -126,7 +129,6 @@
 					//modifica il quesito scelto
 					else if(isset($_POST['update']))
 					{
-						echo $_POST['inizio'];
 						
 						$sql = "UPDATE votazione SET quesito = '".$_POST['quesito']."', tipo = '".$_POST['tipo']."',
 								inizio = '".$_POST['inizio']."', fine = '".$_POST['fine']."', scelteMax = '"
@@ -134,6 +136,8 @@
 								
 						if ($conn->query($sql) === TRUE) {
 						  echo "Record updated successfully";
+						  $_SESSION["idVotazione_Opzione"] = $_POST['id'];
+						  header("refresh: 3; URL= gestisci_votazioni.php");
 						} else {
 						  echo "Error updating record: " . $conn->error;
 						}
