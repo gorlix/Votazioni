@@ -43,7 +43,7 @@
                 if($aus  == "Crea utente"){
                     stampaFormCreazioneUtente();
                 }else if($aus  == "Modifica utente"){
-                    $mail_selectded = "mail.prova@mail.com";
+                    $mail_selectded = $_POST["mail_inpt"];
                     stampaFormModificaUtente($mail_selectded);
                 }else if($aus == "Elimina utente"){
                     $mail_selectded = "";
