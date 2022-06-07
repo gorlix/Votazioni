@@ -51,8 +51,6 @@
         ?>
         <div class="contenuto">
             <!--Contenuto della pagine qui sotto-->
-
-
             <?php
 				if(!isset($_SESSION))
 				{
@@ -68,12 +66,26 @@
                 if($_SERVER["REQUEST_METHOD"] == "POST"){  
                     if($_POST["operazione"] == 1){
                         $opzione = $_POST['opzione'];
-                        //$idVotazione = $_POST['id'];
-                        $query = "insert into opzione(testo,idVotazione) values ('" . $opzione . "', '" . $idVotazione . "')";
-                        $conn->query($query);
-                        /*$result = $conn->query($query);
-                        $row = $result->fetch_assoc();*/
-                    
+                        // detenere il lock di due tabelle: una per le opzioni e una per le votazioni
+                        // una per le opzioni contiene una chiave primaria che corrisponde all'id della votazione
+                        // controllare che l'opzione non sia già presente
+                        $lock = "LOCK TABLES opzione WRITE, votazione WRITE";
+                        $conn->query($lock);
+                        $startTrans = "START TRANSACTION"; 
+                        $conn->query($startTrans);
+                        $sql = "SELECT id FROM opzione WHERE idVotazione LIKE '" . $idVotazione . "' AND testo LIKE '" . $opzione . "'";
+                        $result = $conn->query($sql);
+                        if($result->num_rows == 0) {
+                            //$idVotazione = $_POST['id'];
+                            $query = "insert into opzione(testo,idVotazione) values ('" . $opzione . "', '" . $idVotazione . "')";
+                            $conn->query($query);
+                            /*$result = $conn->query($query);
+                            $row = $result->fetch_assoc();*/
+                        }
+                        $endTrans = "COMMIT";
+                        $conn->query($endTrans);
+                        $unlock = "UNLOCK TABLES";
+                        $conn->query($unlock);
                     }else if($_POST["operazione"] == 2){
                         $testo = $_POST["testo"];
                         $idOpzione = $_POST["idOperazione"];
@@ -86,11 +98,8 @@
 
                         $query = "DELETE FROM opzione WHERE id = " . $idOpzione;
                         $conn -> query($query);
-
                     }
                          //echo "ciaooooooooooo giggggiii";
-                   
-    
                 }
 
                 /*if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -103,7 +112,6 @@
 
                 $query = "select quesito from votazione WHERE id = " . $idVotazione;
                 $result = $conn->query($query);
-                
                 
                 while($row = $result->fetch_assoc()){
                     //$conn->close();
@@ -143,8 +151,6 @@
                 }
             //$conn->close();
             ?>
-
-
         </div>
     </div>
 </body>
