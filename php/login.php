@@ -17,7 +17,7 @@
         $password = $_POST['password'];
         if(valida_mail($mail)){
             if (check_login(connettiDb(), $mail, $password)) {
-                $_SESSION['id_utente'] = getIdUtente(connettiDb(), $mail);
+                $_SESSION['id_utente'] = getIdUtente($mail);
                 header("Location: home.php");
             } else {
                 $_SESSION['loginpageError'] = "Wrong mail or password!";
