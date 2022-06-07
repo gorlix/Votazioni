@@ -43,17 +43,31 @@
                 if($aus  == "Crea utente"){
                     stampaFormCreazioneUtente();
                 }else if($aus  == "Modifica utente"){
-                    stampaFormModificaUtente("mail.prova@mail.com");
+                    $mail_selectded = "mail.prova@mail.com";
+                    stampaFormModificaUtente($mail_selectded);
                 }else if($aus == "Elimina utente"){
-                    eliminaUtente();
+                    $mail_selectded = "";
+                    eliminaUtente($mail_selectded);
                 }else if($aus == "SalvaModificaUtente"){
-                    modificaUtente();
+                    $new_pw = "";
+                    $new_nome = "";
+                    $new_cognome = "";
+                    $new_mail = "";
+                    modificaUtente($new_pw, $new_nome, $new_cognome, $new_mail);
                 }else if($aus == "SalvaCreazioneUtente"){
-                    creaUtente();
+                    $new_pw = "";
+                    $new_nome = "";
+                    $new_cognome = "";
+                    $new_mail = "";
+                    creaUtente($new_pw, $new_nome, $new_cognome, $new_mail);
                 }else if ($aus == "Aggiungi al gruppo"){
-                    aggiungiUntenteAlGruppo();
+                    $id_User = "";
+                    $id_Group = "";
+                    aggiungiUntenteAlGruppo($id_User, $id_Group);
                 }else if($aus == "Rimuovi dal gruppo"){
-                    rimuoviUtenteDalGruppo();
+                    $id_User = "";
+                    $id_Group = "";
+                    rimuoviUtenteDalGruppo($id_User, $id_Group);
                 }
                 echo $aus, $_POST["submittedUsr"];
             }
@@ -61,7 +75,7 @@
 
         <?php
         echo "<h2>Gestione gruppi utente</h2><h3>Seleziona gruppo</h3>";
-        $str = "<select name='nome'>";
+        $str = "<form action='$_SERVER[PHP_SELF]' method='post'><select name='nome'>";
         $str .= "<option value='0'></option>";
         $query = "SELECT id, nome FROM gruppo";
         $conn = connettiDb();
@@ -71,14 +85,12 @@
                 $str .= "<option value='".$row["id"]."'>".$row["nome"]."</option>";
             }
         }
-        $str.="</select>";
-        echo $str;
-
-        echo "<form action='$_SERVER[PHP_SELF]' method='post'>
+        $str.="</select>
             <br><br>
             <input type='submit' name='submit' value='Aggiungi al gruppo'>
             <input type='submit' name='submit' value='Rimuovi dal gruppo'><br><br>
         </form>";
+        echo $str;
         //stampaGruppi("mail.prova@mail.com");
         ?>
     </div>
