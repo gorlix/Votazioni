@@ -30,18 +30,17 @@
             <center>
             <h1 style="align:center; font-family: 'Roboto Mono', monospace;font-family: 'Space Mono', monospace;">Lista Votazioni</h1>
         <?php
+        $_SESSION["user_selected"] = 0;
         $server = "localhost";
         $username = "root";
         $password = "";
         $dbName = "votazioniscolastiche";
         $sql = "";
-        $tab;
 
         $conn = mysqli_connect($server,$username,$password,$dbName);
         if(!$conn){
             die("Connessione Fallita: " . mysqli_connect_error());
         }
-
         $sql = "select id,quesito,tipo,fine FROM votazione";
 
         $result = mysqli_query($conn,$sql);
