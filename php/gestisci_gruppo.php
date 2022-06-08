@@ -17,10 +17,57 @@
             <p class="titolo-header">Gestisci Gruppo</p>
         </div>
         <?PHP
-            include "Navbar.php";
+            //include "Navbar.php";
         ?>
         <div class="contenuto">
-            <!--Contenuto della pagine qui sotto-->
+                <?php
+                    require __DIR__ . '/SharedFunctions.php';
+
+
+                        if(isset($_POST['Elimina']))
+                        {
+                            $id = $_POST['Elimina'];
+                            $query = "DELETE FROM gruppo WHERE id = $id";
+                            $conn = connettiDb();
+                            $conn->query($query);
+                            $conn -> close();
+                        }
+                        if(isset($_POST['Crea']))
+                        {
+                            $nome = $_POST['Crea'];
+                            echo $query = "INSERT INTO gruppo(nome) value ('$nome')";
+                            $conn = connettiDb();
+                            $conn->query($query);
+                            $conn -> close();
+                        }
+
+                        echo '<form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . ' "method="post">';
+                        $var = "<label for='nome''>Elimina Gruppo: </label>";
+                        $var .= "<select name='Elimina'>";
+
+                        $query = "SELECT  id, nome FROM gruppo";
+                        $conn = connettiDb();
+                        $ris=$conn->query($query);
+                        if ($ris->num_rows > 0) {
+                            while($row = $ris->fetch_assoc()) {
+                                $quesito = $row["nome"];
+                                $id = $row["id"];
+                                $var .= "<option value='$id' name='Elimina'>$quesito</option>";
+                            }
+                        }
+                        $var .= "</select>";
+                        echo $var;
+                        echo "\n" . "<button type='submit' >Elimina Gruppo</button>";
+                        echo "</form>";
+
+                        echo '<form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . ' "method="post">';
+                        $var = "<label for='Crea'>Crea Gruppo: </label>";
+                        $var .= "<input type='text' name='Crea' id='CreaGruppo'>";
+                        echo $var;
+                        echo "\n<button type='submit'>Crea Gruppo</button>";
+                        echo "</form>";
+
+                ?>
         </div>
     </div>
 </body>
