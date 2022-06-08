@@ -33,7 +33,7 @@
         if(!isset($_SESSION)) { 
             session_start(); 
         }
-
+        $_SESSION["user_selected"] = 0;
         $server = "localhost";
         $username = "root";
         $password = "";

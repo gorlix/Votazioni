@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../stile/globalStyle.css">
     <title>Votazione</title>
-
 </head>
 <body>
     <div class="container">
@@ -17,7 +16,6 @@
             <p class="titolo-header">Gestisci Votazioni</p>
         </div>
         <?PHP
-		//	require __DIR__. '/SharedFunctions.php';
             include "Navbar.php";
         ?>
         <div class="contenuto">
@@ -31,10 +29,10 @@
 				}
 				$conn = connettiDb();
 
-				if ($conn->connect_error) {
-					die("Connection failed: " . $conn->connect_error);
-				}
-				
+
+                /*
+                 * Inizio Serie Verifiche per richeste metodi POST
+                 */
 				if ($_SERVER["REQUEST_METHOD"] == "POST") 
 				{
 					//form di creazione del quesito, si genera se si schiaccia il tasto nel form 
@@ -195,7 +193,8 @@
 						  echo "Error updating record: " . $conn->error;
 						}
 					}
-					//cancella il quesito selezionato 
+
+                    //cancella il quesito selezionato
 					else if(isset($_POST['cancella']))  
 					{
 						$sql = "DELETE FROM votazione WHERE id='".$_POST['quesito']."'";
@@ -213,8 +212,9 @@
 						$_SESSION["idVotazione_Opzione"] = $_POST['quesito'];
 						header("location: gestisci_opzione.php");
 					}
-					// pagina gestione della votazione
-					else if(isset($_POST['gestisciG']))  
+
+                    // pagina gestione della votazione
+					else if(isset($_POST['assegna']))
 					{
 						$query = "select quesito from votazione WHERE id = " . $_POST['quesito'];
 						$result = $conn->query($query);
@@ -243,13 +243,13 @@
 						}
 						$content.="</select>.
 								<input hidden type='text' name='idVotazione' value='".$_POST['quesito']."' >
-								<br><br><input type='submit' name='aggiungiG' value='Aggiungi'/><br>
-								<br><input type='submit' name='rimuoviG' value='Rimuovi gruppo'/><br>
+								<br><br><input type='submit' name='aggiungiG' value='Assegna al gruppo'/><br>
+								<br><input type='submit' name='rimuoviG' value='Rimuovi il gruppo dalla Votazione'/><br>
 								</form>";
 						echo $content;
 					}
 
-					//aggiunge tutti gli utenti del gruppo alla votazione
+                    //aggiunge tutti gli utenti del gruppo alla votazione
 					else if(isset($_POST['aggiungiG']))  
 					{
 						$query = "SELECT  idUtente FROM appartienea where idGruppo=".$_POST['gruppo'];
@@ -261,13 +261,13 @@
 							{
 								
 								$idUtente = $row["idUtente"];
+
 								//genera l'hash con idUtente + idVotazione
-								$stringhash = $idUtente.$_POST['idVotazione'];
+								$hash = generaHash($idUtente, $_POST['idVotazione']);
 								$inserisci = "Insert into esegue (idUtente, idVotazione, hash)
-									values ('".$idUtente."','".$_POST['idVotazione']."','".hash_password($stringhash)."')";
+									values ('".$idUtente."','".$_POST['idVotazione']."','".$hash."')";
 								if ($conn->query($inserisci) === TRUE) 
 								{
-	
 								  echo "New record created successfully";
 								}else{
 									echo "Error: " . $query . "<br>" . $conn->error;
@@ -275,22 +275,28 @@
 							}
 						}
 					}
-					//rimuovi tutti gli utenti appartenenti a quel gruppo
+
+                    //rimuovi tutti gli utenti appartenenti a quel gruppo
 					else if(isset($_POST['aggiungiG']))  
 					{
 						
 					}
-					echo "".'<form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
+
+                    echo "".'<form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
 								"<br><input type='submit' name='' value='Ritorna alla scelta votazione'/><br>
 							</form>"; 
-				}else 
+				}
+                /*
+                 * Fine Verifche metodo POST
+                 */
+                else
 				{
 					$content = "<h3>OPERAZIONE VOTAZIONE </h3>
 								<br>
 						
 								<p>Nome della votazione</p>".
 						
-								'<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
+								'<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) .'">'.
 							
 								"<select name='quesito'>";
 
@@ -302,24 +308,51 @@
 							$quesito = $row["quesito"];
 							$id = $row["id"];
 							// $altro = $row["altro"];
-							$content.= "<option name='quesito' value='$id'>$quesito</option>\n";
+							$content.= "<option name='quesito' value='$id'>$quesito</option> <br>";
 						}
 					}
-					$content.="</select>.
+                    echo $content;
+                    echo "<br>";
+					$content ="</select>.
 								<br><input type='submit' name='crea' value='Crea votazione'/><br>
 								<br><input type='submit' name='modifica' value='Modifica votazione'/><br>
 								<br><input type='submit' name='cancella' value='Cancella votazione'/><br>
 								<br><input type='submit' name='gestisci' value='Gestisci opzione'/><br>
-								<br><input type='submit' name='gestisciG' value='Gestisci gruppo'/><br>
+								<br><input type='submit' name='assegna' value='Assegna Votazione'/><br>
 								</form>";
 					
 					echo $content;
 				}
-
 			?>
-			
 		</center>
         </div>
     </div>
 </body>
 </html>
+
+<?PHP
+    function generaHash($idUtente, $idVotazione)
+    {
+        $key = $idUtente;
+        $key.= $idVotazione;
+
+        $hash = hash('sha256', $key, false);
+
+        $conn = connettiDb();
+
+        $sql = "Select hash from esegue where hash like '$hash'";
+        $ris=$conn->query($sql);
+        //Se trovo un HASH uguale ricalcolo finche non sara diverso
+        if($ris->num_rows > 0)
+        {
+            do{
+                echo $hash = hash('sha256', $hash, false);
+                $sql = "Select hash from esegue where hash like '$hash'";
+                $ris=$conn->query($sql);
+            } while($ris->num_rows > 0);
+        }
+
+        $conn->close();
+        return $hash;
+    }
+?>
