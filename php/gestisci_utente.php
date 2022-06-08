@@ -11,7 +11,7 @@
 
     <script>
         $(document).ready(function(){
-            $("#drpUsr").change(function() {
+            $("#drpUsr").change(function() {    
                 $("#btnSubDrpSelUsr").click();
             });
         });

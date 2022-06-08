@@ -340,7 +340,7 @@
 
         $conn = connettiDb();
 
-        $sql = "Select hash from esegue where hash like $hash";
+        $sql = "Select hash from esegue where hash like '$hash'";
         $ris=$conn->query($sql);
         //Se trovo un HASH uguale ricalcolo finche non sara diverso
         if($ris->num_rows > 0)
