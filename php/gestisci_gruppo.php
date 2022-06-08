@@ -17,13 +17,11 @@
             <p class="titolo-header">Gestisci Gruppo</p>
         </div>
         <?PHP
-            //include "Navbar.php";
+            include "Navbar.php";
         ?>
         <div class="contenuto">
                 <?php
-                    require __DIR__ . '/SharedFunctions.php';
-
-
+                    //require __DIR__ . '/SharedFunctions.php';
                         if(isset($_POST['Elimina']))
                         {
                             $id = $_POST['Elimina'];
@@ -33,11 +31,25 @@
                             $conn -> close();
                         }
                         if(isset($_POST['Crea']))
-                        {
-                            $nome = $_POST['Crea'];
-                            echo $query = "INSERT INTO gruppo(nome) value ('$nome')";
+                        {   
                             $conn = connettiDb();
-                            $conn->query($query);
+                            $lock = "LOCK TABLES gruppo WRITE";
+                            $conn->query($lock);
+                            $startTrans = "START TRANSACTION";
+                            $query = "SELECT id FROM gruppo WHERE nome = '".$_POST['Crea']."'";
+                            $result = $conn->query($query);
+                            if($result->num_rows == 0)
+                            {
+                               $nome = $_POST['Crea'];
+                                $query = "INSERT INTO gruppo(nome) value ('$nome')";
+                                $conn->query($query); 
+                            }
+                            $commit = "COMMIT";
+                            $conn->query($commit);
+                            $endTrans = "END TRANSACTION";
+                            $conn->query($endTrans);
+                            $unlock = "UNLOCK TABLES";
+                            $conn->query($unlock);
                             $conn -> close();
                         }
 
@@ -66,7 +78,6 @@
                         echo $var;
                         echo "\n<button type='submit'>Crea Gruppo</button>";
                         echo "</form>";
-
                 ?>
         </div>
     </div>
