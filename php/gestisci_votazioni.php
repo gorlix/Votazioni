@@ -347,7 +347,7 @@
         {
             do{
                 echo $hash = hash('sha256', $hash, false);
-                $sql = "Select hash from esegue where hash like $hash";
+                $sql = "Select hash from esegue where hash like '$hash'";
                 $ris=$conn->query($sql);
             } while($ris->num_rows > 0);
         }
