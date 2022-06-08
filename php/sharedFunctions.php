@@ -25,7 +25,8 @@ function check_login($conn, $mail, $password){
     return $valido;
 }
 
-function getIdUtente($conn, $mail){
+function getIdUtente($mail){
+	$conn = connettiDb();
     $sql = "SELECT id FROM utente WHERE mail = '$mail'";
     $result = $conn->query($sql);
     $row = $result->fetch_assoc();
@@ -38,6 +39,18 @@ function hash_password($password) {
     return sha1($password);
 }
 
+function mailEsistente($mail) {
+	$esistente = false;
+	$conn = connettiDb();
+	$sql = "SELECT id FROM utente WHERE mail = '$mail'";
+	$result = $conn->query($sql);
+	if ($result->num_rows > 0) {
+		$esistente = true;
+	}
+
+	return $esistente;
+}
+
 //funzioner per verificare il formato valido della mail inserita
 function valida_mail($mail) {
     $valida = true;
@@ -46,8 +59,40 @@ function valida_mail($mail) {
     return $valida;
 }
 
+function getNomeGruppo($id_gruppo){
+	$conn = connettiDb();
+	$query = "SELECT nome FROM gruppo WHERE id = '$id_gruppo'";
+	$result = $conn -> query($query);
+	$row = $result -> fetch_assoc();
+	return $row["nome"];
+}
 
+function getMailUtente($id){
+	$conn = connettiDb();
+	$sql = "SELECT mail FROM utente WHERE id = '$id'";
+	$result = $conn->query($sql);
+	$row = $result->fetch_assoc();
+	$conn->close();
+	return $row['mail'];
+}
 
+function getCognomeUtente($id) {
+	$conn = connettiDb();
+	$sql = "SELECT cognome FROM utente WHERE id = '$id'";
+	$result = $conn->query($sql);
+	$row = $result->fetch_assoc();
+	$conn->close();
+	return $row['cognome'];
+}
+
+function getNomeUtente($id) {
+	$conn = connettiDb();
+	$sql = "SELECT nome FROM utente WHERE id = '$id'";
+	$result = $conn->query($sql);
+	$row = $result->fetch_assoc();
+	$conn->close();
+	return $row['nome'];
+}
 
 //ricerca ID Admin
 function get_Id_Admin()
