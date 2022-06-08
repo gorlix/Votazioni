@@ -26,7 +26,6 @@
     
         $_SESSION['errore'] = "";
         $_SESSION['voto'] = "";
-        
 
         // $_SESSION['id_utente'];
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -88,7 +87,6 @@
 
             $qryVotato = "SELECT id FROM risposta WHERE idUtente = '" . $_SESSION['idUtente'] . "' AND  idVotazione = '" . $_SESSION['idVot'] . "'";
             $resultVotato = $conn->query($qryVotato);
-            echo '<script>console.log("' . $qryVotato . '");</script>';
 
             if($resultVotato->num_rows > 0) {
                 $_SESSION['voto'] = "HAI GIÀ VOTATO";
@@ -111,8 +109,10 @@
                             $_SESSION['errore'] = "ERRORE: tipo di votazione inesistente o votazione non valida";
                         }
                         
-                        $lock = "START TRANSACTION";
+                        $lock = "LOCK TABLES opzione WRITE";
                         $conn->query($lock);
+                        $startTrans = "START TRANSACTION";
+                        $conn->query($startTrans);
 
                         for($i = 0; $i < count($opzioni); $i++) {
                             $qrynVotOp = "SELECT nVoti FROM opzione WHERE id LIKE '" . $opzioni[$i] . "' AND idVotazione LIKE '" . $_SESSION['idVot'] . "'";
@@ -142,6 +142,9 @@
 
                     $commit = "COMMIT";
                     $conn->query($commit);
+                    $endTrans = "END TRANSACTION";
+                    $conn->query($endTrans);
+                    $unlock = "UNLOCK TABLES";
 
                     if($tipoVot == "anonimo") {
                         $qryVotAnonim = "INSERT INTO risposta(data, ora, idUtente, idVotazione) VALUES 
