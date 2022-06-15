@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 19, 2022 alle 11:57
+-- Creato il: Giu 15, 2022 alle 22:29
 -- Versione del server: 5.7.17
 -- Versione PHP: 5.6.30
 
@@ -30,6 +30,7 @@ USE `votazioniscolastiche`;
 -- Struttura della tabella `appartienea`
 --
 
+DROP TABLE IF EXISTS `appartienea`;
 CREATE TABLE `appartienea` (
   `idUtente` int(11) NOT NULL,
   `idGruppo` int(11) NOT NULL
@@ -50,6 +51,7 @@ INSERT INTO `appartienea` (`idUtente`, `idGruppo`) VALUES
 -- Struttura della tabella `esegue`
 --
 
+DROP TABLE IF EXISTS `esegue`;
 CREATE TABLE `esegue` (
   `idUtente` int(11) NOT NULL,
   `idVotazione` int(11) NOT NULL,
@@ -59,9 +61,22 @@ CREATE TABLE `esegue` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `eseguegruppo`
+--
+
+DROP TABLE IF EXISTS `eseguegruppo`;
+CREATE TABLE `eseguegruppo` (
+  `idGruppo` int(11) NOT NULL,
+  `idVotazione` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `gruppo`
 --
 
+DROP TABLE IF EXISTS `gruppo`;
 CREATE TABLE `gruppo` (
   `id` int(11) NOT NULL,
   `nome` varchar(30) NOT NULL
@@ -81,6 +96,7 @@ INSERT INTO `gruppo` (`id`, `nome`) VALUES
 -- Struttura della tabella `opzione`
 --
 
+DROP TABLE IF EXISTS `opzione`;
 CREATE TABLE `opzione` (
   `id` int(11) NOT NULL,
   `testo` varchar(40) NOT NULL,
@@ -94,6 +110,7 @@ CREATE TABLE `opzione` (
 -- Struttura della tabella `recupero`
 --
 
+DROP TABLE IF EXISTS `recupero`;
 CREATE TABLE `recupero` (
   `hash` varchar(256) NOT NULL,
   `idUtente` int(11) NOT NULL,
@@ -107,12 +124,13 @@ CREATE TABLE `recupero` (
 -- Struttura della tabella `risposta`
 --
 
+DROP TABLE IF EXISTS `risposta`;
 CREATE TABLE `risposta` (
   `data` date NOT NULL,
   `ora` time NOT NULL,
   `idUtente` int(11) NOT NULL,
   `idVotazione` int(11) NOT NULL,
-  `pubblica` boolean DEFAULT false,
+  `pubblica` tinyint(1) DEFAULT '0',
   `idOpzione` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -122,6 +140,7 @@ CREATE TABLE `risposta` (
 -- Struttura della tabella `utente`
 --
 
+DROP TABLE IF EXISTS `utente`;
 CREATE TABLE `utente` (
   `id` int(11) NOT NULL,
   `pw` varchar(512) NOT NULL,
@@ -145,6 +164,7 @@ INSERT INTO `utente` (`id`, `pw`, `mail`, `nome`, `cognome`, `forzaModificaPW`) 
 -- Struttura della tabella `votazione`
 --
 
+DROP TABLE IF EXISTS `votazione`;
 CREATE TABLE `votazione` (
   `id` int(11) NOT NULL,
   `quesito` varchar(40) NOT NULL,
@@ -172,6 +192,13 @@ ALTER TABLE `appartienea`
 ALTER TABLE `esegue`
   ADD PRIMARY KEY (`idUtente`,`idVotazione`),
   ADD UNIQUE KEY `hash` (`hash`),
+  ADD KEY `idVotazione` (`idVotazione`);
+
+--
+-- Indici per le tabelle `eseguegruppo`
+--
+ALTER TABLE `eseguegruppo`
+  ADD PRIMARY KEY (`idGruppo`,`idVotazione`),
   ADD KEY `idVotazione` (`idVotazione`);
 
 --
@@ -255,6 +282,13 @@ ALTER TABLE `appartienea`
 ALTER TABLE `esegue`
   ADD CONSTRAINT `esegue_ibfk_1` FOREIGN KEY (`idUtente`) REFERENCES `utente` (`id`),
   ADD CONSTRAINT `esegue_ibfk_2` FOREIGN KEY (`idVotazione`) REFERENCES `votazione` (`id`);
+
+--
+-- Limiti per la tabella `eseguegruppo`
+--
+ALTER TABLE `eseguegruppo`
+  ADD CONSTRAINT `eseguegruppo_ibfk_1` FOREIGN KEY (`idGruppo`) REFERENCES `gruppo` (`id`),
+  ADD CONSTRAINT `eseguegruppo_ibfk_2` FOREIGN KEY (`idVotazione`) REFERENCES `votazione` (`id`);
 
 --
 -- Limiti per la tabella `opzione`
