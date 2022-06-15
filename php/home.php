@@ -81,11 +81,12 @@
                 $tab .= "<td name='id'>" . $row['quesito'] . "</td>
                 <input type='hidden' name='id' value='".$row['id']."'>
                 <td>" . $row['tipo'] . "</td>";
-                
-                if($row['fine'] >= date("Y-M-D h:i:sa")){
-                    $tab .= "<td> SI </td>";
-                }else{
+
+                if(date("Y-m-d H:i:s") <= $row['fine'])
+				{
                     $tab .= "<td> NO </td>";
+                }else{
+                    $tab .= "<td> SI </td>";
                 }
 
                 $tab .= "<td><input type='submit' class='button' value='vai a votazione'></td>";

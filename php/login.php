@@ -10,7 +10,6 @@
     ?>
     <?php
     session_start();
-    $_SESSION['id_utente'] = "";
     $_SESSION['loginpageError'] = "";
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail = $_POST['mail'];
