@@ -160,8 +160,11 @@
 						{	
 						
 						}
-                    } else if($tipoVot == "nominale") {
-						
+                    } /* fine anonimo */
+					else if($tipoVot == "nominale") {
+						/* con il nominale, io devo agganciare l'opzione alla votazionev
+						votata dall'utente, con l'anonimo io devo sapere solo se ho votato
+						*/
                         for($i = 0; $i < count($opzioni); $i++) {
                             $qryVotNom = "INSERT INTO risposta(data, ora, idUtente, idVotazione, idOpzione) VALUES
                                         ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "', '" . $opzioni[$i] . "')";
@@ -170,7 +173,14 @@
                                 die($_SESSION['errore'] = "Connection failed 4: " . $conn->connect_error);
                             }
                         }
-                    }
+                    } /* fine nominale */
+					
+					$qryTogliHash = "UPDATE esegue SET hash = NULL WHERE idUtente = '" . $_SESSION['idUtente'] . "' AND idVotazione = '" . $_SESSION['idVot'] . "'";
+					
+					 if($conn->query($qryTogliHash) === FALSE) {
+						die($_SESSION['errore'] = "Connection failed togliHash: " . $conn->connect_error);
+					}
+					
                 } else {
                     $_SESSION['errore'] = "ERRORE: seleziona almeno un'opzione";
                 }
