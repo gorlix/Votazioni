@@ -27,7 +27,7 @@
 				//ini_set('log_errors', 1);
 				//session_start();
 				
-				$server = "localhost";
+				$server = "127.0.0.1";
 				$username = "root";
 				$password = "";
 				$dbName = "votazioniscolastiche";

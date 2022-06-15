@@ -34,7 +34,7 @@
             session_start(); 
         }
         $_SESSION["user_selected"] = 0;
-        $server = "localhost";
+        $server = "127.0.0.1";
         $username = "root";
         $password = "";
         $dbName = "votazioniscolastiche";

@@ -12,7 +12,7 @@
     Crea variabili di sessione
 -->
     <?php   
-        $servername = "localhost";
+        $servername = "127.0.0.1";
         $username = "root";
         $password = "";
         $dbname = "votazioniScolastiche";
