@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Giu 15, 2022 alle 22:29
+-- Creato il: Giu 15, 2022 alle 22:49
 -- Versione del server: 5.7.17
 -- Versione PHP: 5.6.30
 
@@ -42,8 +42,15 @@ CREATE TABLE `appartienea` (
 
 INSERT INTO `appartienea` (`idUtente`, `idGruppo`) VALUES
 (1, 1),
+(3, 1),
 (1, 2),
-(2, 2);
+(2, 2),
+(3, 2),
+(3, 3),
+(4, 3),
+(5, 3),
+(6, 3),
+(7, 3);
 
 -- --------------------------------------------------------
 
@@ -88,7 +95,8 @@ CREATE TABLE `gruppo` (
 
 INSERT INTO `gruppo` (`id`, `nome`) VALUES
 (1, 'Admin'),
-(2, 'Crea_votazione');
+(2, 'Crea_votazione'),
+(3, '5b inf');
 
 -- --------------------------------------------------------
 
@@ -103,6 +111,14 @@ CREATE TABLE `opzione` (
   `nVoti` int(11) NOT NULL DEFAULT '0',
   `idVotazione` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `opzione`
+--
+
+INSERT INTO `opzione` (`id`, `testo`, `nVoti`, `idVotazione`) VALUES
+(1, 'si', 0, 1),
+(2, 'no', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -156,7 +172,12 @@ CREATE TABLE `utente` (
 
 INSERT INTO `utente` (`id`, `pw`, `mail`, `nome`, `cognome`, `forzaModificaPW`) VALUES
 (1, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'mail.prova@mail.com', 'Utente', 'Prova', 0),
-(2, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'mail.prova2@mail.com', 'Utente2', 'Prova2', 0);
+(2, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'mail.prova2@mail.com', 'Utente2', 'Prova2', 0),
+(3, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'andrea.tonello@alessandrinimainardi.edu.it', 'Andrea', 'Tonello', 0),
+(4, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'gabriele.groppo@alessandrinimainardi.edu.it', 'Gabriele', 'Groppo', 0),
+(5, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'alessandro.gorla@alessandrinimainardi.edu.it', 'Alessandro', 'Gorla', 0),
+(6, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'francesco.moscaritoli@alessandrinimainardi.edu.it', 'Francesco', 'Moscaritoli', 0),
+(7, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'matteo.schintu@alessandrinimainardi.edu.it', 'Matteo', 'Schintu', 0);
 
 -- --------------------------------------------------------
 
@@ -174,6 +195,13 @@ CREATE TABLE `votazione` (
   `quorum` float NOT NULL,
   `scelteMax` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `votazione`
+--
+
+INSERT INTO `votazione` (`id`, `quesito`, `tipo`, `inizio`, `fine`, `quorum`, `scelteMax`) VALUES
+(1, 'Groppo con meno di 100', 'anonimo', '2022-06-14 22:34:00', '2022-06-19 22:34:00', 0, 1);
 
 --
 -- Indici per le tabelle scaricate
@@ -249,22 +277,22 @@ ALTER TABLE `votazione`
 -- AUTO_INCREMENT per la tabella `gruppo`
 --
 ALTER TABLE `gruppo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT per la tabella `opzione`
 --
 ALTER TABLE `opzione`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT per la tabella `utente`
 --
 ALTER TABLE `utente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT per la tabella `votazione`
 --
 ALTER TABLE `votazione`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- Limiti per le tabelle scaricate
 --
