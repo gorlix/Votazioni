@@ -70,7 +70,7 @@
 -->
     <?php
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $servername = "localhost";
+            $servername = "127.0.0.1";
             $username = "root";
             $password = "";
             $dbname = "votazioniScolastiche";
@@ -186,7 +186,7 @@
         <div class="titolo">
             <p class="titolo-header">Votazione: 
                 <?php
-                    $servername = "localhost";
+                    $servername = "127.0.0.1";
                     $username = "root";
                     $password = "";
                     $dbname = "votazioniScolastiche";
@@ -223,7 +223,7 @@
         </div>
         <div class="contenuto">
             <?php
-                $servername = "localhost";
+                $servername = "127.0.0.1";
                 $username = "root";
                 $password = "";
                 $dbname = "votazioniScolastiche";
