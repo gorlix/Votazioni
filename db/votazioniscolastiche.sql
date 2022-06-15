@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Giu 15, 2022 alle 23:21
+-- Creato il: Giu 16, 2022 alle 01:13
 -- Versione del server: 5.7.17
 -- Versione PHP: 5.6.30
 
@@ -50,7 +50,8 @@ INSERT INTO `appartienea` (`idUtente`, `idGruppo`) VALUES
 (4, 3),
 (5, 3),
 (6, 3),
-(7, 3);
+(7, 3),
+(8, 3);
 
 -- --------------------------------------------------------
 
@@ -70,11 +71,12 @@ CREATE TABLE `esegue` (
 --
 
 INSERT INTO `esegue` (`idUtente`, `idVotazione`, `hash`) VALUES
-(5, 1, '031b4af5197ec30a926f48cf40e11a7dbc470048a21e4003b7a3c07c5dab1baa'),
-(4, 1, '3d914f9348c9cc0ff8a79716700b9fcd4d2f3e711608004eb8f138bcba7f14d9'),
-(7, 1, '7f2253d7e228b22a08bda1f09c516f6fead81df6536eb02fa991a34bb38d9be8'),
-(6, 1, 'd029fa3a95e174a19934857f535eb9427d967218a36ea014b70ad704bc6c8d1c'),
-(3, 1, 'eb1e33e8a81b697b75855af6bfcdbcbf7cbbde9f94962ceaec1ed8af21f5a50f');
+(3, 1, NULL),
+(4, 1, NULL),
+(5, 1, NULL),
+(6, 1, NULL),
+(7, 1, NULL),
+(8, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -128,7 +130,7 @@ CREATE TABLE `opzione` (
 --
 
 INSERT INTO `opzione` (`id`, `testo`, `nVoti`, `idVotazione`) VALUES
-(1, 'si', 1, 1),
+(1, 'si', 15, 1),
 (2, 'no', 0, 1);
 
 -- --------------------------------------------------------
@@ -158,8 +160,20 @@ CREATE TABLE `risposta` (
   `ora` time NOT NULL,
   `idUtente` int(11) NOT NULL,
   `idVotazione` int(11) NOT NULL,
-  `idOpzione` int(11) NOT NULL
+  `idOpzione` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `risposta`
+--
+
+INSERT INTO `risposta` (`id`, `data`, `ora`, `idUtente`, `idVotazione`, `idOpzione`) VALUES
+(1, '2022-06-15', '11:39:26', 3, 1, NULL),
+(2, '2022-06-15', '11:42:55', 7, 1, NULL),
+(3, '2022-06-15', '11:44:22', 6, 1, NULL),
+(4, '2022-06-16', '12:00:31', 4, 1, NULL),
+(5, '2022-06-16', '12:05:14', 5, 1, NULL),
+(7, '2022-06-16', '12:26:52', 8, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -188,7 +202,8 @@ INSERT INTO `utente` (`id`, `pw`, `mail`, `nome`, `cognome`, `forzaModificaPW`) 
 (4, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'gabriele.groppo@alessandrinimainardi.edu.it', 'Gabriele', 'Groppo', 0),
 (5, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'alessandro.gorla@alessandrinimainardi.edu.it', 'Alessandro', 'Gorla', 0),
 (6, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'francesco.moscaritoli@alessandrinimainardi.edu.it', 'Francesco', 'Moscaritoli', 0),
-(7, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'matteo.schintu@alessandrinimainardi.edu.it', 'Matteo', 'Schintu', 0);
+(7, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'matteo.schintu@alessandrinimainardi.edu.it', 'Matteo', 'Schintu', 0),
+(8, '1e4e888ac66f8dd41e00c5a7ac36a32a9950d271', 'negro@negro.it', 'N', 'N', 0);
 
 -- --------------------------------------------------------
 
@@ -213,7 +228,7 @@ CREATE TABLE `votazione` (
 --
 
 INSERT INTO `votazione` (`id`, `quesito`, `tipo`, `inizio`, `fine`, `quorum`, `scelteMax`, `pubblica`) VALUES
-(1, 'Groppo con meno di 100', 'anonimo', '2022-06-14 22:34:00', '2022-06-19 22:34:00', 0, 1, 0);
+(1, 'Groppo con meno di 100', 'anonimo', '2022-06-14 22:34:00', '2022-06-16 00:00:01', 0, 1, 0);
 
 --
 -- Indici per le tabelle scaricate
@@ -300,12 +315,12 @@ ALTER TABLE `opzione`
 -- AUTO_INCREMENT per la tabella `risposta`
 --
 ALTER TABLE `risposta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT per la tabella `utente`
 --
 ALTER TABLE `utente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT per la tabella `votazione`
 --
