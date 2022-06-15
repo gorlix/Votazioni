@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Giu 15, 2022 alle 22:57
+-- Creato il: Giu 15, 2022 alle 23:21
 -- Versione del server: 5.7.17
 -- Versione PHP: 5.6.30
 
@@ -128,7 +128,7 @@ CREATE TABLE `opzione` (
 --
 
 INSERT INTO `opzione` (`id`, `testo`, `nVoti`, `idVotazione`) VALUES
-(1, 'si', 0, 1),
+(1, 'si', 1, 1),
 (2, 'no', 0, 1);
 
 -- --------------------------------------------------------
@@ -153,11 +153,11 @@ CREATE TABLE `recupero` (
 
 DROP TABLE IF EXISTS `risposta`;
 CREATE TABLE `risposta` (
+  `id` int(11) NOT NULL,
   `data` date NOT NULL,
   `ora` time NOT NULL,
   `idUtente` int(11) NOT NULL,
   `idVotazione` int(11) NOT NULL,
-  `pubblica` tinyint(1) DEFAULT '0',
   `idOpzione` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -204,15 +204,16 @@ CREATE TABLE `votazione` (
   `inizio` datetime NOT NULL,
   `fine` datetime NOT NULL,
   `quorum` float NOT NULL,
-  `scelteMax` int(11) NOT NULL DEFAULT '1'
+  `scelteMax` int(11) NOT NULL DEFAULT '1',
+  `pubblica` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `votazione`
 --
 
-INSERT INTO `votazione` (`id`, `quesito`, `tipo`, `inizio`, `fine`, `quorum`, `scelteMax`) VALUES
-(1, 'Groppo con meno di 100', 'anonimo', '2022-06-14 22:34:00', '2022-06-19 22:34:00', 0, 1);
+INSERT INTO `votazione` (`id`, `quesito`, `tipo`, `inizio`, `fine`, `quorum`, `scelteMax`, `pubblica`) VALUES
+(1, 'Groppo con meno di 100', 'anonimo', '2022-06-14 22:34:00', '2022-06-19 22:34:00', 0, 1, 0);
 
 --
 -- Indici per le tabelle scaricate
@@ -264,9 +265,10 @@ ALTER TABLE `recupero`
 -- Indici per le tabelle `risposta`
 --
 ALTER TABLE `risposta`
-  ADD PRIMARY KEY (`idUtente`,`idVotazione`,`idOpzione`),
-  ADD KEY `idVotazione` (`idVotazione`),
-  ADD KEY `idOpzione` (`idOpzione`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `risposta_ibfk_1` (`idUtente`),
+  ADD KEY `risposta_ibfk_2` (`idVotazione`),
+  ADD KEY `risposta_ibfk_3` (`idOpzione`);
 
 --
 -- Indici per le tabelle `utente`
@@ -294,6 +296,11 @@ ALTER TABLE `gruppo`
 --
 ALTER TABLE `opzione`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT per la tabella `risposta`
+--
+ALTER TABLE `risposta`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT per la tabella `utente`
 --

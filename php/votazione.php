@@ -91,10 +91,11 @@
             if($resultVotato->num_rows > 0) {
                 $_SESSION['voto'] = "HAI GIÀ VOTATO";
             } else {
+
                 if(isset($_POST['opzione'])) {
                 
                     $opzioni = $_POST['opzione'];
-                    
+
                     $aus = count($opzioni);
 
                     if($aus > 0 && $aus <= $_SESSION['numScelte']) {               
@@ -133,6 +134,7 @@
                             }
                             
                         }
+						
                         $_SESSION['voto'] = "VOTAZIONE ANDATA A BUON FINE";
                     } else if($aus > $_SESSION['numScelte']) {
                         $_SESSION['errore'] = "ERRORE: superato il numero di scelte massime";
@@ -147,13 +149,19 @@
                     $unlock = "UNLOCK TABLES";
 
                     if($tipoVot == "anonimo") {
+
                         $qryVotAnonim = "INSERT INTO risposta(data, ora, idUtente, idVotazione) VALUES 
-                                        ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "')";
-                        
-                        if(!($conn->query($qryVotAnonim) === TRUE)) {
+                                        ('" . date("Y-m-d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "')";
+
+                        if($conn->query($qryVotAnonim) === FALSE) {
                             die($_SESSION['errore'] = "Connection failed 3: " . $conn->connect_error);
                         }
+						else
+						{	
+						
+						}
                     } else if($tipoVot == "nominale") {
+						
                         for($i = 0; $i < count($opzioni); $i++) {
                             $qryVotNom = "INSERT INTO risposta(data, ora, idUtente, idVotazione, idOpzione) VALUES
                                         ('" . date("Y/m/d") . "', '" . date("h:i:s") . "', '" . $_SESSION['idUtente'] . "', '" . $_SESSION['idVot'] . "', '" . $opzioni[$i] . "')";
