@@ -89,6 +89,37 @@ td{
     padding:10px;
 }
 
+.errore {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    padding: 15px;
+
+    font-size: 30px;
+
+    color: red;
+}
+
+.testo {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    padding: 10px;
+
+    font-size: 20px;
+}
+
+.quesito {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    padding: 10px;
+
+    font-size: 30px;
+
+    font-style: italic;
+}
+
  .titoli{
     font-family: 'Roboto Mono', monospace;
     font-family: 'Space Mono', monospace;
@@ -98,6 +129,17 @@ td{
     font-size: 20px;
 
     align-content:left;
+}
+
+.voto{
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+
+    padding: 15px;
+
+    font-size: 30px;
+
+    color:green;
 }
 
 .button {

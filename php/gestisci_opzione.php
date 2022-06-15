@@ -1,8 +1,13 @@
 <?php
 /**
 * @author skenny;
+Matteo Schintu
 */
 ?>
+<?php
+    require __DIR__. '/SharedFunctions.php';
+?>
+
 <!doctype html>
 <html lang="it">
 <head>
@@ -54,11 +59,14 @@
 
 
             <?php
-				if(!isset($_SESSION))
-				{
-					session_start();
-				}
-				$idVotazione = $_SESSION["idVotazione_Opzione"];
+                
+                //session_start();
+                $server = "localhost";
+			    $username = "root";
+			    $password = "";
+			    $dbName = "votazioniscolastiche";
+                $idVotazione = $_SESSION["idVotazione_Opzione"];
+                //$idVotazione = 3;
                 $conn = connettiDb();
 
                 if ($conn->connect_error) {

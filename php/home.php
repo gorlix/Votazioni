@@ -13,7 +13,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../stile/globalStyle.css">
     <title>Votazione</title>
+    <!--script>
+        jQuery(document).ready(function($){
+            $(".clickable-row").click(function(){
+                window.location = $(this).data("href");
+            });
+        });
+    </script-->
 
+    <style>
+        .button {
+            background-color: rgba(230, 126, 34, 1);
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -33,7 +54,7 @@
         if(!isset($_SESSION)) { 
             session_start(); 
         }
-        $_SESSION["user_selected"] = 0;
+
         $server = "localhost";
         $username = "root";
         $password = "";
