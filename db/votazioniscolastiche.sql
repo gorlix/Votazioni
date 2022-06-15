@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Giu 15, 2022 alle 22:49
+-- Creato il: Giu 15, 2022 alle 22:57
 -- Versione del server: 5.7.17
 -- Versione PHP: 5.6.30
 
@@ -64,6 +64,17 @@ CREATE TABLE `esegue` (
   `idVotazione` int(11) NOT NULL,
   `hash` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `esegue`
+--
+
+INSERT INTO `esegue` (`idUtente`, `idVotazione`, `hash`) VALUES
+(5, 1, '031b4af5197ec30a926f48cf40e11a7dbc470048a21e4003b7a3c07c5dab1baa'),
+(4, 1, '3d914f9348c9cc0ff8a79716700b9fcd4d2f3e711608004eb8f138bcba7f14d9'),
+(7, 1, '7f2253d7e228b22a08bda1f09c516f6fead81df6536eb02fa991a34bb38d9be8'),
+(6, 1, 'd029fa3a95e174a19934857f535eb9427d967218a36ea014b70ad704bc6c8d1c'),
+(3, 1, 'eb1e33e8a81b697b75855af6bfcdbcbf7cbbde9f94962ceaec1ed8af21f5a50f');
 
 -- --------------------------------------------------------
 
