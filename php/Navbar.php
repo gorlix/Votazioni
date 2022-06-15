@@ -10,8 +10,9 @@
 
     if(!isset($_SESSION["id_utente"]))
     {
-        echo "<h1 style='position: center'>NON SEI AUTORIZZATO</h1>";
-        //die();
+        /* ID Utente non settato Torna alla Login page */
+        session_destroy();
+        header("Location:login.php");
     }
     else
     {
@@ -45,7 +46,6 @@
                 $crea_votazione = true;
             }
         }
-
     }
 
     echo
