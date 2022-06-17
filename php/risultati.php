@@ -204,10 +204,12 @@
 
                             if($resultVotApertaChiusa->num_rows > 0) {
                                 while($row4 = $resultVotApertaChiusa->fetch_assoc()) {
-                                    $votazioneAperta = $row4['pubblica'];
+                                    $votazionePubblicata = $row4['pubblica'];
 
-                                    if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo) || $votazioneAperta == 1) {
-                                        $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "% - Numero voti: " . $nVoti." / " . $totVoti;
+                                    if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo) || $votazionePubblicata == 1) {
+                                        if($totVoti > 0) {
+                                            $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "% - Numero voti: " . $nVoti." / " . $totVoti;
+                                        }
                                     } 
                                 }
                             } else {
@@ -224,19 +226,34 @@
                                 <a class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</a><br><br>";
                         }
                     } 
-                    if($votazioneAperta == 0 && !(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo))) {
+                    if($votazionePubblicata == 0 && !(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo))) {
                         echo "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
                     }
                 } 
 
-                if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo)) {
+                $qryTempo = "SELECT fine FROM votazione WHERE id LIKE '" . $_GLOBALS['idVotazione'] . "'";
+                $resultTempo = $conn->query($qryTempo);
+                
+                if($resultTempo->num_rows == 1) {
+                    $row = $resultTempo->fetch_assoc();
+                    $tempoFine = $row['fine'];
+                } else {
+                    $_SESSION['errore'] = "ERRORE: votazione non valida";
+                }
+
+                // calcoli per il tempo
+                $dataCorrente = date("Y-m-d h:i:s");
+
+                if($dataCorrente > $tempoFine) {
+                    if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo)) {
                     // chiamata con php self e il method post --> pubblica risultati della votazione
                     echo '<form style="display: inline-block" method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
                     echo "<input type=\"submit\" name=\"vota\" value=\"pubblica risultati votazione\">
                             <input type='hidden' name='id' value='".$_GLOBALS['idVotazione']."'>
                             </form>";
+                    }
                 }
-
+                
                 $conn->close();    
             ?>
         </div>

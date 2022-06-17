@@ -268,7 +268,7 @@
 									values ('".$idUtente."','".$_POST['idVotazione']."','".$hash."')";
 								if ($conn->query($inserisci) === TRUE) 
 								{
-									$sqlDatiUtente = "SELECT nome, cognome, mail FROM Utente WHERE id = $user";
+									$sqlDatiUtente = "SELECT nome, cognome, mail FROM Utente WHERE id = '".$idUtente."'";
 									$resultDatiUtente = $conn->query($sqlDatiUtente);
 
 									if ($resultDatiUtente->num_rows == 1)
