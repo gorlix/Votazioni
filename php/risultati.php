@@ -5,7 +5,28 @@
 <!----------------------------------------------------------------------
     HTML
 ---------------------------------------------------------------------->
+<?php
+    $servername = "127.0.0.1";
+    $username = "root";
+    $password = "";
+    $dbname = "votazioniScolastiche";
 
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $_GLOBALS['idVotazione'] = $_POST['id'];
+
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
+        
+        if ($conn->connect_error) {
+            die($_SESSION['errore'] = "Connection failed 1: " . $conn->connect_error);
+        }
+
+        $qryPubblicaVot = "UPDATE votazione SET pubblica = 1 WHERE id = ".$_GLOBALS['idVotazione'];
+
+        if ($conn->query($qryPubblicaVot) === FALSE) {
+            echo "ERRORE durante la pubblicazione della votazione"; 
+        }
+    };
+?>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,7 +124,9 @@
                
                 if($dataCorrente < $inizio || $dataCorrente > $fine) {
                     $vot = "chiusa";    
-                } 
+                } else {
+                    $vot = "aperta";
+                }
 
                 $qryOpz = "SELECT id, testo FROM opzione WHERE idVotazione LIKE '" . $_GLOBALS['idVotazione'] . "'";
                 $resultOpz = $conn->query($qryOpz);
@@ -158,7 +181,7 @@
                                     $tipoVotApCh = $row4['pubblica'];
 
                                     if($tipoVotApCh == 1) {
-                                        $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "%";
+                                        $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "% - Numero voti: " . $nVoti." / " . $totVoti;
                                     }
                                 }
                             } else {
@@ -191,7 +214,10 @@
                                 /**
                                 * @todo
                                 */
-                                echo "<input type=\"submit\" name=\"vota\" value=\"pubblica risultati votazione\">";
+                                echo '<form style="display: inline-block" method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
+                                echo "<input type=\"submit\" name=\"vota\" value=\"pubblica risultati votazione\">
+                                        <input type='hidden' name='id' value='".$_GLOBALS['idVotazione']."'>
+                                        </form>";
                             }
                         }
                     } else {
