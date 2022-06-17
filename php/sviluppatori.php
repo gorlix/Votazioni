@@ -36,31 +36,31 @@
             <center>
                 <table>
                     <tr>
-                        <td><img class='img' src="../foto/default_avatar.jpg"></td>
-                        <td><h2>Matteo Schintu</h2><h3>5Bi</h3></td>
+                        <td><img class='img' src="../foto/Schintu.jpg"></td>
+                        <td><h2>Matteo Schintu</h2><h3>5Bi</h3><h3>Anno Scolastico: 2022-2023</h3></td>
                     </tr>
                     <tr>
-                        <td><img class='img' src="../foto/default_avatar.jpg"></td>
-                        <td><h2>Cosimo Daniele</h2><h3>5Bi</h3></td>
+                        <td><img class='img' src="../foto/Daniele.jpg"></td>
+                        <td><h2>Cosimo Daniele</h2><h3>5Bi</h3><h3>Anno Scolastico: 2022-2023</h3></td>
                     </tr>
                     <tr>
-                        <td><img class='img' src="../foto/default_avatar.jpg"></td>
-                        <td><h2>Simone Negro</h2><h3>5Bi</h3></td>
+                        <td><img class='img' src="../foto/Negro.jpg"></td>
+                        <td><h2>Simone Negro</h2><h3>5Bi</h3><h3>Anno Scolastico: 2022-2023</h3></td>
                     </tr>
                     <tr>
-                        <td><img class='img' src="../foto/default_avatar.jpg"></td>
-                        <td><h2>Alessandro Gorla</h2><h3>5Bi</h3></td>
+                        <td><img class='img' src="../foto/Gorla.jpg"></td>
+                        <td><h2>Alessandro Gorla</h2><h3>5Bi</h3><h3>Anno Scolastico: 2022-2023</h3></td>
                     </tr>
                     <tr>
-                        <td><img class='img' src="../foto/default_avatar.jpg"></td>
-                        <td><h2>Danilo Fusè</h2><h3>5Bi</h3></td>
+                        <td><img class='img' src="../foto/Fusè.jpg"></td>
+                        <td><h2>Danilo Fusè</h2><h3>5Bi</h3><h3>Anno Scolastico: 2022-2023</h3></td>
                     </tr>
                     <tr>
-                        <td><img class='img' src="../foto/default_avatar.jpg"></td>
-                        <td><h2>Gabriele Groppo</h2><h3>5Bi</h3></td>
+                        <td><img class='img' src="../foto/Groppo.jpg"></td>
+                        <td><h2>Gabriele Groppo</h2><h3>5Bi</h3><h3>Anno Scolastico: 2022-2023</h3></td>
                     </tr>
                     <tr>
-                        <td><img class='img' src="../foto/default_avatar.jpg"></td>
+                        <td><img class='img' src="../foto/Tonello.jpg"></td>
                         <td><h2>Andrea Tonello</h2><h3>Docente</h3></td>
                     </tr>
                 </table>
