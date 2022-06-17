@@ -29,7 +29,8 @@
 ?>
 <style>
     .collapsible {
-    color: black;
+    background-color: #777;
+    color: white;
     cursor: pointer;
     padding: 18px;
     width: 100%;
@@ -248,7 +249,7 @@
 
                         if($resultVontantiOpzione->num_rows > 0) {
                             while($row5 = $resultVontantiOpzione->fetch_assoc()) {
-                                $testoCollapsable .= "• ".$row5['nome'] . " " . $row5['cognome'] . " (" . $row5['mail'] . ")<br>";
+                                $testoCollapsable .= "".$row5['nome'] . " " . $row5['cognome'] . " (" . $row5['mail'] . ")<br>";
                             }
                         }
 
@@ -265,21 +266,25 @@
                 // lista di chi non ha ancora votato
                 $qryNonVotanti = "SELECT idUtente FROM esegue WHERE idVotazione LIKE '" . $_GLOBALS['idVotazione'] . "' AND hash IS NOT NULL";
                 $resultNonVotanti = $conn->query($qryNonVotanti);
+                
+                $testoCollapsable = "";
 
                 if($resultNonVotanti->num_rows > 0) {
-                    echo "Non votanti:<br>";
                     while($row = $resultNonVotanti->fetch_assoc()) {
                         $qryDatiNonVotanti = "SELECT nome, cognome, mail FROM utente WHERE id LIKE '" . $row['idUtente'] . "'";
                         $resultDatiNonVotanti = $conn->query($qryDatiNonVotanti);
-                        
+
                         if($resultDatiNonVotanti->num_rows == 1) {
                             $row2 = $resultDatiNonVotanti->fetch_assoc();
-                            echo "• <label class=\"testo\">" . $row2['nome'] . " " . $row2['cognome'] . " - " . $row2['mail'] . "</label><br>";
+                            $testoCollapsable .= "<label class=\"testo\">" . $row2['nome'] . " " . $row2['cognome'] . " - " . $row2['mail'] . "</label><br>";
                         } else {
                             echo "ERRORE: utente non trovato 1";
                         }
                     }
-                    echo "<br>";
+                    echo "<p></p><button type=\"button\" class=\"collapsible\"><label class=\"testo\">Non votanti</label></button>
+                        <div class=\"content\">
+                        <p>" . $testoCollapsable . "</p>
+                        </div><p></p>";
                 } else {
                     echo "<br>Hanno votato tutti.<br><br>";
                 }
