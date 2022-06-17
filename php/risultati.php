@@ -216,7 +216,19 @@
                                 $_SESSION['errore'] = "ERRORE: votazione non trovata";
                             }
                         }
-                        echo "• <label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label><br><br>";
+                        echo "• <label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label><br>";
+                        
+                        $qryVontantiOpzione = "SELECT u.nome, u.cognome, u.mail FROM utente u
+                                                INNER JOIN risposta r ON u.id = r.idUtente
+                                                WHERE r.idOpzione IS NOT NULL AND r.idOpzione LIKE '" . $row['id'] . "'";
+                        $resultVontantiOpzione = $conn->query($qryVontantiOpzione);
+
+                        if($resultVontantiOpzione->num_rows > 0) {
+                            while($row5 = $resultVontantiOpzione->fetch_assoc()) {
+                                echo "   • ".$row5['nome'] . " " . $row5['cognome'] . " (" . $row5['mail'] . ")<br>";
+                            }
+                            echo "<br>";
+                        }
                     } 
                     if($votazionePubblicata == 0 && !(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo))) {
                         echo "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
@@ -235,11 +247,12 @@
                         
                         if($resultDatiNonVotanti->num_rows == 1) {
                             $row2 = $resultDatiNonVotanti->fetch_assoc();
-                            echo "• <label class=\"testo\">" . $row2['nome'] . " " . $row2['cognome'] . " - " . $row2['mail'] . "</label><br><br>";
+                            echo "• <label class=\"testo\">" . $row2['nome'] . " " . $row2['cognome'] . " - " . $row2['mail'] . "</label><br>";
                         } else {
                             echo "ERRORE: utente non trovato 1";
                         }
                     }
+                    echo "<br>";
                 } else {
                     echo "Hanno votato tutti.";
                 }
