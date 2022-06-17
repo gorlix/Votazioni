@@ -268,7 +268,21 @@
 									values ('".$idUtente."','".$_POST['idVotazione']."','".$hash."')";
 								if ($conn->query($inserisci) === TRUE) 
 								{
-								  echo "New record created successfully";
+									$sqlDatiUtente = "SELECT nome, cognome, mail FROM Utente WHERE id = $user";
+									$resultDatiUtente = $conn->query($sqlDatiUtente);
+
+									if ($resultDatiUtente->num_rows == 1)
+									{
+										$row = $resultDatiUtente->fetch_assoc();
+										$nome = $row['nome'];
+										$cognome = $row['cognome'];
+										$mail = $row['mail'];
+										echo "Votazione assegnata a: " . $nome . " " . $cognome . " (" . $mail . ")<br>";
+									}
+									else
+									{
+										echo "Errore associando la votazione a un utente";
+									}
 								}else{
 									echo "Error: " . $query . "<br>" . $conn->error;
 								}
