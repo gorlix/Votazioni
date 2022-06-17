@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Giu 17, 2022 alle 23:09
+-- Creato il: Giu 17, 2022 alle 23:23
 -- Versione del server: 5.7.17
 -- Versione PHP: 5.6.30
 
@@ -81,7 +81,13 @@ INSERT INTO `esegue` (`idUtente`, `idVotazione`, `hash`) VALUES
 (5, 1, NULL),
 (6, 1, NULL),
 (7, 1, NULL),
-(8, 1, NULL);
+(8, 1, NULL),
+(5, 2, '41cfc0d1f2d127b04555b7246d84019b4d27710a3f3aff6e7764375b1e06e05d'),
+(4, 2, '73475cb40a568e8da8a045ced110137e159f890ac4da883b6b17dc651b3a8049'),
+(6, 2, '81b8a03f97e8787c53fe1a86bda042b6f0de9b0ec9c09357e107c99ba4d6948a'),
+(7, 2, '8722616204217eddb39e7df969e0698aed8e599ba62ed2de1ce49b03ade0fede'),
+(8, 2, 'a46e37632fa6ca51a13fe39a567b3c23b28c2f47d8af6be9bd63e030e214ba38'),
+(3, 2, 'e29c9c180c6279b0b02abd6a1801c7c04082cf486ec027aa13515e4f3884bb6b');
 
 -- --------------------------------------------------------
 
@@ -133,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `opzione` (
   `idVotazione` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idVotazione` (`idVotazione`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `opzione`
@@ -141,7 +147,9 @@ CREATE TABLE IF NOT EXISTS `opzione` (
 
 INSERT INTO `opzione` (`id`, `testo`, `nVoti`, `idVotazione`) VALUES
 (1, 'si', 15, 1),
-(2, 'no', 1, 1);
+(2, 'no', 1, 1),
+(3, 'Si', 0, 2),
+(4, 'No', 0, 2);
 
 -- --------------------------------------------------------
 
@@ -239,14 +247,15 @@ CREATE TABLE IF NOT EXISTS `votazione` (
   `scelteMax` int(11) NOT NULL DEFAULT '1',
   `pubblica` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `votazione`
 --
 
 INSERT INTO `votazione` (`id`, `quesito`, `tipo`, `inizio`, `fine`, `quorum`, `scelteMax`, `pubblica`) VALUES
-(1, 'Groppo con meno di 100', 'anonimo', '2022-06-14 22:34:00', '2022-06-16 00:00:01', 0, 1, 1);
+(1, 'Groppo con meno di 100', 'anonimo', '2022-06-14 22:34:00', '2022-06-16 00:00:01', 0, 1, 1),
+(2, 'simone Ã¨ stupido', 'nominale', '2022-06-16 23:06:00', '2022-06-18 23:07:00', 0, 1, 0);
 
 --
 -- Limiti per le tabelle scaricate
@@ -263,8 +272,8 @@ ALTER TABLE `appartienea`
 -- Limiti per la tabella `esegue`
 --
 ALTER TABLE `esegue`
-  ADD CONSTRAINT `esegue_ibfk_1` FOREIGN KEY (`idUtente`) REFERENCES `utente` (`id`),
-  ADD CONSTRAINT `esegue_ibfk_2` FOREIGN KEY (`idVotazione`) REFERENCES `votazione` (`id`);
+  ADD CONSTRAINT `esegue_ibfk_1` FOREIGN KEY (`idUtente`) REFERENCES `utente` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `esegue_ibfk_2` FOREIGN KEY (`idVotazione`) REFERENCES `votazione` (`id`) ON DELETE CASCADE;
 
 --
 -- Limiti per la tabella `eseguegruppo`
