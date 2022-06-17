@@ -254,7 +254,7 @@
                     }
                     echo "<br>";
                 } else {
-                    echo "Hanno votato tutti.";
+                    echo "<br>Hanno votato tutti.<br><br>";
                 }
 
                 // Pulsante pubblica solo quando la votazione è chiusa
@@ -273,12 +273,16 @@
                 $dataCorrente = date("Y-m-d h:i:s");
 
                 if($dataCorrente > $tempoFine) {
-                    if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo)) {
-                    // chiamata con php self e il method post --> pubblica risultati della votazione
-                    echo '<form style="display: inline-block" method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
-                    echo "<input type=\"submit\" name=\"vota\" value=\"pubblica risultati votazione\">
-                            <input type='hidden' name='id' value='".$_GLOBALS['idVotazione']."'>
-                            </form>";
+                    if($pubblica == 0) {
+                        if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo)) {
+                        // chiamata con php self e il method post --> pubblica risultati della votazione
+                        echo '<form style="display: inline-block" method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
+                        echo "<input type=\"submit\" name=\"vota\" value=\"pubblica risultati votazione\">
+                                <input type='hidden' name='id' value='".$_GLOBALS['idVotazione']."'>
+                                </form>";
+                        }
+                    } else {
+                        echo "RISULTATI PUBBLICATI";
                     }
                 }
                 
