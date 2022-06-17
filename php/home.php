@@ -89,8 +89,12 @@
                     $tab .= "<td> SI </td>";
                 }
 
-                $tab .= "<td><input type='submit' class='button' value='vai a votazione'></td>";
-                $tab .= "</tr> </form>";
+                $tab .= "<td><input type='submit' class='button' value='vai a votazione'></td></form>";
+                $tab .= "<td><form method='get' action = 'risultati.php'>
+                                <input type='submit' class='button' value='vai ai risultati'>
+                                <input type='hidden' name='id' value='".$row['id']."'>
+                            </form></td>";
+                $tab .= "</tr> ";
             }
         }
         echo $tab . "</table>";

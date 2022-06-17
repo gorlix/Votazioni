@@ -27,6 +27,22 @@
                    INNER JOIN Utente u on (a.idUtente = u.id)
                    WHERE u.id = $user";
         $result = $conn->query($sql);
+
+        $sqlDatiUtente = "SELECT nome, cognome, mail FROM Utente WHERE id = $user";
+        $resultDatiUtente = $conn->query($sqlDatiUtente);
+
+        if ($resultDatiUtente->num_rows == 1)
+        {
+            $row = $resultDatiUtente->fetch_assoc();
+            $nome = $row['nome'];
+            $cognome = $row['cognome'];
+            $mail = $row['mail'];
+        }
+        else
+        {
+            echo "0 results";
+        }
+
         if ($result->num_rows > 0)
         {
             $gruppoUtente = array();
@@ -81,16 +97,14 @@
                     "<a href='home.php' class='link'>Home</a>" .
                     "</li>" ;
             }
+                
+            echo "<p>".$nome." ".$cognome."<br>".$mail."</p>";
 
-            echo
-                "<li class='elenco' id='3'>";
             echo
                 '<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
                         "<input type='submit' name='esci' value='Esci'/><br>
                     </form>" .
                 "</li>" ;
-
-
     echo
             "</ul>" .
 
