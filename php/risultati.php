@@ -216,21 +216,35 @@
                                 $_SESSION['errore'] = "ERRORE: votazione non trovata";
                             }
                         }
-
-                        if($_SESSION['numScelte'] == 1) {
-                            echo "<input type=\"radio\" name=\"opzione[]\" value=\"" . $row['id'] . "\" " . $attScelta . ">
-                                <label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label><br><br>";
-                        } else {
-                            $_GLOBALS['numOpz']++;
-                            echo "<input name=\"opzione[]\" type=\"checkbox\" value=\"" . $row['id'] . "\" " .$attScelta . ">
-                                <a class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</a><br><br>";
-                        }
+                        echo "• <label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label><br><br>";
                     } 
                     if($votazionePubblicata == 0 && !(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo))) {
                         echo "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
                     }
                 } 
 
+                // lista di chi non ha ancora votato
+                $qryNonVotanti = "SELECT idUtente FROM esegue WHERE idVotazione LIKE '" . $_GLOBALS['idVotazione'] . "' AND hash IS NOT NULL";
+                $resultNonVotanti = $conn->query($qryNonVotanti);
+
+                if($resultNonVotanti->num_rows > 0) {
+                    echo "Non votanti:<br>";
+                    while($row = $resultNonVotanti->fetch_assoc()) {
+                        $qryDatiNonVotanti = "SELECT nome, cognome, mail FROM utente WHERE id LIKE '" . $row['idUtente'] . "'";
+                        $resultDatiNonVotanti = $conn->query($qryDatiNonVotanti);
+                        
+                        if($resultDatiNonVotanti->num_rows == 1) {
+                            $row2 = $resultDatiNonVotanti->fetch_assoc();
+                            echo "• <label class=\"testo\">" . $row2['nome'] . " " . $row2['cognome'] . " - " . $row2['mail'] . "</label><br><br>";
+                        } else {
+                            echo "ERRORE: utente non trovato 1";
+                        }
+                    }
+                } else {
+                    echo "Hanno votato tutti.";
+                }
+
+                // Pulsante pubblica solo quando la votazione è chiusa
                 $qryTempo = "SELECT fine FROM votazione WHERE id LIKE '" . $_GLOBALS['idVotazione'] . "'";
                 $resultTempo = $conn->query($qryTempo);
                 
@@ -241,6 +255,7 @@
                     $_SESSION['errore'] = "ERRORE: votazione non valida";
                 }
 
+                
                 // calcoli per il tempo
                 $dataCorrente = date("Y-m-d h:i:s");
 
