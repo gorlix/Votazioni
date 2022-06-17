@@ -12,6 +12,7 @@
     $dbname = "votazioniScolastiche";
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //echo $_POST["id"];
         $_GLOBALS['idVotazione'] = $_POST['id'];
 
         $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -286,7 +287,7 @@
                         <p>" . $testoCollapsable . "</p>
                         </div><p></p>";
                 } else {
-                    echo "<br>Hanno votato tutti.<br><br>";
+                    echo "<br><br>Hanno votato tutti.<br><br>";
                 }
 
                 // Pulsante pubblica solo quando la votazione è chiusa

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Giu 17, 2022 alle 23:25
+-- Creato il: Giu 18, 2022 alle 01:12
 -- Versione del server: 5.7.17
 -- Versione PHP: 5.6.30
 
@@ -77,17 +77,17 @@ CREATE TABLE IF NOT EXISTS `esegue` (
 
 INSERT INTO `esegue` (`idUtente`, `idVotazione`, `hash`) VALUES
 (3, 1, NULL),
+(3, 4, NULL),
 (4, 1, NULL),
+(4, 4, NULL),
 (5, 1, NULL),
+(5, 4, NULL),
 (6, 1, NULL),
+(6, 4, NULL),
 (7, 1, NULL),
+(7, 4, NULL),
 (8, 1, NULL),
-(5, 2, '41cfc0d1f2d127b04555b7246d84019b4d27710a3f3aff6e7764375b1e06e05d'),
-(4, 2, '73475cb40a568e8da8a045ced110137e159f890ac4da883b6b17dc651b3a8049'),
-(6, 2, '81b8a03f97e8787c53fe1a86bda042b6f0de9b0ec9c09357e107c99ba4d6948a'),
-(7, 2, '8722616204217eddb39e7df969e0698aed8e599ba62ed2de1ce49b03ade0fede'),
-(8, 2, 'a46e37632fa6ca51a13fe39a567b3c23b28c2f47d8af6be9bd63e030e214ba38'),
-(3, 2, 'e29c9c180c6279b0b02abd6a1801c7c04082cf486ec027aa13515e4f3884bb6b');
+(8, 4, NULL);
 
 -- --------------------------------------------------------
 
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `opzione` (
   `idVotazione` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idVotazione` (`idVotazione`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `opzione`
@@ -148,8 +148,8 @@ CREATE TABLE IF NOT EXISTS `opzione` (
 INSERT INTO `opzione` (`id`, `testo`, `nVoti`, `idVotazione`) VALUES
 (1, 'si', 15, 1),
 (2, 'no', 1, 1),
-(3, 'Si', 0, 2),
-(4, 'No', 0, 2);
+(7, 'Si', 4, 4),
+(8, 'Ovvio', 2, 4);
 
 -- --------------------------------------------------------
 
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `risposta` (
   KEY `risposta_ibfk_1` (`idUtente`),
   KEY `risposta_ibfk_2` (`idVotazione`),
   KEY `risposta_ibfk_3` (`idOpzione`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `risposta`
@@ -197,7 +197,13 @@ INSERT INTO `risposta` (`id`, `data`, `ora`, `idUtente`, `idVotazione`, `idOpzio
 (3, '2022-06-15', '11:44:22', 6, 1, NULL),
 (4, '2022-06-16', '12:00:31', 4, 1, NULL),
 (5, '2022-06-16', '12:05:14', 5, 1, NULL),
-(7, '2022-06-16', '12:26:52', 8, 1, NULL);
+(7, '2022-06-16', '12:26:52', 8, 1, NULL),
+(8, '2022-06-17', '11:34:18', 8, 4, 7),
+(9, '2022-06-17', '11:34:51', 7, 4, 7),
+(10, '2022-06-17', '11:35:45', 3, 4, 8),
+(11, '2022-06-18', '01:04:29', 5, 4, 8),
+(12, '2022-06-18', '01:05:00', 4, 4, 7),
+(13, '2022-06-18', '01:05:23', 6, 4, 7);
 
 -- --------------------------------------------------------
 
@@ -247,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `votazione` (
   `scelteMax` int(11) NOT NULL DEFAULT '1',
   `pubblica` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `votazione`
@@ -255,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `votazione` (
 
 INSERT INTO `votazione` (`id`, `quesito`, `tipo`, `inizio`, `fine`, `quorum`, `scelteMax`, `pubblica`) VALUES
 (1, 'Groppo con meno di 100', 'anonimo', '2022-06-14 22:34:00', '2022-06-16 00:00:01', 0, 1, 1),
-(2, 'simone Ã¨ stupido', 'nominale', '2022-06-16 23:06:00', '2022-06-18 23:07:00', 0, 1, 0);
+(4, 'simone Ã¨ stupido2!', 'nominale', '2022-06-16 23:29:00', '2022-06-16 23:29:00', 0, 1, 1);
 
 --
 -- Limiti per le tabelle scaricate

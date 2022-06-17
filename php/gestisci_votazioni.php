@@ -305,6 +305,7 @@
                  */
                 else
 				{
+					// INIZIO PAGINA HTML
 					$content = "<h3>OPERAZIONE VOTAZIONE </h3>
 								<br>
 						
