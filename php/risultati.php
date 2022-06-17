@@ -27,6 +27,22 @@
         }
     };
 ?>
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+        content.style.display = "none";
+        } else {
+        content.style.display = "block";
+        }
+    });
+    }
+</script>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -216,8 +232,6 @@
                                 $_SESSION['errore'] = "ERRORE: votazione non trovata";
                             }
                         }
-                        echo "• <label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label><br>";
-                        
                         $qryVontantiOpzione = "SELECT u.nome, u.cognome, u.mail FROM utente u
                                                 INNER JOIN risposta r ON u.id = r.idUtente
                                                 WHERE r.idOpzione IS NOT NULL AND r.idOpzione LIKE '" . $row['id'] . "'";
@@ -229,6 +243,14 @@
                             }
                             echo "<br>";
                         }
+
+                        echo "<button type=\"button\" class=\"collapsible\"><label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label></button>
+                        <div class=\"content\">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>";
+                        // echo "• <label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label><br>";
+                        
+                        
                     } 
                     if($votazionePubblicata == 0 && !(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo))) {
                         echo "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
