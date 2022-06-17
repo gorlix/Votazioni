@@ -128,6 +128,19 @@
                     $vot = "aperta";
                 }
 
+                if(isset($_SESSION['id_utente'])) {
+                    $qryAppartenenzaGruppo = "SELECT idGruppo FROM appartienea WHERE idUtente LIKE '" . $_SESSION['id_utente'] . "'";
+                    $resultAppartenenzaGruppo = $conn->query($qryAppartenenzaGruppo);
+                
+                    if($resultAppartenenzaGruppo->num_rows > 0) {
+                        while($row = $resultAppartenenzaGruppo->fetch_assoc()) {
+                            $idGruppo[] = $row["idGruppo"];
+                        }
+                    } else {
+                        $_SESSION['errore'] = "ERRORE: gruppo non trovato";
+                    }
+                }
+
                 $qryOpz = "SELECT id, testo FROM opzione WHERE idVotazione LIKE '" . $_GLOBALS['idVotazione'] . "'";
                 $resultOpz = $conn->query($qryOpz);
 
@@ -147,7 +160,7 @@
                             $_SESSION['errore'] = "ERRORE: votazione non trovata";
                         }
                         
-                        if($vot == "chiusa" && $pubblica == 1) {
+                        if(($vot == "chiusa" && $pubblica == 1) || in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo)) {
                             $qryTotVoti = "SELECT SUM(nVoti) AS totVoti FROM opzione 
                                             WHERE idVotazione LIKE '" . $_GLOBALS['idVotazione'] . "'";
 
@@ -180,7 +193,7 @@
                                 while($row4 = $resultVotApertaChiusa->fetch_assoc()) {
                                     $tipoVotApCh = $row4['pubblica'];
 
-                                    if($tipoVotApCh == 1) {
+                                    if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo) || $tipoVotApCh == 1) {
                                         $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "% - Numero voti: " . $nVoti." / " . $totVoti;
                                     }
                                 }
@@ -201,28 +214,16 @@
                         }
                     }
                 }
-                
-                if(isset($_SESSION['id_utente'])) {
-                    $qryAppartenenzaGruppo = "SELECT idGruppo FROM appartienea WHERE idUtente LIKE '" . $_SESSION['id_utente'] . "'";
-                    $resultAppartenenzaGruppo = $conn->query($qryAppartenenzaGruppo);
-                    
-                    if($resultAppartenenzaGruppo->num_rows > 0) {
-                        while($row = $resultAppartenenzaGruppo->fetch_assoc()) {
-                            $idGruppo = $row['idGruppo'];
-                            if($idGruppo == 1) {
-                                // chiamata con php self e il method post --> pubblica risultati della votazione
-                                /**
-                                * @todo
-                                */
-                                echo '<form style="display: inline-block" method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
-                                echo "<input type=\"submit\" name=\"vota\" value=\"pubblica risultati votazione\">
-                                        <input type='hidden' name='id' value='".$_GLOBALS['idVotazione']."'>
-                                        </form>";
-                            }
-                        }
-                    } else {
-                        $_SESSION['errore'] = "ERRORE: gruppo non trovato";
-                    }
+
+                if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo)) {
+                    // chiamata con php self e il method post --> pubblica risultati della votazione
+                    /**
+                    * @todo
+                    */
+                    echo '<form style="display: inline-block" method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
+                    echo "<input type=\"submit\" name=\"vota\" value=\"pubblica risultati votazione\">
+                            <input type='hidden' name='id' value='".$_GLOBALS['idVotazione']."'>
+                            </form>";
                 }
 
                 $conn->close();    
