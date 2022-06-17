@@ -35,9 +35,10 @@
         <div class="contenuto">
             <center>
                 <table>
-                <tr>
-                        <td><img class='img' src="../foto/Tonello.jpg"></td>
-                        <td><h2>Andrea Tonello</h2><h3>Docente</h3></td>
+					<tr>
+		
+                        <td colspan="2" style="text-align: right;"><img class='img' src="../foto/Tonello.jpg"></td>
+                        <td colspan="2"><h2>Andrea Tonello</h2><h3>Docente</h3></td>
                     </tr>
                     <tr>
                         <td><img class='img' src="../foto/Schintu.jpg"></td>
