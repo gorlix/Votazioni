@@ -68,7 +68,7 @@
                     die($_SESSION['errore'] = "Connection failed 1: " . $conn->connect_error);
                 }
 
-                $qryInfoVot = "SELECT tipo, inizio, fine, quorum, scelteMax, quesito FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
+                $qryInfoVot = "SELECT tipo, inizio, fine, quorum, scelteMax, quesito FROM votazione WHERE id LIKE '" . $_GLOBALS['idVotazione'] . "'";
                 $resultInfoVot = $conn->query($qryInfoVot);
 
                 // In base all'id del quesito, stampo i dati necessari
@@ -150,10 +150,20 @@
                             }
                             
                             // se la votazione è chiusa, stampo i risultati dei voti
-                            /**
-                             * @todo
-                             */
-                            $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "%";
+                            $qryVotApertaChiusa = "SELECT pubblica FROM votazione WHERE id LIKE '" . $_GLOBALS['idVotazione'] . "'";
+                            $resultVotApertaChiusa = $conn->query($qryVotApertaChiusa);
+
+                            if($resultVotApertaChiusa->num_rows > 0) {
+                                while($row4 = $resultVotApertaChiusa->fetch_assoc()) {
+                                    $tipoVotApCh = $row4['pubblica'];
+
+                                    if($tipoVotApCh == 1) {
+                                        $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "%";
+                                    }
+                                }
+                            } else {
+                                $_SESSION['errore'] = "ERRORE: votazione non trovata";
+                            }
                         } else {
                             $_SESSION['errore'] = "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
                         }
