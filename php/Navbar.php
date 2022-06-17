@@ -97,6 +97,11 @@
                     "<a href='home.php' class='link'>Home</a>" .
                     "</li>" ;
             }
+
+            echo
+                    "<li class='elenco' id='3'>" .
+                    "<a href='sviluppatori.php' class='link'>Sviluppatori</a>" .
+                    "</li>" ;
                 
             echo "<p>".$nome." ".$cognome."<br>".$mail."</p>";
 

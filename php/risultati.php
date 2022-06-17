@@ -12,6 +12,7 @@
     $dbname = "votazioniScolastiche";
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //echo $_POST["id"];
         $_GLOBALS['idVotazione'] = $_POST['id'];
 
         $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -27,6 +28,30 @@
         }
     };
 ?>
+<style>
+    .collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+  }
+  
+  .active, .collapsible:hover {
+    background-color: #555;
+  }
+  
+  .content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+  }
+</style>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -204,42 +229,115 @@
 
                             if($resultVotApertaChiusa->num_rows > 0) {
                                 while($row4 = $resultVotApertaChiusa->fetch_assoc()) {
-                                    $votazioneAperta = $row4['pubblica'];
+                                    $votazionePubblicata = $row4['pubblica'];
 
-                                    if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo) || $votazioneAperta == 1) {
-                                        $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "% - Numero voti: " . $nVoti." / " . $totVoti;
+                                    if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo) || $votazionePubblicata == 1) {
+                                        if($totVoti > 0) {
+                                            $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "% - Numero voti: " . $nVoti." / " . $totVoti;
+                                        }
                                     } 
                                 }
                             } else {
                                 $_SESSION['errore'] = "ERRORE: votazione non trovata";
                             }
                         }
+                        $qryVontantiOpzione = "SELECT u.nome, u.cognome, u.mail FROM utente u
+                                                INNER JOIN risposta r ON u.id = r.idUtente
+                                                WHERE r.idOpzione IS NOT NULL AND r.idOpzione LIKE '" . $row['id'] . "'";
+                        $resultVontantiOpzione = $conn->query($qryVontantiOpzione);
+                        
+                        $testoCollapsable = "";
 
-                        if($_SESSION['numScelte'] == 1) {
-                            echo "<input type=\"radio\" name=\"opzione[]\" value=\"" . $row['id'] . "\" " . $attScelta . ">
-                                <label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label><br><br>";
-                        } else {
-                            $_GLOBALS['numOpz']++;
-                            echo "<input name=\"opzione[]\" type=\"checkbox\" value=\"" . $row['id'] . "\" " .$attScelta . ">
-                                <a class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</a><br><br>";
+                        if($resultVontantiOpzione->num_rows > 0) {
+                            while($row5 = $resultVontantiOpzione->fetch_assoc()) {
+                                $testoCollapsable .= "".$row5['nome'] . " " . $row5['cognome'] . " (" . $row5['mail'] . ")<br>";
+                            }
                         }
+
+                        echo "<button type=\"button\" class=\"collapsible\"><label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label></button>
+                        <div class=\"content\">
+                        <p>" . $testoCollapsable . "</p>
+                        </div>";
                     } 
-                    if($votazioneAperta == 0 && !(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo))) {
+                    if($votazionePubblicata == 0 && !(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo))) {
                         echo "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
                     }
                 } 
 
-                if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo)) {
-                    // chiamata con php self e il method post --> pubblica risultati della votazione
-                    echo '<form style="display: inline-block" method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
-                    echo "<input type=\"submit\" name=\"vota\" value=\"pubblica risultati votazione\">
-                            <input type='hidden' name='id' value='".$_GLOBALS['idVotazione']."'>
-                            </form>";
+                // lista di chi non ha ancora votato
+                $qryNonVotanti = "SELECT idUtente FROM esegue WHERE idVotazione LIKE '" . $_GLOBALS['idVotazione'] . "' AND hash IS NOT NULL";
+                $resultNonVotanti = $conn->query($qryNonVotanti);
+                
+                $testoCollapsable = "";
+
+                if($resultNonVotanti->num_rows > 0) {
+                    while($row = $resultNonVotanti->fetch_assoc()) {
+                        $qryDatiNonVotanti = "SELECT nome, cognome, mail FROM utente WHERE id LIKE '" . $row['idUtente'] . "'";
+                        $resultDatiNonVotanti = $conn->query($qryDatiNonVotanti);
+
+                        if($resultDatiNonVotanti->num_rows == 1) {
+                            $row2 = $resultDatiNonVotanti->fetch_assoc();
+                            $testoCollapsable .= "<label class=\"testo\">" . $row2['nome'] . " " . $row2['cognome'] . " - " . $row2['mail'] . "</label><br>";
+                        } else {
+                            echo "ERRORE: utente non trovato 1";
+                        }
+                    }
+                    echo "<p></p><button type=\"button\" class=\"collapsible\"><label class=\"testo\">Non votanti</label></button>
+                        <div class=\"content\">
+                        <p>" . $testoCollapsable . "</p>
+                        </div><p></p>";
+                } else {
+                    echo "<br><br>Hanno votato tutti.<br><br>";
                 }
 
+                // Pulsante pubblica solo quando la votazione è chiusa
+                $qryTempo = "SELECT fine FROM votazione WHERE id LIKE '" . $_GLOBALS['idVotazione'] . "'";
+                $resultTempo = $conn->query($qryTempo);
+                
+                if($resultTempo->num_rows == 1) {
+                    $row = $resultTempo->fetch_assoc();
+                    $tempoFine = $row['fine'];
+                } else {
+                    $_SESSION['errore'] = "ERRORE: votazione non valida";
+                }
+
+                
+                // calcoli per il tempo
+                $dataCorrente = date("Y-m-d h:i:s");
+
+                if($dataCorrente > $tempoFine) {
+                    if($pubblica == 0) {
+                        if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo)) {
+                        // chiamata con php self e il method post --> pubblica risultati della votazione
+                        echo '<form style="display: inline-block" method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
+                        echo "<input type=\"submit\" name=\"vota\" value=\"pubblica risultati votazione\">
+                                <input type='hidden' name='id' value='".$_GLOBALS['idVotazione']."'>
+                                </form>";
+                        }
+                    } else {
+                        echo "RISULTATI PUBBLICATI";
+                    }
+                }
+                
                 $conn->close();    
             ?>
         </div>
     </div>
+    <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+        content.style.display = "none";
+        } else {
+        content.style.display = "block";
+        }
+    });
+    }
+</script>
 </body>
 </html>
