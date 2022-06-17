@@ -67,6 +67,18 @@
                         } else {
                             die($_SESSION['errore'] = "0 results");
                         }
+                    } else {
+                        $sql = "SELECT quesito FROM votazione WHERE id = " . $_GLOBALS['idVotazione'] . "";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            while($row = $result->fetch_assoc()) {
+                                $_GLOBALS['nomQuesito'] = $row["quesito"];
+                                echo $_GLOBALS['nomQuesito'];  
+                            }
+                        } else {
+                            die($_SESSION['errore'] = "0 results");
+                        }
                     }
 
                     $conn->close();
@@ -143,6 +155,7 @@
 
                 $qryOpz = "SELECT id, testo FROM opzione WHERE idVotazione LIKE '" . $_GLOBALS['idVotazione'] . "'";
                 $resultOpz = $conn->query($qryOpz);
+                $votazioneAperta = 0;
 
                 if ($resultOpz->num_rows > 0) {
                     while($row = $resultOpz->fetch_assoc()) {
@@ -191,17 +204,15 @@
 
                             if($resultVotApertaChiusa->num_rows > 0) {
                                 while($row4 = $resultVotApertaChiusa->fetch_assoc()) {
-                                    $tipoVotApCh = $row4['pubblica'];
+                                    $votazioneAperta = $row4['pubblica'];
 
-                                    if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo) || $tipoVotApCh == 1) {
+                                    if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo) || $votazioneAperta == 1) {
                                         $mediaVot = "- " . round((100 * $nVoti) / $totVoti, 1) . "% - Numero voti: " . $nVoti." / " . $totVoti;
-                                    }
+                                    } 
                                 }
                             } else {
                                 $_SESSION['errore'] = "ERRORE: votazione non trovata";
                             }
-                        } else {
-                            $_SESSION['errore'] = "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
                         }
 
                         if($_SESSION['numScelte'] == 1) {
@@ -212,14 +223,14 @@
                             echo "<input name=\"opzione[]\" type=\"checkbox\" value=\"" . $row['id'] . "\" " .$attScelta . ">
                                 <a class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</a><br><br>";
                         }
+                    } 
+                    if($votazioneAperta == 0 && !(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo))) {
+                        echo "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
                     }
-                }
+                } 
 
                 if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo)) {
                     // chiamata con php self e il method post --> pubblica risultati della votazione
-                    /**
-                    * @todo
-                    */
                     echo '<form style="display: inline-block" method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
                     echo "<input type=\"submit\" name=\"vota\" value=\"pubblica risultati votazione\">
                             <input type='hidden' name='id' value='".$_GLOBALS['idVotazione']."'>
