@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Giu 16, 2022 alle 01:13
+-- Creato il: Giu 17, 2022 alle 23:09
 -- Versione del server: 5.7.17
 -- Versione PHP: 5.6.30
 
@@ -31,9 +31,11 @@ USE `votazioniscolastiche`;
 --
 
 DROP TABLE IF EXISTS `appartienea`;
-CREATE TABLE `appartienea` (
+CREATE TABLE IF NOT EXISTS `appartienea` (
   `idUtente` int(11) NOT NULL,
-  `idGruppo` int(11) NOT NULL
+  `idGruppo` int(11) NOT NULL,
+  PRIMARY KEY (`idUtente`,`idGruppo`),
+  KEY `idGruppo` (`idGruppo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -60,10 +62,13 @@ INSERT INTO `appartienea` (`idUtente`, `idGruppo`) VALUES
 --
 
 DROP TABLE IF EXISTS `esegue`;
-CREATE TABLE `esegue` (
+CREATE TABLE IF NOT EXISTS `esegue` (
   `idUtente` int(11) NOT NULL,
   `idVotazione` int(11) NOT NULL,
-  `hash` varchar(256) DEFAULT NULL
+  `hash` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`idUtente`,`idVotazione`),
+  UNIQUE KEY `hash` (`hash`),
+  KEY `idVotazione` (`idVotazione`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -85,9 +90,11 @@ INSERT INTO `esegue` (`idUtente`, `idVotazione`, `hash`) VALUES
 --
 
 DROP TABLE IF EXISTS `eseguegruppo`;
-CREATE TABLE `eseguegruppo` (
+CREATE TABLE IF NOT EXISTS `eseguegruppo` (
   `idGruppo` int(11) NOT NULL,
-  `idVotazione` int(11) NOT NULL
+  `idVotazione` int(11) NOT NULL,
+  PRIMARY KEY (`idGruppo`,`idVotazione`),
+  KEY `idVotazione` (`idVotazione`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -97,10 +104,11 @@ CREATE TABLE `eseguegruppo` (
 --
 
 DROP TABLE IF EXISTS `gruppo`;
-CREATE TABLE `gruppo` (
-  `id` int(11) NOT NULL,
-  `nome` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `gruppo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `gruppo`
@@ -118,12 +126,14 @@ INSERT INTO `gruppo` (`id`, `nome`) VALUES
 --
 
 DROP TABLE IF EXISTS `opzione`;
-CREATE TABLE `opzione` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `opzione` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `testo` varchar(40) NOT NULL,
   `nVoti` int(11) NOT NULL DEFAULT '0',
-  `idVotazione` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `idVotazione` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idVotazione` (`idVotazione`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `opzione`
@@ -131,7 +141,7 @@ CREATE TABLE `opzione` (
 
 INSERT INTO `opzione` (`id`, `testo`, `nVoti`, `idVotazione`) VALUES
 (1, 'si', 15, 1),
-(2, 'no', 0, 1);
+(2, 'no', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -140,11 +150,13 @@ INSERT INTO `opzione` (`id`, `testo`, `nVoti`, `idVotazione`) VALUES
 --
 
 DROP TABLE IF EXISTS `recupero`;
-CREATE TABLE `recupero` (
+CREATE TABLE IF NOT EXISTS `recupero` (
   `hash` varchar(256) NOT NULL,
   `idUtente` int(11) NOT NULL,
   `dataScadenza` date NOT NULL,
-  `oraScadenza` time NOT NULL
+  `oraScadenza` time NOT NULL,
+  PRIMARY KEY (`hash`),
+  KEY `idUtente` (`idUtente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -154,14 +166,18 @@ CREATE TABLE `recupero` (
 --
 
 DROP TABLE IF EXISTS `risposta`;
-CREATE TABLE `risposta` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `risposta` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `data` date NOT NULL,
   `ora` time NOT NULL,
   `idUtente` int(11) NOT NULL,
   `idVotazione` int(11) NOT NULL,
-  `idOpzione` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `idOpzione` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `risposta_ibfk_1` (`idUtente`),
+  KEY `risposta_ibfk_2` (`idVotazione`),
+  KEY `risposta_ibfk_3` (`idOpzione`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `risposta`
@@ -182,14 +198,15 @@ INSERT INTO `risposta` (`id`, `data`, `ora`, `idUtente`, `idVotazione`, `idOpzio
 --
 
 DROP TABLE IF EXISTS `utente`;
-CREATE TABLE `utente` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `utente` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `pw` varchar(512) NOT NULL,
   `mail` varchar(50) NOT NULL,
   `nome` varchar(30) NOT NULL,
   `cognome` varchar(30) NOT NULL,
-  `forzaModificaPW` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `forzaModificaPW` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `utente`
@@ -212,120 +229,25 @@ INSERT INTO `utente` (`id`, `pw`, `mail`, `nome`, `cognome`, `forzaModificaPW`) 
 --
 
 DROP TABLE IF EXISTS `votazione`;
-CREATE TABLE `votazione` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `votazione` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `quesito` varchar(40) NOT NULL,
   `tipo` enum('anonimo','nominale') DEFAULT NULL,
   `inizio` datetime NOT NULL,
   `fine` datetime NOT NULL,
   `quorum` float NOT NULL,
   `scelteMax` int(11) NOT NULL DEFAULT '1',
-  `pubblica` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `pubblica` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `votazione`
 --
 
 INSERT INTO `votazione` (`id`, `quesito`, `tipo`, `inizio`, `fine`, `quorum`, `scelteMax`, `pubblica`) VALUES
-(1, 'Groppo con meno di 100', 'anonimo', '2022-06-14 22:34:00', '2022-06-16 00:00:01', 0, 1, 0);
+(1, 'Groppo con meno di 100', 'anonimo', '2022-06-14 22:34:00', '2022-06-16 00:00:01', 0, 1, 1);
 
---
--- Indici per le tabelle scaricate
---
-
---
--- Indici per le tabelle `appartienea`
---
-ALTER TABLE `appartienea`
-  ADD PRIMARY KEY (`idUtente`,`idGruppo`),
-  ADD KEY `idGruppo` (`idGruppo`);
-
---
--- Indici per le tabelle `esegue`
---
-ALTER TABLE `esegue`
-  ADD PRIMARY KEY (`idUtente`,`idVotazione`),
-  ADD UNIQUE KEY `hash` (`hash`),
-  ADD KEY `idVotazione` (`idVotazione`);
-
---
--- Indici per le tabelle `eseguegruppo`
---
-ALTER TABLE `eseguegruppo`
-  ADD PRIMARY KEY (`idGruppo`,`idVotazione`),
-  ADD KEY `idVotazione` (`idVotazione`);
-
---
--- Indici per le tabelle `gruppo`
---
-ALTER TABLE `gruppo`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `opzione`
---
-ALTER TABLE `opzione`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idVotazione` (`idVotazione`);
-
---
--- Indici per le tabelle `recupero`
---
-ALTER TABLE `recupero`
-  ADD PRIMARY KEY (`hash`),
-  ADD KEY `idUtente` (`idUtente`);
-
---
--- Indici per le tabelle `risposta`
---
-ALTER TABLE `risposta`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `risposta_ibfk_1` (`idUtente`),
-  ADD KEY `risposta_ibfk_2` (`idVotazione`),
-  ADD KEY `risposta_ibfk_3` (`idOpzione`);
-
---
--- Indici per le tabelle `utente`
---
-ALTER TABLE `utente`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `votazione`
---
-ALTER TABLE `votazione`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT per le tabelle scaricate
---
-
---
--- AUTO_INCREMENT per la tabella `gruppo`
---
-ALTER TABLE `gruppo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT per la tabella `opzione`
---
-ALTER TABLE `opzione`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT per la tabella `risposta`
---
-ALTER TABLE `risposta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
---
--- AUTO_INCREMENT per la tabella `utente`
---
-ALTER TABLE `utente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
---
--- AUTO_INCREMENT per la tabella `votazione`
---
-ALTER TABLE `votazione`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- Limiti per le tabelle scaricate
 --
