@@ -27,22 +27,29 @@
         }
     };
 ?>
-<script>
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
-
-    for (i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var content = this.nextElementSibling;
-        if (content.style.display === "block") {
-        content.style.display = "none";
-        } else {
-        content.style.display = "block";
-        }
-    });
-    }
-</script>
+<style>
+    .collapsible {
+    color: black;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+  }
+  
+  .active, .collapsible:hover {
+    background-color: #555;
+  }
+  
+  .content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+  }
+</style>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -236,21 +243,19 @@
                                                 INNER JOIN risposta r ON u.id = r.idUtente
                                                 WHERE r.idOpzione IS NOT NULL AND r.idOpzione LIKE '" . $row['id'] . "'";
                         $resultVontantiOpzione = $conn->query($qryVontantiOpzione);
+                        
+                        $testoCollapsable = "";
 
                         if($resultVontantiOpzione->num_rows > 0) {
                             while($row5 = $resultVontantiOpzione->fetch_assoc()) {
-                                echo "   • ".$row5['nome'] . " " . $row5['cognome'] . " (" . $row5['mail'] . ")<br>";
+                                $testoCollapsable .= "• ".$row5['nome'] . " " . $row5['cognome'] . " (" . $row5['mail'] . ")<br>";
                             }
-                            echo "<br>";
                         }
 
                         echo "<button type=\"button\" class=\"collapsible\"><label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label></button>
                         <div class=\"content\">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <p>" . $testoCollapsable . "</p>
                         </div>";
-                        // echo "• <label class=\"testo\">" . $row['testo'] . " " . $mediaVot . "</label><br>";
-                        
-                        
                     } 
                     if($votazionePubblicata == 0 && !(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo))) {
                         echo "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
@@ -312,5 +317,21 @@
             ?>
         </div>
     </div>
+    <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+        content.style.display = "none";
+        } else {
+        content.style.display = "block";
+        }
+    });
+    }
+</script>
 </body>
 </html>
