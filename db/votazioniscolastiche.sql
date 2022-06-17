@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Giu 17, 2022 alle 23:23
+-- Creato il: Giu 17, 2022 alle 23:25
 -- Versione del server: 5.7.17
 -- Versione PHP: 5.6.30
 
@@ -286,7 +286,7 @@ ALTER TABLE `eseguegruppo`
 -- Limiti per la tabella `opzione`
 --
 ALTER TABLE `opzione`
-  ADD CONSTRAINT `opzione_ibfk_1` FOREIGN KEY (`idVotazione`) REFERENCES `votazione` (`id`);
+  ADD CONSTRAINT `opzione_ibfk_1` FOREIGN KEY (`idVotazione`) REFERENCES `votazione` (`id`) ON DELETE CASCADE;
 
 --
 -- Limiti per la tabella `recupero`
