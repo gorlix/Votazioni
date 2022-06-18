@@ -71,12 +71,17 @@
 											</tr>
 											<tr>
 												<td>
-													<input type='submit' name='invia' value='salva'>
+													<input class=\"button\" type='submit' name='invia' value='Salva'></form>
 												</td>
 											</tr>
-										</table>
-									</form>";
-									
+										</table>";
+											/*<tr>
+												<td>
+													<form action='". htmlspecialchars($_SERVER["PHP_SELF"]) ."'>
+														<input type='submit' class=\"button\" name='' value='Ritorna alla scelta votazione'/>
+													</form>
+												</td>
+											</tr>*/
 						echo $content;
 					}
 					
@@ -160,8 +165,6 @@
 					//principale name='modifica'
 					else if(isset($_POST['modifica']))  
 					{
-						echo $_POST['quesito'];
-						
 						$sql = "SELECT quesito, tipo, inizio, fine, scelteMax FROM votazione where id = '".$_POST['quesito']."'";
 						$result = $conn->query($sql);
 												/*if ($result === TRUE) 
@@ -171,8 +174,20 @@
 						if ($result->num_rows > 0) {
 							while($row = $result->fetch_assoc()) {
 								$content = "<br>".'<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
-											"Quesito:<input type='text' name='quesito' value='".$row['quesito']."' required><br>
-											tipo:<select name='tipo'>";
+											"<table>
+												<tr>
+													<td>
+														ID Votazione: ".$_POST['quesito']."
+													</td>
+												</tr>
+												<tr>
+													<td>
+														Quesito:<input type='text' name='quesito' value='".$row['quesito']."' required>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														Tipo:<select name='tipo'>";
 											
 								if (strcmp($row['tipo'], "anonimo") === 0) {
 									$scelta1 = "<option name='tipo' value='anonimo'>anonimo</option>\n";
@@ -184,14 +199,32 @@
 								$inMod = str_replace(" ","T",$row['inizio']);
 								$fiMod = str_replace(" ","T",$row['fine']);
 									
-								$content .= $scelta1.$scelta2."</select><br>
-											<input hidden type='text' name='id' value='".$_POST['quesito']."' required>
-											Data e ora inizio:<input type='datetime-local' name='inizio' value='".$inMod."' required><br>
-											Data e ora fine:<input type='datetime-local' name='fine' value='".$fiMod."'required><br>
-											Numero di selte max:<input type='number' name='scelteMax' value='".$row['scelteMax']."' required min='1' ><br>
-											
-											<br><input type='submit' name='update' value='salva'><br>
-									</form>";
+								$content .= $scelta1.$scelta2."</select>
+														<input hidden type='text' name='id' value='".$_POST['quesito']."' required>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														Data e ora inizio:<input type='datetime-local' name='inizio' value='".$inMod."' required>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														Data e ora fine:<input type='datetime-local' name='fine' value='".$fiMod."'required>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														Numero di selte max:<input type='number' name='scelteMax' value='".$row['scelteMax']."' required min='1' >
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<input type='submit' class=\"button\" name='update' value='salva'>
+													</td>
+												</tr>
+												</form>
+											</table>";
 							}
 						} else {
 						  echo "0 results";
@@ -320,7 +353,7 @@
 					}
 
                     echo "".'<form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
-								"<br><input type='submit' name='' value='Ritorna alla scelta votazione'/><br>
+								"<br><input type='submit' class=\"button\" name='' value='Ritorna alla scelta votazione'/><br>
 							</form>"; 
 				}
                 /*
@@ -342,7 +375,7 @@
 							$quesito = $row["quesito"];
 							$id = $row["id"];
 							// $altro = $row["altro"];
-							$content.= "<option name='quesito' value='$id'>$quesito</option>";
+							$content.= "<option name='quesito' value='".$id."'>$quesito</option>";
 						}
 					}
                     echo $content;
@@ -351,23 +384,23 @@
 								<table>
 									<tr>
 										<td>
-											<input style=\"button\" type='submit' name='crea' value='Crea votazione'/>
+											<input style=\"width: 100%\" class=\"button\" type='submit' name='crea' value='Crea votazione'/>
 										</td>
 										<td>
-											<input type='submit' name='modifica' value='Modifica votazione'/>
+											<input style=\"width: 100%\" class=\"button\" type='submit' name='modifica' value='Modifica votazione'/>
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<input type='submit' name='cancella' value='Cancella votazione'/>
+											<input style=\"width: 100%\" class=\"button\" type='submit' name='cancella' value='Cancella votazione'/>
 										</td>
 										<td>
-											<input type='submit' name='gestisci' value='Gestisci opzione'/>
+											<input style=\"width: 100%\" class=\"button\" type='submit' name='gestisci' value='Gestisci opzione'/>
 										</td>
 									</tr>
 									<tr>
 										<td style=\"text-align: center\" colspan=\"2\">
-											<input type='submit' name='assegna' value='Assegna Votazione'/>
+											<input style=\"width: 100%\" class=\"button\" type='submit' name='assegna' value='Assegna Votazione'/>
 										</td>
 									</tr>
 								</table>

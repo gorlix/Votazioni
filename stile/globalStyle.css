@@ -134,3 +134,8 @@ td{
     overflow: hidden;
     background-color: #f1f1f1;
   }
+
+  .infoUt {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+  }
