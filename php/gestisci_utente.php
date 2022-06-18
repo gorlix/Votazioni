@@ -47,7 +47,7 @@
 	            echo "<h2>Gestione gruppi utente</h2><h3>Seleziona gruppo</h3>";
 	            $str = "<form action='$_SERVER[PHP_SELF]' method='post'><select name='id_gruppo'>";
 	            $str .= "<option value='0'></option>";
-	            $query = "SELECT id, nome FROM gruppo";
+	            $query = "SELECT id, nome FROM gruppo ORDER BY nome ASC"; 
 	            $conn = connettiDb();
 	            $ris = $conn->query($query);
 	            if ($ris->num_rows > 0) {
@@ -181,13 +181,10 @@ function stampaFormModificaUtente($id_user){
 function stampaSelezioneUser(){
     echo "<h1>Operazioni utente</h1>";
     echo "<h3>Seleziona utente </h3>";
-
-    echo "<input name=\"nomeRicerca\" type=\"text\" onkeypress=\"cercaDati()\">";
-
     $str = "<form id='frmSelUsr' action='$_SERVER[PHP_SELF]' method='post'>";
     $str .= "<select name='submittedUsr' id='drpUsr'>";
     $str .= "<option value='0'></option>";
-    $query = "SELECT id, mail FROM utente";
+    $query = "SELECT id, mail FROM utente ORDER BY mail ASC"; 
     $conn = connettiDb();
     $ris = $conn->query($query);
     if ($ris->num_rows > 0) {
