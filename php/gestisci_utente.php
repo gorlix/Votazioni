@@ -181,6 +181,9 @@ function stampaFormModificaUtente($id_user){
 function stampaSelezioneUser(){
     echo "<h1>Operazioni utente</h1>";
     echo "<h3>Seleziona utente </h3>";
+
+    echo "<input name=\"nomeRicerca\" type=\"text\" onkeypress=\"cercaDati()\">";
+
     $str = "<form id='frmSelUsr' action='$_SERVER[PHP_SELF]' method='post'>";
     $str .= "<select name='submittedUsr' id='drpUsr'>";
     $str .= "<option value='0'></option>";
@@ -302,3 +305,4 @@ function rimuoviUtenteDalGruppo($id_User, $id_Group){
 function refreshPage($nome_pagina) {
     header("Location: ".$nome_pagina);
 }
+?>
