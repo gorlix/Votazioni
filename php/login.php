@@ -36,13 +36,13 @@
     </div>
     <div class="contenuto">
         <form action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>' method='post'>
-            <h2>Benvenuto nel sistema votazioni !</h2>
-            <h1>Mail</h1>
+            <h1 class="textSpecial">Benvenuto nel sistema votazioni!</h1>
+            <h2 class="textSpecial">Mail</h2>
             <input type="text" name="mail" id="mail">
-            <h1>Password</h1>
+            <h2 class="textSpecial">Password</h2>
             <input type="password" name="password" id="password">
             <br>
-            <input style="margin-top: 20px" type="submit" value="Login">
+            <input class="button" style="margin-top: 20px" type="submit" value="Login">
             <h3><?php echo $_SESSION['loginpageError']?></h3>
         </form>
     </div>

@@ -53,8 +53,17 @@
                             $conn -> close();
                         }
 
-                        echo '<form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . ' "method="post">';
-                        $var = "<label for='nome''>Elimina Gruppo: </label>";
+                        echo '<center>
+                            <table>
+                                <tr>
+                                    <td colsapn="2">
+                                        <h2 style="text-align: center" class="textSpecial">Opereazioni gruppo</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . ' "method="post">';
+                        $var = "<label for='nome''><p>Elimina Gruppo: </label>";
                         $var .= "<select name='Elimina'>";
 
                         $query = "SELECT  id, nome FROM gruppo";
@@ -67,17 +76,19 @@
                                 $var .= "<option value='$id' name='Elimina'>$quesito</option>";
                             }
                         }
-                        $var .= "</select>";
+                        $var .= "</p></select></td>";
                         echo $var;
-                        echo "\n" . "<button type='submit' >Elimina Gruppo</button>";
-                        echo "</form>";
+                        echo "\n" . "<td><button style=\"width: 100%\" type='submit' class=\"button\">Elimina Gruppo</button>";
+                        echo "</form></td></tr>";
 
-                        echo '<form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . ' "method="post">';
-                        $var = "<label for='Crea'>Crea Gruppo: </label>";
-                        $var .= "<input type='text' name='Crea' id='CreaGruppo'>";
+                        echo '<tr>
+                                <td>
+                                    <form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . ' "method="post">';
+                        $var = "<label for='Crea'><p>Crea Gruppo: </label>";
+                        $var .= "<input type='text' name='Crea' id='CreaGruppo' required></td>";
                         echo $var;
-                        echo "\n<button type='submit'>Crea Gruppo</button>";
-                        echo "</form>";
+                        echo "\n<td><button style=\"width: 100%\" class=\"button\" type='submit'>Crea Gruppo</button></p>";
+                        echo "</form></td></tr></table></center>";
                 ?>
         </div>
     </div>

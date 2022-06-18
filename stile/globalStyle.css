@@ -84,8 +84,8 @@ body {
 td{
     font-family: 'Roboto Mono', monospace;
     font-family: 'Space Mono', monospace;
-
-    padding:10px;
+    font-size: 18px;
+    padding:5px;
 }
 
  .titoli{
@@ -103,13 +103,16 @@ td{
     background-color: rgba(230, 126, 34, 1);
     border: none;
     color: black;
-    padding: 15px 32px;
+    padding: 10px 30px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
 }
 
 .collapsible {
@@ -133,4 +136,21 @@ td{
     display: none;
     overflow: hidden;
     background-color: #f1f1f1;
+  }
+
+  p, input[type=datetime-local], input[type=text] {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+  }
+
+  option, select {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+  }
+
+  .textSpecial {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
   }

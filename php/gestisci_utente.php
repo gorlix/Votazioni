@@ -33,21 +33,43 @@
             stampaSelezioneUser();
         ?>
         <br>
-        <br>
         <form action='<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>' method='post'>
-
-            <input type='submit' name='submit' value='Crea utente'>
-            <input type='submit' name='submit' value='Modifica utente'>
-            <input type='submit' name='submit' value='Elimina utente'>
+        <tr>
+            <td>
+                <input class="button" type='submit' name='submit' value='Crea utente'>
+            </td>
+            <td>
+                <input class="button" type='submit' name='submit' value='Modifica utente'>
+            <td>
+                <input class="button" type='submit' name='submit' value='Elimina utente'>
+            </td>
+        </tr>
+        </center></table>
         </form>
         <?php
             if($_SESSION["user_selected"] != 0 && isset($_SESSION["user_selected"])){
-	            echo "<h4>Utente selezionato: ".getMailUtente($_SESSION["user_selected"])."</h4>";
+	            echo "<table>
+                        <tr>
+                            <td colspan=\"2\">
+                                <h4 style=\"width: 550px\" class=\"textSpecial\">Utente selezionato: ".getMailUtente($_SESSION["user_selected"])."</h4>
+                            </td>
+                        </tr>";
                 gestisciRichiestePageGestisciUtente();
-	            echo "<h2>Gestione gruppi utente</h2><h3>Seleziona gruppo</h3>";
-	            $str = "<form action='$_SERVER[PHP_SELF]' method='post'><select name='id_gruppo'>";
+	            echo "<table><tr>
+                        <td colspan=\"2\">
+                            <h2 class=\"textSpecial\">Gestione gruppi utente</h2>
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td colspan=\"2\">    
+                            <h3>Seleziona gruppo</h3>
+                        </td>
+                    </tr>";
+	            $str = "<tr>
+                            <td colspan=\"2\">
+                                <form action='$_SERVER[PHP_SELF]' method='post'><select name='id_gruppo'>";
 	            $str .= "<option value='0'></option>";
-	            $query = "SELECT id, nome FROM gruppo";
+	            $query = "SELECT id, nome FROM gruppo ORDER BY nome ASC"; 
 	            $conn = connettiDb();
 	            $ris = $conn->query($query);
 	            if ($ris->num_rows > 0) {
@@ -56,10 +78,17 @@
 		            }
 	            }
 	            $str .= "</select>
-            <br><br>
-            <input type='submit' name='submit' value='Aggiungi al gruppo'>
-            <input type='submit' name='submit' value='Rimuovi dal gruppo'><br><br>
-        </form>";
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input class=\"button\" type='submit' name='submit' value='Aggiungi al gruppo'>
+                            </td>
+                            <td>
+                                <input class=\"button\" type='submit' name='submit' value='Rimuovi dal gruppo'></form>
+                            </td>
+                        </tr>
+                        </table>";
 	            echo $str;
                 stampaGruppiUser();
             }else{
@@ -127,9 +156,16 @@ function stampaErrore() {
     echo "<h6 style='color: red'>Errore: ".$_SESSION["ErrorGestioneUtente"]."</h6>";
 }
 function stampaGruppiUser(){
-    echo "<h4>Gruppi già associati</h4>";
+    echo "<table>
+            <tr>
+                <td>
+                    <h3 class=\"textSpecial\">Gruppi già associati</h3>
+                </td>
+            </tr>";
     $conn = connettiDb();
-    $str = "<table style='border: 1px solid black'><tr style='border: 1px solid black'><th style='border: 1px solid black'>Nome</th></tr>";
+    $str = "<tr>
+                <td>
+                <center><table style='border: 1px solid black'><tr style='border: 1px solid black'><th style='border: 1px solid black'>Nome</th></tr>";
 
     $query = "SELECT nome FROM gruppo g INNER JOIN appartienea app ON app.idGruppo = g.id WHERE app.idUtente = '$_SESSION[user_selected]'";
     $conn = connettiDb();
@@ -138,61 +174,113 @@ function stampaGruppiUser(){
         while($row = $ris->fetch_assoc()) {
             $str .= "<tr style='border: 1px solid black'><td style='border: 1px solid black'>".$row["nome"]."</td></tr>";
         }
-	    $str.="</table>";
+	    $str.="</table></center>
+                </td>
+                </tr></table>";
     }else{
-        $str = "L'utente non appartiene a nessun gruppo.";
+        $str = "<tr>
+                    <td>
+                        <p>L'utente non appartiene a nessun gruppo.</p>
+                    </td>
+                </tr>
+                </table>";
     }
     echo $str;
 }
 
 function stampaFormCreazioneUtente(){
-    echo "<form action='$_SERVER[PHP_SELF]' method='post'><br><br>
-            <h2>Crea utente</h2>
-            <label>Mail</label>
-                <input type='text' name='mail_inpt' required>
-            <label>Password</label>
-                <input type='password' name='pw_inpt' required><br><br>
-            <label>Nome</label>
-                <input type='text' name='nome_inpt' required>
-            <label>Cognome</label>
-                <input type='text' name='cognome_inpt' required><br><br>
-            <input type='submit' name='submit' value='Crea'>
-         </form>";
+    echo "<table><tr>
+                <td colspan=\"2\">
+                    <form action='$_SERVER[PHP_SELF]' method='post'>
+                    <h2>Crea utente</h2>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Mail<input type='text' name='mail_inpt' required></p>
+                </td>
+                <td>
+                    <p>Password<input type='password' name='pw_inpt' required></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Nome<input type='text' name='nome_inpt' required></p>
+                </td>
+                <td>
+                    <p>Cognome<input type='text' name='cognome_inpt' required></p>
+                </td>
+            </tr>
+            <tr>
+                <td  colspan=\"2\">
+                    <input type='submit' class=\"button\" name='submit' value='Crea'></form>
+                </td>
+            </tr>
+            </table>";
 }
 
 function stampaFormModificaUtente($id_user){
     $nome = getNomeUtente($id_user);
     $cognome = getCognomeUtente($id_user);
     $mail = getMailUtente($id_user);
-    echo "<form action='$_SERVER[PHP_SELF]' method='post'><br><br>
-            <h2>Modifica utente</h2>
-            <label>Nome</label>
-                <input type='text' name='nome_inpt' value='$nome' required>
-            <label>Cognome</label>
-                <input type='text' name='cognome_inpt' value='$cognome' required><br><br>
-            <label>Mail</label>
-                <input type='text' name='mail_inpt' value='$mail' required>
-            <label>Password</label>
-                <input type='password' name='pw_inpt'><br><br>
-            <input type='submit' name='submit' value='Modifica'>
-         </form>";
+    echo "<table>
+            <tr>
+                <td colspan=\"2\">
+                    <form action='$_SERVER[PHP_SELF]' method='post'>
+                    <h2 class=\"textSpecial\">Modifica utente</h2>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Nome<input type='text' name='nome_inpt' value='$nome' required></p>
+                </td>
+                <td>
+                    <p>Cognome<input type='text' name='cognome_inpt' value='$cognome' required></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Mail<input type='text' name='mail_inpt' value='$mail' required></p>
+                </td>
+                <td>
+                    <p>Password<input type='password' name='pw_inpt'></p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=\"2\">
+                <input class=\"button\" type='submit' name='submit' value='Modifica'></form>
+                </td>
+            </tr>
+            </table>";
 }
 
 function stampaSelezioneUser(){
-    echo "<h1>Operazioni utente</h1>";
-    echo "<h3>Seleziona utente </h3>";
-    $str = "<form id='frmSelUsr' action='$_SERVER[PHP_SELF]' method='post'>";
+    echo "<h1 style=\"text-align: center\" class=\"textSpecial\">Operazioni utente</h1><center><table>";
+    echo "<tr>
+            <td colspan=\"3\">
+                <h3 class=\"textSpecial\">Seleziona utente </h3>
+            </td>
+        </tr>";
+    $str = "<tr>
+                <td colspan=\"3\">
+                    <form id='frmSelUsr' action='$_SERVER[PHP_SELF]' method='post'>";
     $str .= "<select name='submittedUsr' id='drpUsr'>";
     $str .= "<option value='0'></option>";
-    $query = "SELECT id, mail FROM utente";
+
+    $query = "SELECT id, mail FROM utente ORDER BY mail ASC"; 
     $conn = connettiDb();
+
     $ris = $conn->query($query);
+
     if ($ris->num_rows > 0) {
         while ($row = $ris->fetch_assoc()) {
             $str .= "<option value='" . $row["id"] . "'>" . $row["mail"] . "</option>";
         }
     }
-    $str .= "</select><input type='submit' id='btnSubDrpSelUsr' hidden name='submit' value='selUser'></form>";
+    $str .= "</select><input type='submit' id='btnSubDrpSelUsr' hidden name='submit' value='selUser'></form>
+                    </td>
+                </tr>";
+
     echo $str;
 }
 
@@ -302,3 +390,4 @@ function rimuoviUtenteDalGruppo($id_User, $id_Group){
 function refreshPage($nome_pagina) {
     header("Location: ".$nome_pagina);
 }
+?>
