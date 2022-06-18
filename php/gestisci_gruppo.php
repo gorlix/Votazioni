@@ -53,7 +53,13 @@
                             $conn -> close();
                         }
 
-                        echo '<table>
+                        echo '<center>
+                            <table>
+                                <tr>
+                                    <td colsapn="2">
+                                        <h2 style="text-align: center" class="textSpecial">Opereazioni gruppo</h2>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>
                                         <form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . ' "method="post">';
@@ -82,7 +88,7 @@
                         $var .= "<input type='text' name='Crea' id='CreaGruppo' required></td>";
                         echo $var;
                         echo "\n<td><button style=\"width: 100%\" class=\"button\" type='submit'>Crea Gruppo</button></p>";
-                        echo "</form></td></tr></table>";
+                        echo "</form></td></tr></table></center>";
                 ?>
         </div>
     </div>
