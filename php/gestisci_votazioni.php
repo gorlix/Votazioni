@@ -375,7 +375,7 @@
                 else
 				{
 					// INIZIO PAGINA HTML
-					$content = "<h3 style=\"font-size: 25px\">OPERAZIONI VOTAZIONE </h3>
+					$content = "<h3 style=\"font-size: 25px\" class=\"textSpecial\">OPERAZIONI VOTAZIONE </h3>
 								<p style=\"font-size: 20px\">Nome della votazione</p>".
 								'<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) .'">'.
 								"<select name='quesito'>";

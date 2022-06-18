@@ -85,7 +85,7 @@ td{
     font-family: 'Roboto Mono', monospace;
     font-family: 'Space Mono', monospace;
     font-size: 18px;
-    padding:10px;
+    padding:5px;
 }
 
  .titoli{
@@ -138,10 +138,16 @@ td{
     background-color: #f1f1f1;
   }
 
-  p, option, select, input[type=datetime-local] {
+  p, input[type=datetime-local] {
     font-family: 'Roboto Mono', monospace;
     font-family: 'Space Mono', monospace;
     font-size: 18px;
+  }
+
+  option, select {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
   }
 
   .textSpecial {
