@@ -71,7 +71,7 @@
 											</tr>
 											<tr>
 												<td>
-													<input class=\"button\" type='submit' name='invia' value='Salva'></form>
+													<input class=\"button\" style=\"width: 100%\" type='submit' name='invia' value='Salva'></form>
 												</td>
 											</tr>
 										</table>";
@@ -220,7 +220,7 @@
 												</tr>
 												<tr>
 													<td>
-														<input type='submit' class=\"button\" name='update' value='salva'>
+														<input type='submit' style=\"width: 100%\" class=\"button\" name='update' value='Salva'>
 													</td>
 												</tr>
 												</form>
@@ -284,8 +284,11 @@
 								</center>";
 						}
 						
-						$content = "".'<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
-									"Gruppo:<select name='gruppo'>";
+						$content = "<table>
+										".'<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
+										"<tr>
+											<td>
+												Gruppo:<select name='gruppo'>";
 						$query = "SELECT  id, nome FROM gruppo";
 						$ris=$conn->query($query);
 						
@@ -297,11 +300,21 @@
 								$content.= "<option name='gruppo' value='$id'>$nome</option>\n";
 							}
 						}
-						$content.="</select>.
-								<input hidden type='text' name='idVotazione' value='".$_POST['quesito']."' >
-								<br><br><input type='submit' name='aggiungiG' value='Assegna al gruppo'/><br>
-								<br><input type='submit' name='rimuoviG' value='Rimuovi il gruppo dalla Votazione'/><br>
-								</form>";
+						$content.="</select><input hidden type='text' name='idVotazione' value='".$_POST['quesito']."' >
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type='submit' style=\"width: 100%\" class=\"button\" name='aggiungiG' value='Assegna al gruppo'/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type='submit' style=\"width: 100%\" class=\"button\" name='rimuoviG' value='Rimuovi il gruppo dalla Votazione'/></form>
+										</td>
+									</tr>
+									</table>";
+
 						echo $content;
 					}
 
@@ -353,7 +366,7 @@
 					}
 
                     echo "".'<form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
-								"<br><input type='submit' class=\"button\" name='' value='Ritorna alla scelta votazione'/><br>
+								"<br><input type='submit' style=\"background-color: grey\" class=\"button\" name='' value='Ritorna alla scelta votazione'/><br>
 							</form>"; 
 				}
                 /*
@@ -362,8 +375,8 @@
                 else
 				{
 					// INIZIO PAGINA HTML
-					$content = "<h3>OPERAZIONI VOTAZIONE </h3>
-								<p>Nome della votazione</p>".
+					$content = "<h3 style=\"font-size: 25px\">OPERAZIONI VOTAZIONE </h3>
+								<p style=\"font-size: 20px\">Nome della votazione</p>".
 								'<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) .'">'.
 								"<select name='quesito'>";
 
