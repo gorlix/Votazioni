@@ -39,16 +39,42 @@
 					if(isset($_POST['crea']))  
 					{
 						$content = "".'<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
-										"Quesito:<input type='text' name='quesito' value='' required><br>
-										tipo:<select name='tipo'>	
-											<option name='tipo' value='anonimo'>anonimo</option>\n
-											<option name='tipo' value='nominale'>nominale</option>\n
-										</select><br>
-										Data e ora inizio:<input type='datetime-local' name='inizio' value=''required><br>
-										Data e ora fine:<input type='datetime-local' name='fine' value=''required><br>
-										Numero di selte max:<input type='number' name='scelteMax' value='' required min='1' ><br>
-											
-										<br><input type='submit' name='invia' value='salva'><br>
+										"<table>
+											<tr>
+												<td>
+													Quesito:<input type='text' name='quesito' value='' required>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Tipo:
+													<select name='tipo'>	
+														<option name='tipo' value='anonimo'>anonimo</option>\n
+														<option name='tipo' value='nominale'>nominale</option>\n
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Data e ora inizio:<input type='datetime-local' name='inizio' value=''required>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Data e ora fine:<input type='datetime-local' name='fine' value=''required>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Numero di selte max:<input type='number' name='scelteMax' value='' required min='1' >
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input type='submit' name='invia' value='salva'>
+												</td>
+											</tr>
+										</table>
 									</form>";
 									
 						echo $content;
