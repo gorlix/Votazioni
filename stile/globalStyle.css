@@ -138,7 +138,7 @@ td{
     background-color: #f1f1f1;
   }
 
-  p, input[type=datetime-local] {
+  p, input[type=datetime-local], input[type=text] {
     font-family: 'Roboto Mono', monospace;
     font-family: 'Space Mono', monospace;
     font-size: 18px;
