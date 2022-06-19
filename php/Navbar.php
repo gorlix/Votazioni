@@ -103,11 +103,11 @@
                     "<a href='sviluppatori.php' class='link'>Sviluppatori</a>" .
                     "</li>" ;
                 
-            echo "<p>".$nome." ".$cognome."<br>".$mail."</p>";
+            echo "<p style=\"font-size: 18px; color: blue\">".$nome." ".$cognome."<br><br>".$mail."</p>";
 
             echo
                 '<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
-                        "<input type='submit' name='esci' value='Esci'/><br>
+                        "<input class=\"button\" style=\"background-color: grey; width: 300px\" type='submit' name='esci' value='Esci'/><br>
                     </form>" .
                 "</li>" ;
     echo

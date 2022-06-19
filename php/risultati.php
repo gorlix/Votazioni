@@ -185,6 +185,7 @@
                 if ($resultOpz->num_rows > 0) {
                     while($row = $resultOpz->fetch_assoc()) {
                         $mediaVot = ""; 
+                        $votazionePubblicata = 0; 
 
                         // e dati pubblicati
                         $qryDatiPub = "SELECT pubblica FROM votazione WHERE id LIKE '" . $_GLOBALS['idVotazione'] . "'";
@@ -226,7 +227,7 @@
                             // se la votazione è chiusa, stampo i risultati dei voti
                             $qryVotApertaChiusa = "SELECT pubblica FROM votazione WHERE id LIKE '" . $_GLOBALS['idVotazione'] . "'";
                             $resultVotApertaChiusa = $conn->query($qryVotApertaChiusa);
-
+                            
                             if($resultVotApertaChiusa->num_rows > 0) {
                                 while($row4 = $resultVotApertaChiusa->fetch_assoc()) {
                                     $votazionePubblicata = $row4['pubblica'];
