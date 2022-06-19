@@ -138,16 +138,16 @@ td{
     background-color: #f1f1f1;
   }
 
-  p, input[type=datetime-local], input[type=text] {
+  p {
     font-family: 'Roboto Mono', monospace;
     font-family: 'Space Mono', monospace;
     font-size: 18px;
   }
 
-  option, select {
+  option, select, input[type=text], input[type=datetime-local] {
     font-family: 'Roboto Mono', monospace;
     font-family: 'Space Mono', monospace;
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .textSpecial {
