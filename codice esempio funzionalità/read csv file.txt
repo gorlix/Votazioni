@@ -1,0 +1,8 @@
+<?php
+	$file = fopen("prova.csv","r");
+	while($row=$row = fgetcsv($file))
+	{
+		echo $row[0] . " " . $row[1] . " " . $row[2] . " " . $row[3] . "<br>";
+	}
+	fclose($file);
+?>
