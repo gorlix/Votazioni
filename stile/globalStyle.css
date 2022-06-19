@@ -61,6 +61,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    max-width: 100%;
 }
 
 .elenco {
@@ -144,10 +146,17 @@ td{
     font-size: 18px;
   }
 
-  option, select, input[type=text], input[type=datetime-local] {
+  option, select, input[type=datetime-local] {
     font-family: 'Roboto Mono', monospace;
     font-family: 'Space Mono', monospace;
-    font-size: 13px;
+    font-size: 15px;
+  }
+
+  input[type=text] {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    width: 400px;
   }
 
   .textSpecial {
