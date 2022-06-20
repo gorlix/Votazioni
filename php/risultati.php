@@ -261,7 +261,7 @@
                         </div>";
                     } 
                     if($votazionePubblicata == 0 && !(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo))) {
-                        echo "DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.";
+                        echo "<p>DATI IN ELABORAZIONE. VEDRAI I RISULTATI APPENA VERRANO PUBBLICATI.</p>";
                     }
                 } 
 
@@ -288,7 +288,7 @@
                         <p>" . $testoCollapsable . "</p>
                         </div><p></p>";
                 } else {
-                    echo "<br><br>Hanno votato tutti.<br><br>";
+                    echo "<br><br><p>Hanno votato tutti.</p><br>";
                 }
 
                 // Pulsante pubblica solo quando la votazione è chiusa
@@ -311,7 +311,7 @@
                         if(in_array(GRUPPO_ADMIN, $idGruppo) || in_array(GRUPPO_CREA_VOTAZIONI, $idGruppo)) {
                         // chiamata con php self e il method post --> pubblica risultati della votazione
                         echo '<form style="display: inline-block" method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
-                        echo "<input type=\"submit\" name=\"vota\" value=\"pubblica risultati votazione\">
+                        echo "<input type=\"submit\" name=\"vota\" value=\"Pubblica risultati votazione\" class=\"button\">
                                 <input type='hidden' name='id' value='".$_GLOBALS['idVotazione']."'>
                                 </form>";
                         }
