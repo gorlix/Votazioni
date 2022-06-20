@@ -231,7 +231,12 @@
 						}
 						
 						echo $content;
-					}			
+					}	
+					
+					else if(isset($_POST['cercaVot'])) 
+					{
+
+					}
 					
 					//modifica il quesito scelto
 					else if(isset($_POST['update']))
@@ -362,7 +367,7 @@
                     //rimuovi tutti gli utenti appartenenti a quel gruppo
 					else if(isset($_POST['aggiungiG']))  
 					{
-						
+						echo "ciao";	
 					}
 
                     echo "".'<form action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">'.
@@ -393,7 +398,9 @@
 					}
                     echo $content;
 
-					$content ="</select><br>
+					$content ="</select><br><br>
+								<input type=\"text\" name=\"nomeVotDaRicercare\" placeholder=\"Nome della votazione...\">
+								<input type=\"submit\" method=\"post\" name=\"cercaVot\" value=\"Cerca votazione\" class=\"button\" style=\"background-color: rgb(162 193 168);\"><br><br>
 								<table>
 									<tr>
 										<td>

@@ -316,7 +316,7 @@
                                 </form>";
                         }
                     } else {
-                        echo "RISULTATI PUBBLICATI";
+                        echo "<p>RISULTATI PUBBLICATI</p>";
                     }
                 }
                 
