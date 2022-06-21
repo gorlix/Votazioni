@@ -12,6 +12,7 @@
     Crea variabili di sessione
 -->
     <?php
+        require __DIR__ . '/SharedFunctions.php';
         $hash = "";
         
         if(!isset($_SESSION)) { 
