@@ -23,9 +23,10 @@
         <div class="titolo">
             <p class="titolo-header">Lista Votazioni</p>
         </div>
-        <?PHP
-            include "Navbar.php";
-        ?>
+	    <?PHP
+	    require __DIR__ . '/SharedFunctions.php';
+	    include "Navbar.php";
+	    ?>
         <div class="contenuto">
             <center>
             <h1 style="align:center; font-family: 'Roboto Mono', monospace;font-family: 'Space Mono', monospace;">Lista Votazioni</h1>

@@ -42,6 +42,7 @@
         <div class="titolo">
             <p class="titolo-header">Risultati votazione:
                 <?php
+                    require __DIR__ . '/SharedFunctions.php';
                     $_GLOBALS['nomQuesito'] = "";
                     $conn = connettiDb();
                     if(isset($_GET['id'])) {

@@ -29,9 +29,10 @@
         <div class="titolo">
             <p class="titolo-header">Sviluppatori</p>
         </div>
-         <?PHP
-            include "Navbar.php";
-        ?> 
+	    <?PHP
+	    require __DIR__ . '/SharedFunctions.php';
+	    include "Navbar.php";
+	    ?>
         <div class="contenuto">
             <center>
                 <table>

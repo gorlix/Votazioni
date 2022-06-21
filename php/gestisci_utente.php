@@ -8,7 +8,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="../stile/globalStyle.css">
     <title>Gestisci Utente</title>
-
     <script>
         $(document).ready(function(){
             $("#drpUsr").change(function() {    
@@ -26,6 +25,7 @@
         <p class="titolo-header">Gestisci Utente</p>
     </div>
     <?PHP
+    require __DIR__ . '/SharedFunctions.php';
     include "Navbar.php";
     ?>
     <div class="contenuto">
