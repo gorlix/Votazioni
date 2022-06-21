@@ -11,13 +11,7 @@
 <!--
     Crea variabili di sessione
 -->
-    <?php   
-        $servername = "127.0.0.1";
-        $username = "root";
-        $password = "";
-        $dbname = "votazioniScolastiche";
-        $error = "";
-        
+    <?php
         $hash = "";
         
         if(!isset($_SESSION)) { 
@@ -43,7 +37,7 @@
         //$hash = "C34D427B8B54B254AE843269019A6D5B747783DD230B0A18D66E6CFAE072CEC3339D8B571FFFCABCD6182D083EF3938A0260205A63E9F568582BFC601376BA83";
         //$hash = "ash sbagliato";
 
-        $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = connettiDb();
 
         if ($conn->connect_error) {
             die($_SESSION['errore'] = "Connection failed: 1" . $conn->connect_error);
@@ -204,15 +198,9 @@
         <div class="titolo">
             <p class="titolo-header">Votazione: 
                 <?php
-                    $servername = "127.0.0.1";
-                    $username = "root";
-                    $password = "";
-                    $dbname = "votazioniScolastiche";
-
-                   
                     $_GLOBALS['nomQuesito'] = "";
                     
-                    $conn = new mysqli($servername, $username, $password, $dbname);
+                    $conn = connettiDb();
 
                     if ($conn->connect_error) {
                         die($_SESSION['errore'] = "Connection failed 5: " . $conn->connect_error);
@@ -241,20 +229,11 @@
         </div>
         <div class="contenuto">
             <?php
-                $servername = "127.0.0.1";
-                $username = "root";
-                $password = "";
-                $dbname = "votazioniScolastiche";
             
                 if($_SESSION['errore'] == "") {
                     $_SESSION['numScelte'] = "";
 
-                    $conn = new mysqli($servername, $username, $password, $dbname);
-
-                    if ($conn->connect_error) {
-                        die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
-                    }
-                    // $conn = connettiDb();
+                    $conn = connettiDb();
 
                     $qryInfoVot = "SELECT tipo, inizio, fine, quorum, scelteMax, quesito FROM votazione WHERE id LIKE '" . $_SESSION['idVot'] . "'";
                     $resultInfoVot = $conn->query($qryInfoVot);
@@ -275,12 +254,7 @@
 
                     $conn->close();
 
-                    $conn = new mysqli($servername, $username, $password, $dbname);
-
-                    if ($conn->connect_error) {
-                        die($_SESSION['errore'] = "Connection failed: " . $conn->connect_error);
-                    }
-                    //$conn = connettiDb();
+                    $conn = connettiDb();
 
                     $aus = 0;
 

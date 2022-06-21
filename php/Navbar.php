@@ -1,7 +1,6 @@
 <?php
     session_start();
     require __DIR__ . '/SharedFunctions.php';
-
     if(isset($_POST['esci'])) /* Ho schiacciato il tasto esci? */
     {
         session_destroy();

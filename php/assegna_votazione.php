@@ -23,31 +23,12 @@
             <center>
             <h1 style="align:center; font-family: 'Roboto Mono', monospace;font-family: 'Space Mono', monospace;">Lista Votazioni</h1>
 			<?php
-				//ini_set('display_errors', 0);
-				//ini_set('log_errors', 1);
-				//session_start();
-				
-				$server = "127.0.0.1";
-				$username = "root";
-				$password = "";
-				$dbName = "votazioniscolastiche";
-				
-				$sql = "";
-				$tab;
-
-				$conn = new mysqli($server, $username, $password, $dbName);
-
-				if ($conn->connect_error) {
-					die("Connection failed: " . $conn->connect_error);
-				}
-				
+				$conn = connettiDb();
 				if ($_SERVER["REQUEST_METHOD"] == "POST") 
 				{
 					//Assegna 
 				}
-
 			?>
-			
 		</center>
         </div>
     </div>

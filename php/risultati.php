@@ -5,29 +5,6 @@
 <!----------------------------------------------------------------------
     HTML
 ---------------------------------------------------------------------->
-<?php
-    $servername = "127.0.0.1";
-    $username = "root";
-    $password = "";
-    $dbname = "votazioniScolastiche";
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        //echo $_POST["id"];
-        $_GLOBALS['idVotazione'] = $_POST['id'];
-
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
-        
-        if ($conn->connect_error) {
-            die($_SESSION['errore'] = "Connection failed 1: " . $conn->connect_error);
-        }
-
-        $qryPubblicaVot = "UPDATE votazione SET pubblica = 1 WHERE id = ".$_GLOBALS['idVotazione'];
-
-        if ($conn->query($qryPubblicaVot) === FALSE) {
-            echo "ERRORE durante la pubblicazione della votazione"; 
-        }
-    };
-?>
 <style>
     .collapsible {
     background-color: #777;
@@ -63,23 +40,12 @@
             <img src="../immagini//logoScuola.png" alt="logo scuola" class="logo-scuola">
         </div>
         <div class="titolo">
-            <p class="titolo-header">Risultati votazione: 
+            <p class="titolo-header">Risultati votazione:
                 <?php
-                    $servername = "127.0.0.1";
-                    $username = "root";
-                    $password = "";
-                    $dbname = "votazioniScolastiche";
-
                     $_GLOBALS['nomQuesito'] = "";
-                    
-                    $conn = new mysqli($servername, $username, $password, $dbname);
-
-                    if ($conn->connect_error) {
-                        die($_SESSION['errore'] = "Connection failed 1: " . $conn->connect_error);
-                    }
-
+                    $conn = connettiDb();
                     if(isset($_GET['id'])) {
-                        $_GLOBALS['idVotazione'] = $_GET['id']; 
+                        $_GLOBALS['idVotazione'] = $_GET['id'];
 
                         $sql = "SELECT quesito FROM votazione WHERE id = " . $_GLOBALS['idVotazione'] . "";
                         $result = $conn->query($sql);
@@ -87,7 +53,7 @@
                         if ($result->num_rows > 0) {
                             while($row = $result->fetch_assoc()) {
                                 $_GLOBALS['nomQuesito'] = $row["quesito"];
-                                echo $_GLOBALS['nomQuesito'];  
+                                echo $_GLOBALS['nomQuesito'];
                             }
                         } else {
                             die($_SESSION['errore'] = "0 results");
@@ -99,7 +65,7 @@
                         if ($result->num_rows > 0) {
                             while($row = $result->fetch_assoc()) {
                                 $_GLOBALS['nomQuesito'] = $row["quesito"];
-                                echo $_GLOBALS['nomQuesito'];  
+                                echo $_GLOBALS['nomQuesito'];
                             }
                         } else {
                             die($_SESSION['errore'] = "0 results");
@@ -110,17 +76,12 @@
                 ?>
             </p>
         </div>
-        <?PHP
-            include "Navbar.php";
-        ?>
+	    <?PHP
+	    include "Navbar.php";
+	    ?>
         <div class="contenuto">
             <?php
-                $servername = "127.0.0.1";
-                $username = "root";
-                $password = "";
-                $dbname = "votazioniScolastiche";
-
-                $conn = new mysqli($servername, $username, $password, $dbname);
+                $conn = connettiDb();
                 
                 if ($conn->connect_error) {
                     die($_SESSION['errore'] = "Connection failed 1: " . $conn->connect_error);
@@ -341,4 +302,15 @@
     }
 </script>
 </body>
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	//echo $_POST["id"];
+	$_GLOBALS['idVotazione'] = $_POST['id'];
+	$conn = connettiDb();
+	$qryPubblicaVot = "UPDATE votazione SET pubblica = 1 WHERE id = ".$_GLOBALS['idVotazione'];
+	if ($conn->query($qryPubblicaVot) === FALSE) {
+		echo "ERRORE durante la pubblicazione della votazione";
+	}
+};
+?>
 </html>
