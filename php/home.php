@@ -33,26 +33,12 @@
         if(!isset($_SESSION)) { 
             session_start(); 
         }
-        $_SESSION["user_selected"] = 0;
-        $server = "127.0.0.1";
-        $username = "root";
-        $password = "";
-        $dbName = "votazioniscolastiche";
 
-        $sql = "";
-        $tab;
+        $conn =  connettiDb();
         $idUtente = $_SESSION['id_utente'];
-
-        $conn = mysqli_connect($server,$username,$password,$dbName);
-
-        if(!$conn){
-            die("Connessione Fallita: " . mysqli_connect_error());
-        }
-
         $sql = "select id,quesito,tipo,fine FROM votazione";
 
-        $result = mysqli_query($conn,$sql);
-
+        $result = $conn->query($sql);
         $tab = "<table style='width:100%'>
                     <tr style='width:100%; border-bottom: 2px solid black'>
                         <td id='titoli'>TITOLO</td>
@@ -60,19 +46,18 @@
                         <td id='titoli'>COMPLETATO</td>
                         <td></td>
                     </tr>";
-
-        if(mysqli_num_rows($result) > 0){
-            while($row=mysqli_fetch_assoc($result)){
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
                 $tab .= "<form method = 'GET' action = 'votazione.php'>";
 
                 $query2 = "select hash FROM esegue WHERE idUtente = " . $idUtente . " AND idVotazione = " . $row['id'];
                 
-                $result2 = mysqli_query($conn,$query2);
+                $result2 = $conn->query($query2);
                 
                 $tab .= "<tr class='clickable-row' style='width:100%' >";
             
-                if(mysqli_num_rows($result2) > 0){
-                    while($row2=mysqli_fetch_assoc($result2)){
+                if($result2->num_rows > 0){
+                    while($row2 = $result2->fetch_assoc()){
                         if($row2['hash'] != "")
                             $tab .="<input type='hidden' name = 'hash' value = '" . $row2['hash'] . "'>";                  
                     }
