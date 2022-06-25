@@ -51,7 +51,7 @@
 	            echo "<table>
                         <tr>
                             <td colspan=\"2\">
-                                <h4 style=\"width: 550px\" class=\"textSpecial\">Utente selezionato: ".getMailUtente($_SESSION["user_selected"])."</h4>
+                                <h4 id=\"utenteSelez\" style=\"width: 550px\" class=\"textSpecial\">Utente selezionato: ".getMailUtente($_SESSION["user_selected"])."</h4>
                             </td>
                         </tr>";
                 gestisciRichiestePageGestisciUtente();
