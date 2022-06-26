@@ -69,6 +69,9 @@
                     if($_POST["operazione"] == 1){
                         $opzione = $_POST['opzione'];
                         //$idVotazione = $_POST['id'];
+                        /**
+                         * @todo problemi apici
+                         */
                         $query = "insert into opzione(testo,idVotazione) values ('" . $opzione . "', '" . $idVotazione . "')";
                         $conn->query($query);
                         /*$result = $conn->query($query);

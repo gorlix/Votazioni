@@ -71,6 +71,11 @@
 											</tr>
 											<tr>
 												<td>
+													Quorum:<input type='number' name='quorum' value='' required max='100' min='0'>
+												</td>
+											</tr>
+											<tr>
+												<td>
 													<input class=\"button\" style=\"width: 100%\" type='submit' name='invia' value='Salva'></form>
 												</td>
 											</tr>
@@ -107,8 +112,11 @@
                             $conn->query($sql);
 
                             //Inserisci Votazione
+							/**
+							 * @todo problema apici
+							 */
                             $sql = "Insert into votazione (quesito, tipo, inizio, fine, scelteMax, quorum)
-                                values ('" . $_POST['quesito'] . "','" . $_POST['tipo'] . "','" . $inizio . "' ,'" . $fine . "' ,'" . $_POST['scelteMax'] . "', '0')";
+                                values ('" . $_POST['quesito'] . "','" . $_POST['tipo'] . "','" . $inizio . "' ,'" . $fine . "' ,'" . $_POST['scelteMax'] . "', '" . $_POST['quorum'] . "')";
 
                                 if ($conn->query($sql) === TRUE) {
                                     echo "New record created successfully";
