@@ -42,8 +42,19 @@
         <div class="titolo">
             <p class="titolo-header">Risultati votazione:
                 <?php
+                    $servername = "127.0.0.1";
+                    $username = "root";
+                    $password = "";
+                    $dbname = "votazioniScolastiche";
+
                     $_GLOBALS['nomQuesito'] = "";
-                    $conn = connettiDb();
+                    
+                    $conn = new mysqli($servername, $username, $password, $dbname);
+
+                    if ($conn->connect_error) {
+                        die($_SESSION['errore'] = "Connection failed: 2" . $conn->connect_error);
+                    }
+
                     if(isset($_GET['id'])) {
                         $_GLOBALS['idVotazione'] = $_GET['id'];
 
