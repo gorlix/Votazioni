@@ -69,10 +69,8 @@
                     if($_POST["operazione"] == 1){
                         $opzione = $_POST['opzione'];
                         //$idVotazione = $_POST['id'];
-                        /**
-                         * @todo problemi apici
-                         */
-                        $query = "insert into opzione(testo,idVotazione) values ('" . $opzione . "', '" . $idVotazione . "')";
+                        $quesito = str_replace("'", "’", $opzione);
+                        $query = "insert into opzione(testo,idVotazione) values ('" . $quesito . "', '" . $idVotazione . "')";
                         $conn->query($query);
                         /*$result = $conn->query($query);
                         $row = $result->fetch_assoc();*/

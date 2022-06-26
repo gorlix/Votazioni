@@ -115,8 +115,10 @@
 							/**
 							 * @todo problema apici
 							 */
+							$quesito = str_replace("'", "’", $_POST['quesito']);
+							
                             $sql = "Insert into votazione (quesito, tipo, inizio, fine, scelteMax, quorum)
-                                values ('" . $_POST['quesito'] . "','" . $_POST['tipo'] . "','" . $inizio . "' ,'" . $fine . "' ,'" . $_POST['scelteMax'] . "', '" . $_POST['quorum'] . "')";
+                                values ('" . $quesito . "','" . $_POST['tipo'] . "','" . $inizio . "' ,'" . $fine . "' ,'" . $_POST['scelteMax'] . "', '" . $_POST['quorum'] . "')";
 
                                 if ($conn->query($sql) === TRUE) {
                                     echo "New record created successfully";
