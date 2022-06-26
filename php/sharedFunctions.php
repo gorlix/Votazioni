@@ -134,6 +134,6 @@ function get_Id_Crea_Votazione()
     return $id_Crea_Votazione;
 }
 
-define("GRUPPO_ADMIN", "1");
-define("GRUPPO_CREA_VOTAZIONI", "2");
+define("GRUPPO_ADMIN", "4");
+define("GRUPPO_CREA_VOTAZIONI", "7");
 ?>
