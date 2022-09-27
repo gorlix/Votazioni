@@ -5,6 +5,7 @@ Progetto votazione è un piccolo tool che permette di esegurire delle votazioni 
 
 
 ## Installazione
+
 ### Requisiti
 - Easy php Webserver
 - Server SMTP per l'invio delle mail
