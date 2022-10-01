@@ -19,4 +19,3 @@ Grazie all' architettura passwordless abilita a votare direttramente da un link 
 #### Link utili
 - [StoryBoard / Analisi / Diagramma ER](https://gabriele-workspace.notion.site/Sistema-votazioni-6848d3ed4cb84d89bb3eb6d99cff4cbc)
 - [Font](https://www.jetbrains.com/lp/mono/)
-- 
