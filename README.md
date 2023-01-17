@@ -11,7 +11,7 @@ Grazie all' architettura passwordless abilita a votare direttramente da un link 
 - Server SMTP per l'invio delle mail.
 
 ### Procedura
-1. Scaricare i file di release (zip). //link
+1. Scaricare i file di ([Release](https://github.com/gorlix/Votazioni/releases/tag/v1.0-beta.1)).
 2. Spostare la release nella cartella www del webserver o in alternativa modificare la document root.
 3. Importare il file sql (contnuto nella cartella db) all'interno di php myAdmin nel webServer.
 
